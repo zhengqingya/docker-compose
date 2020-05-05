@@ -2,7 +2,7 @@ version: '3'
 services:
   zookepper:
     image: wurstmeister/zookeeper                    # 原镜像`wurstmeister/zookeeper`
-    container_name: zookeeper_server                 # 容器名为'zookeeper_server'
+    container_name: zookeeper                        # 容器名为'zookeeper'
     restart: always                                  # 指定容器退出后的重启策略为始终重启
     volumes:                                         # 数据卷挂载路径设置,将本机目录映射到容器目录
       - "/etc/localtime:/etc/localtime"
@@ -11,7 +11,7 @@ services:
 
   kafka:
     image: wurstmeister/kafka                                # 原镜像`wurstmeister/kafka`
-    container_name: kafka_server                             # 容器名为'kafka_server'
+    container_name: kafka                                    # 容器名为'kafka'
     restart: always                                          # 指定容器退出后的重启策略为始终重启
     volumes:                                                 # 数据卷挂载路径设置,将本机目录映射到容器目录
       - "/etc/localtime:/etc/localtime"
