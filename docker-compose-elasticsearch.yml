@@ -1,0 +1,18 @@
+version: '3'
+services:
+  elasticsearch:
+    image: elasticsearch                      # 镜像`elasticsearch`
+    container_name: elasticsearch             # 容器名为'elasticsearch'
+    restart: always                           # 指定容器退出后的重启策略为始终重启
+    # volumes:                                  # 数据卷挂载路径设置,将本机目录映射到容器目录
+    #      - "./elasticsearch/data:/usr/share/elasticsearch/data:rw"
+    #      - "./elasticsearch/conf/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
+    #      - "./elasticsearch/conf/jvm.options:/usr/share/elasticsearch/config/jvm.options"
+    #      - "./elasticsearch/logs:/usr/share/elasticsearch/logs:rw"
+    environment:                              # 设置环境变量,相当于docker run命令中的-e
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+      discovery.type: single-node
+    ports:
+      - "9200:9200"
+      - "9300:9300"

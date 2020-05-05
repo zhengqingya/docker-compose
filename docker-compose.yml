@@ -1,0 +1,37 @@
+version: '3'
+services:
+  yl1:
+    image: xx
+    links:                              # 配置指定容器与当前服务连接， 并指定服务别名
+      - "zookeeper:zk"
+
+  yl2:
+    image: xx
+
+  yl3:
+    image: xx                           # 镜像
+    container_name: xx                  # 容器名为'xx'
+    restart: always                     # 指定容器退出后的重启策略为始终重启
+    volumes:                            # 数据卷挂载路径设置,将本机目录映射到容器目录
+      - "/xx/my.cnf:/xx/my.cnf"
+    environment:                        # 设置环境变量,相当于docker run命令中的-e
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    ports:                              # 映射端口
+      - "xx:xx"
+    links:                              # 配置容器互相连接
+      - yl1
+      - yl2
+    entrypoint: /code/entrypoint.sh     # 指定接入点,用于定义容器启动以后的执行体的
+    command: bundle exec thin -p 3000   # 设置容器的默认执行的命令。`CMD/command`设定的命令会在`entrypoint`之后执行。
+    depends_on:                         # 解决容器依赖启动先后问题
+      - yl1
+      - yl2
+    build:                              # host(容器与宿主机网络相通 TODO 注：未实践)
+      context: .
+      network: host
+
+
+
+
+
