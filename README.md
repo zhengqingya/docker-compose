@@ -1,4 +1,8 @@
-### `docker-compose`安装
+# docker-compose
+
+![docker-compose](./docker-compose.png)
+
+## `docker-compose`安装
 
 ```shell
 # 安装依赖
@@ -17,14 +21,14 @@ docker-compose --version
 curl -L https://raw.githubusercontent.com/docker/compose/1.25.0/contrib/completion/bash/docker-compose > /etc/bash_completion.d/docker-compose
 ```
 
-### `docker-compose`卸载
+## `docker-compose`卸载
 
 ```shell
 # pip卸载
 pip uninstall docker-compose
 ```
 
-### `docker-compose`相关命令
+## `docker-compose`相关命令
 
 ```shell
 # 构建镜像
@@ -47,7 +51,7 @@ docker-compose images
 docker-compose pull 镜像名
 ```
 
-### 常用shell组合
+## 常用shell组合
 
 ```shell
 # 删除所有容器
@@ -64,7 +68,7 @@ docker run -it --net mynet --name container1 another_image
 
 ---
 
-### 环境准备
+## 环境准备
 
 ```shell
 git clone https://gitee.com/zhengqingya/docker-compose.git
@@ -74,6 +78,8 @@ cd docker-compose
 ====================================================================================\
 =========================  ↓↓↓↓↓↓ 环境部署 start ↓↓↓↓↓↓  ====================================\
 ====================================================================================\
+
+## 运行服务
 
 ### portainer
 
@@ -92,6 +98,15 @@ docker-compose -f docker-compose-portainer.yml -p portainer up -d
 ```shell
 docker-compose -f docker-compose-mysql.yml -p mysql up -d
 ```
+
+### yearning
+
+```shell
+docker-compose -f docker-compose-yearning.yml -p yearning up -d
+```
+
+访问地址：[`ip地址:8000`](www.zhengqingya.com:8000)
+默认登录账号密码：`admin/Yearning_admin`
 
 ### oracle18c
 
