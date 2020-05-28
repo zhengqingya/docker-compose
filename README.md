@@ -223,6 +223,14 @@ docker-compose -f docker-compose-kafka.yml -p kafka up -d
 
 集群管理地址：[`ip地址:9000`](www.zhengqingya.com:9000)
 
+### couchbase
+
+```shell
+docker-compose -f docker-compose-couchbase.yml -p couchbase up -d
+```
+
+管理平台地址：[`ip地址:8091`](www.zhengqingya.com:8091)
+默认登录账号密码：`Administrator/password`
 
 ==============================================================================\
 ========================  ↑↑↑↑↑↑ 环境部署 end ↑↑↑↑↑↑  ================================\
