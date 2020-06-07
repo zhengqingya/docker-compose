@@ -1,0 +1,13 @@
+version: '3'
+services:
+  elasticsearch:
+    image: yanliangzhong/elasticsearch6.3.2                   # 镜像`yanliangzhong/elasticsearch6.3.2`
+    container_name: elasticsearch                             # 容器名为'elasticsearch'
+    restart: always                                           # 指定容器退出后的重启策略为始终重启
+    environment:                              # 设置环境变量,相当于docker run命令中的-e
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+      discovery.type: single-node
+    ports:
+      - "9200:9200"
+      - "9300:9300"

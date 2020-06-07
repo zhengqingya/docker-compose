@@ -1,0 +1,16 @@
+version: '3'
+services:
+  redis:
+    image: redis:latest                                                               # 镜像'redis:latest'
+    container_name: redis                                                             # 容器名为'redis'
+    restart: always                                                                    # 指定容器退出后的重启策略为始终重启
+    #    command: redis-server /etc/redis/redis.conf --requirepass 123456 --appendonly yes # 启动redis服务并添加密码为：123456,并开启redis持久化配置
+    command: redis-server --requirepass 123456 --appendonly yes # 启动redis服务并添加密码为：123456,并开启redis持久化配置
+    environment:                        # 设置环境变量,相当于docker run命令中的-e
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    volumes:                            # 数据卷挂载路径设置,将本机目录映射到容器目录
+      - "./redis/data:/data"
+    #      - "./redis/redis.conf:/etc/redis/redis.conf"  # `redis.conf`文件内容`http://download.redis.io/redis-stable/redis.conf`
+    ports:                              # 映射端口
+      - "6379:6379"

@@ -15,13 +15,13 @@ services:
     restart: always                                          # 指定容器退出后的重启策略为始终重启
     volumes:                                                 # 数据卷挂载路径设置,将本机目录映射到容器目录
       - "/etc/localtime:/etc/localtime"
-    environment:                        # 设置环境变量,相当于docker run命令中的-e
-      KAFKA_ADVERTISED_HOST_NAME: www.zhengqingya.com  # TODO 本机IP
-      KAFKA_ADVERTISED_PORT: 9092                      # 端口
-      KAFKA_BROKER_ID: 0                # 在kafka集群中，每个kafka都有一个BROKER_ID来区分自己
+    environment:                                                       # 设置环境变量,相当于docker run命令中的-e
+      KAFKA_ADVERTISED_HOST_NAME: www.zhengqingya.com                  # TODO 本机IP
+      KAFKA_ADVERTISED_PORT: 9092                                      # 端口
+      KAFKA_BROKER_ID: 0                                               # 在kafka集群中，每个kafka都有一个BROKER_ID来区分自己
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://www.zhengqingya.com:9092 # TODO 将kafka的地址端口注册给zookeeper
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092        # 配置kafka的监听端口
-      KAFKA_ZOOKEEPER_CONNECT: www.zhengqingya.com:2181 # TODO zookeeper地址
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092                        # 配置kafka的监听端口
+      KAFKA_ZOOKEEPER_CONNECT: www.zhengqingya.com:2181                # TODO zookeeper地址
       KAFKA_CREATE_TOPICS: "hello_world"
     ports:                              # 映射端口
       - "9092:9092"

@@ -1,6 +1,6 @@
 # docker-compose
 
-![docker-compose](./docker-compose.png)
+![docker-compose-liunx.png](image/docker-compose-liunx.png)
 
 ## `docker-compose`安装
 
@@ -72,7 +72,7 @@ docker run -it --net mynet --name container1 another_image
 
 ```shell
 git clone https://gitee.com/zhengqingya/docker-compose.git
-cd docker-compose
+cd docker-compose/Liunx
 ```
 
 ====================================================================================\
@@ -81,7 +81,7 @@ cd docker-compose
 
 ## 运行服务
 
-### portainer
+### Portainer
 
 ```shell
 docker-compose -f docker-compose-portainer.yml -p portainer up -d
@@ -93,13 +93,13 @@ docker-compose -f docker-compose-portainer.yml -p portainer up -d
 
 访问地址：[`ip地址:9000`](www.zhengqingya.com:9000)
 
-### mysql
+### MySQL
 
 ```shell
 docker-compose -f docker-compose-mysql.yml -p mysql up -d
 ```
 
-### yearning
+### Yearning
 
 ```shell
 docker-compose -f docker-compose-yearning.yml -p yearning up -d
@@ -108,7 +108,7 @@ docker-compose -f docker-compose-yearning.yml -p yearning up -d
 访问地址：[`ip地址:8000`](www.zhengqingya.com:8000)
 默认登录账号密码：`admin/Yearning_admin`
 
-### oracle18c
+### Oracle18c
 
 ```shell
 docker-compose -f docker-compose-oracle18c.yml -p oracle18c up -d
@@ -116,26 +116,16 @@ docker-compose -f docker-compose-oracle18c.yml -p oracle18c up -d
 
 > 配置参考：[Docker(9) 安装Oracle18c](https://zhengqing.blog.csdn.net/article/details/103296040)
 
-### jenkins
+### Couchbase
 
 ```shell
-docker-compose -f docker-compose-jenkins.yml -p jenkins up -d
+docker-compose -f docker-compose-couchbase.yml -p couchbase up -d
 ```
 
-访问地址：[`ip地址:8080`](www.zhengqingya.com:8080)
+管理平台地址：[`ip地址:8091`](www.zhengqingya.com:8091)
+默认登录账号密码：`Administrator/password`
 
-### jrebel
-
-```shell
-docker-compose -f docker-compose-jrebel.yml -p jrebel up -d
-```
-
-默认反代`idea.lanyus.com`, 运行起来后
-
-1. 激活地址： `ip地址:8888/UUID` -> 注：UUID可以自己生成，并且必须是UUID才能通过验证 -> [UUID在线生成](http://www.uuid.online/)
-2. 邮箱随意填写
-
-### redis
+### Redis
 
 ```shell
 docker-compose -f docker-compose-redis.yml -p redis up -d
@@ -147,7 +137,18 @@ docker-compose -f docker-compose-redis.yml -p redis up -d
 docker exec -it redis redis-cli -a 123456  # 密码为123456
 ```
 
-### nginx
+### Jrebel
+
+```shell
+docker-compose -f docker-compose-jrebel.yml -p jrebel up -d
+```
+
+默认反代`idea.lanyus.com`, 运行起来后
+
+1. 激活地址： `ip地址:8888/UUID` -> 注：UUID可以自己生成，并且必须是UUID才能通过验证 -> [UUID在线生成](http://www.uuid.online/)
+2. 邮箱随意填写
+
+### Nginx
 
 ```shell
 docker-compose -f docker-compose-nginx.yml -p nginx up -d
@@ -155,13 +156,13 @@ docker-compose -f docker-compose-nginx.yml -p nginx up -d
 
 访问地址：[`ip地址:80`](www.zhengqingya.com:80)
 
-### elasticsearch
+### Elasticsearch
 
 ```shell
 docker-compose -f docker-compose-elasticsearch.yml -p elasticsearch up -d
 ```
 
-### rabbitmq
+### RabbitMQ
 
 ```shell
 docker-compose -f docker-compose-rabbitmq.yml -p rabbitmq up -d
@@ -170,7 +171,7 @@ docker-compose -f docker-compose-rabbitmq.yml -p rabbitmq up -d
 web管理端：[`ip地址:15672`](www.zhengqingya.com:15672)
 登录账号密码：`admin/admin`
 
-### activemq
+### ActiveMQ
 
 ```shell
 docker-compose -f docker-compose-activemq.yml -p activemq up -d
@@ -179,7 +180,7 @@ docker-compose -f docker-compose-activemq.yml -p activemq up -d
 访问地址：[`ip地址:8161`](www.zhengqingya.com:8161)
 登录账号密码：`admin/admin`
 
-### baidupcs-web
+### BaiduPCS-Web
 
 ```shell
 docker-compose -f docker-compose-baidupcs-web.yml -p baidupcs-web up -d
@@ -187,25 +188,7 @@ docker-compose -f docker-compose-baidupcs-web.yml -p baidupcs-web up -d
 
 访问地址：[`ip地址:5299`](www.zhengqingya.com:5299)
 
-### nacos
-
-```shell
-docker-compose -f docker-compose-nacos.yml -p nacos up -d
-```
-
-访问地址：[`ip地址:8848/nacos`](www.zhengqingya.com:8848/nacos)
-登录账号密码默认：`nacos/nacos`
-
-### sentinel
-
-```shell
-docker-compose -f docker-compose-sentinel.yml -p sentinel up -d
-```
-
-访问地址：[`ip地址:8858`](www.zhengqingya.com:8858)
-登录账号密码：`sentinel/sentinel`
-
-### minio
+### MinIO
 
 ```shell
 docker-compose -f docker-compose-minio.yml -p minio up -d
@@ -214,8 +197,26 @@ docker-compose -f docker-compose-minio.yml -p minio up -d
 访问地址：[`ip地址:9000/minio`](www.zhengqingya.com:9000/minio)
 登录账号密码：`root/password`
 
+### Nacos
 
-### kafka
+```shell
+docker-compose -f docker-compose-nacos.yml -p nacos up -d
+```
+
+访问地址：[`ip地址:8848/nacos`](www.zhengqingya.com:8848/nacos)
+登录账号密码默认：`nacos/nacos`
+
+### Sentinel
+
+```shell
+docker-compose -f docker-compose-sentinel.yml -p sentinel up -d
+```
+
+访问地址：[`ip地址:8858`](www.zhengqingya.com:8858)
+登录账号密码：`sentinel/sentinel`
+
+
+### Kafka
 
 ```shell
 docker-compose -f docker-compose-kafka.yml -p kafka up -d
@@ -223,14 +224,32 @@ docker-compose -f docker-compose-kafka.yml -p kafka up -d
 
 集群管理地址：[`ip地址:9000`](www.zhengqingya.com:9000)
 
-### couchbase
+### Tomcat
 
 ```shell
-docker-compose -f docker-compose-couchbase.yml -p couchbase up -d
+docker-compose -f docker-compose-tomcat.yml -p tomcat up -d
 ```
 
-管理平台地址：[`ip地址:8091`](www.zhengqingya.com:8091)
-默认登录账号密码：`Administrator/password`
+访问地址：[`ip地址:8081`](www.zhengqingya.com:8081)
+
+### GitLab
+
+> docker-compose-gitlab.yml文件参考：[https://github.com/sameersbn/docker-gitlab/blob/master/docker-compose.yml](https://github.com/sameersbn/docker-gitlab/blob/master/docker-compose.yml)
+
+```shell
+docker-compose -f docker-compose-gitlab.yml -p gitlab up -d
+```
+
+访问地址：[`ip地址:10080`](www.zhengqingya.com:10080)
+默认root账号，密码访问页面时需自己设置
+
+### Jenkins
+
+```shell
+docker-compose -f docker-compose-jenkins.yml -p jenkins up -d
+```
+
+访问地址：[`ip地址:8080`](www.zhengqingya.com:8080)
 
 ==============================================================================\
 ========================  ↑↑↑↑↑↑ 环境部署 end ↑↑↑↑↑↑  ================================\

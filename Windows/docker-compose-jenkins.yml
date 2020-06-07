@@ -1,0 +1,16 @@
+version: '3'
+services:
+  jenkins:
+    image: jenkins/jenkins:lts                  # 镜像`jenkins/jenkins:lts`
+    container_name: jenkins                     # 容器名为'jenkins'
+    restart: always                             # 指定容器退出后的重启策略为始终重启
+    volumes:                                    # 数据卷挂载路径设置,将本机目录映射到容器目录 (下面映射可在容器中执行宿主机docker命令)
+      #      - "/c/Program Files/Docker/Docker/resources/bin/docker:/usr/bin/docker"
+      #      - "/var/run/docker.sock:/var/run/docker.sock"
+      #      - "/usr/lib64/libltdl.so.7:/usr/lib/x86_64-linux-gnu/libltdl.so.7"
+      - "./jenkins_home:/home/jenkins_home"
+    environment:                                # 设置环境变量,相当于docker run命令中的-e
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    ports:                                      # 映射端口
+      - "8080:8080"

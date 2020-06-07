@@ -1,0 +1,59 @@
+version: '3'
+services:
+  zookepper:
+    image: zookeeper                                 # 原镜像`zookeeper`
+    hostname: "zookeeper.local"
+    container_name: zookeeper                        # 容器名为'zookeeper'
+    restart: always                                  # 指定容器退出后的重启策略为始终重启
+    ports:                                           # 映射端口
+      - "2181:2181"
+    networks:                                        # 设置网络别名
+      local:
+        aliases:
+          - "zookeeper.local"
+
+  kafka:
+    image: wurstmeister/kafka                                # 原镜像`wurstmeister/kafka`
+    hostname: "kafka.local"
+    container_name: kafka                                    # 容器名为'kafka'
+    restart: always                                          # 指定容器退出后的重启策略为始终重启
+    environment:                                                       # 设置环境变量,相当于docker run命令中的-e
+      KAFKA_ADVERTISED_HOST_NAME: kafka.local                          # TODO 本机IP
+      KAFKA_ADVERTISED_PORT: 9092                                      # 端口
+      KAFKA_BROKER_ID: 0                                               # 在kafka集群中，每个kafka都有一个BROKER_ID来区分自己
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092               # TODO 将kafka的地址端口注册给zookeeper
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092                        # 配置kafka的监听端口
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181                          # TODO zookeeper地址
+      KAFKA_CREATE_TOPICS: "hello_world"
+    ports:                              # 映射端口
+      - "9092:9092"
+    networks:                           # 设置网络别名
+      local:
+        aliases:
+          - "kafka.local"
+    depends_on:                         # 解决容器依赖启动先后问题
+      - zookepper
+
+  kafka-manager:
+    image: sheepkiller/kafka-manager                         # 原镜像`sheepkiller/kafka-manager`
+    container_name: kafka-manager                            # 容器名为'kafka-manager'
+    restart: always                                          # 指定容器退出后的重启策略为始终重启
+    environment:                          # 设置环境变量,相当于docker run命令中的-e
+      ZK_HOSTS: zookeeper:2181            # TODO zookeeper地址
+      APPLICATION_SECRET: zhengqing
+      KAFKA_MANAGER_AUTH_ENABLED: "true"  # 开启kafka-manager权限校验
+      KAFKA_MANAGER_USERNAME: admin       # 登陆账户
+      KAFKA_MANAGER_PASSWORD: 123456      # 登陆密码
+    ports:                              # 映射端口
+      - "9001:9000"
+    networks:                           # 设置网络别名
+      local:
+        aliases:
+          - "kafka-manager.local"
+    depends_on:                         # 解决容器依赖启动先后问题
+      - kafka
+
+# 设置网络，名为local
+networks:
+  local:
+    driver: bridge

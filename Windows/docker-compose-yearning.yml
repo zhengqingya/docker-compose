@@ -1,0 +1,31 @@
+version: '3'
+services:
+  mysql:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/mysql5.7  # 原镜像`mysql:5.7`
+    container_name: mysql_3307                                   # 容器名为'mysql_3307'
+    restart: always                                              # 指定容器退出后的重启策略为始终重启
+    volumes:                                                     # 数据卷挂载路径设置,将本机目录映射到容器目录
+      - "./yearning/mysql/my.cnf:/etc/mysql/my.cnf"
+      - "./yearning/mysql/data:/var/lib/mysql"
+      - "./yearning/mysql/conf.d:/etc/mysql/conf.d"
+    environment:                        # 设置环境变量,相当于docker run命令中的-e
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+      MYSQL_ROOT_PASSWORD: root         # 设置root用户密码
+      MYSQL_DATABASE: Yearning          # 初始化的数据库名称
+    ports:                              # 映射端口
+      - "3307:3306"
+
+  yearning:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/yearning     # 原镜像`daichengxu11/yearning`
+    container_name: yearning                                        # 容器名为'yearning'
+    restart: always                                                 # 指定容器退出后的重启策略为始终重启
+    environment:                        # 设置环境变量,相当于docker run命令中的-e
+      MYSQL_ADDR: 192.168.0.119:3307         # TODO mysql连接地址 【注：这里填写自己本地的ip地址，通过cmd执行`ipconfig`命令查看，暂不能填写localhost或127.0.0.1】
+      MYSQL_USER: root                             # 账号
+      MYSQL_PASSWORD: root                         # 密码
+      MYSQL_DB: Yearning                           # Yearning数据库
+    ports:                              # 映射端口
+      - "8000:8000"
+    depends_on:                         # 解决容器依赖启动先后问题
+      - mysql
