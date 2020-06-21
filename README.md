@@ -251,6 +251,15 @@ docker-compose -f docker-compose-jenkins.yml -p jenkins up -d
 
 访问地址：[`ip地址:8080`](www.zhengqingya.com:8080)
 
+### Nextcloud - 多端同步网盘
+
+```shell
+docker-compose -f docker-compose-nextcloud.yml -p nextcloud up -d
+```
+
+访问地址：[`ip地址:81`](www.zhengqingya.com:81) , 创建管理员账号
+
+
 ==============================================================================\
 ========================  ↑↑↑↑↑↑ 环境部署 end ↑↑↑↑↑↑  ================================\
 ==============================================================================\
