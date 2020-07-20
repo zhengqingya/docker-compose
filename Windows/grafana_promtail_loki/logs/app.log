@@ -1,0 +1,52 @@
+2020-06-30 12:48:00.518 [XNIO-1 task-1] DEBUG c.z.config.security.filter.MyAuthenticationFilter - 请求头类型： application/json;charset=UTF-8
+2020-06-30 12:48:00.518 [XNIO-1 task-1] DEBUG c.z.config.security.filter.MyAuthenticationFilter - 后台检查令牌: 06f59dea5662fdf76d91a7f9cfd58b4cc8d969
+2020-06-30 12:48:00.525 [XNIO-1 task-1] INFO  c.z.config.security.filter.MyAuthenticationFilter - xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+2020-06-30 12:48:00.564 [XNIO-1 task-1] DEBUG c.z.m.system.service.impl.SysPermissionServiceImpl - =========== 用户ID为：1 ===========
+2020-06-30 12:48:00.586 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【12】 所拥有按钮权限:【[]】
+2020-06-30 12:48:00.586 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【11】 所拥有按钮权限:【[add, edit, query, delete]】
+2020-06-30 12:48:00.586 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【13】 所拥有按钮权限:【[add, edit, query, detail, delete]】
+2020-06-30 12:48:00.586 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【14】 所拥有按钮权限:【[add, edit, query, save, reset, detail, delete]】
+2020-06-30 12:48:00.586 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【15】 所拥有按钮权限:【[add]】
+2020-06-30 12:48:00.586 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【16】 所拥有按钮权限:【[]】
+2020-06-30 12:48:00.586 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【17】 所拥有按钮权限:【[add, edit, query, detail, delete]】
+2020-06-30 12:48:00.587 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【18】 所拥有按钮权限:【[add, edit, query, detail, delete]】
+2020-06-30 12:48:00.587 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【1】 所拥有按钮权限:【[]】
+2020-06-30 12:48:00.587 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【4】 所拥有按钮权限:【[add, edit, data_permission, query, role_permission, delete]】
+2020-06-30 12:48:00.587 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【8】 所拥有按钮权限:【[]】
+2020-06-30 12:48:00.587 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【5】 所拥有按钮权限:【[add, edit, query, reset, permission, delete]】
+2020-06-30 12:48:00.587 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【6】 所拥有按钮权限:【[]】
+2020-06-30 12:48:00.587 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【3】 所拥有按钮权限:【[add, edit, add_next, disable, save, delete]】
+2020-06-30 12:48:00.587 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【10】 所拥有按钮权限:【[add, edit, delete]】
+2020-06-30 12:48:00.587 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【2】 所拥有按钮权限:【[]】
+2020-06-30 12:48:00.587 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【21】 所拥有按钮权限:【[add, edit, query, save, detail, delete]】
+2020-06-30 12:48:00.587 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【22】 所拥有按钮权限:【[add, edit, query, save, reset, detail, delete]】
+2020-06-30 12:48:00.587 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【20】 所拥有按钮权限:【[]】
+2020-06-30 12:48:00.590 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 更新`1`菜单+按钮权限缓存成功!
+2020-06-30 12:48:00.600 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 更新`1`用户所有信息缓存成功!
+2020-06-30 12:48:00.600 [XNIO-1 task-1] DEBUG c.z.m.system.service.impl.SysPermissionServiceImpl - =========== 用户ID为：2 ===========
+2020-06-30 12:48:00.607 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【12】 所拥有按钮权限:【[]】
+2020-06-30 12:48:00.607 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【11】 所拥有按钮权限:【[add, edit, query, delete]】
+2020-06-30 12:48:00.607 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【13】 所拥有按钮权限:【[add, edit, query, detail, delete]】
+2020-06-30 12:48:00.607 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【14】 所拥有按钮权限:【[add, edit, query, save, reset, detail, delete]】
+2020-06-30 12:48:00.607 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【15】 所拥有按钮权限:【[add]】
+2020-06-30 12:48:00.607 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【16】 所拥有按钮权限:【[]】
+2020-06-30 12:48:00.607 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【17】 所拥有按钮权限:【[add, edit, query, detail, delete]】
+2020-06-30 12:48:00.607 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【18】 所拥有按钮权限:【[add, edit, query, detail, delete]】
+2020-06-30 12:48:00.607 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【1】 所拥有按钮权限:【[]】
+2020-06-30 12:48:00.607 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【4】 所拥有按钮权限:【[add, edit, data_permission, query, role_permission, delete]】
+2020-06-30 12:48:00.607 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【8】 所拥有按钮权限:【[]】
+2020-06-30 12:48:00.607 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【5】 所拥有按钮权限:【[add, edit, query, reset, permission, delete]】
+2020-06-30 12:48:00.607 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【6】 所拥有按钮权限:【[]】
+2020-06-30 12:48:00.607 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【3】 所拥有按钮权限:【[add, edit, add_next, disable, save, delete]】
+2020-06-30 12:48:00.607 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【10】 所拥有按钮权限:【[add, edit, delete]】
+2020-06-30 12:48:00.607 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【2】 所拥有按钮权限:【[]】
+2020-06-30 12:48:00.607 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【21】 所拥有按钮权限:【[add, edit, query, save, detail, delete]】
+2020-06-30 12:48:00.607 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【22】 所拥有按钮权限:【[add, edit, query, save, reset, detail, delete]】
+2020-06-30 12:48:00.607 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 菜单id:【20】 所拥有按钮权限:【[]】
+2020-06-30 12:48:00.610 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 更新`2`菜单+按钮权限缓存成功!
+2020-06-30 12:48:00.619 [XNIO-1 task-1] INFO  c.z.m.system.service.impl.SysPermissionServiceImpl - 更新`2`用户所有信息缓存成功!
+2020-06-30 12:48:00.621 [XNIO-1 task-1] INFO  c.z.config.security.filter.MyAuthenticationFilter - 请求url: `/api/system/role/saveOrUpdateRole`  耗时:104ms  返回的参数:{}
+2020-06-30 12:48:17.875 [XNIO-1 task-1] INFO  c.z.config.security.filter.MyAuthenticationFilter - xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+2020-06-30 12:50:32.602 [SpringContextShutdownHook] INFO  o.s.boot.web.embedded.undertow.UndertowWebServer - Commencing graceful shutdown. Wait for active requests to complete
+2020-06-30 12:50:32.603 [SpringContextShutdownHook] INFO  o.s.boot.web.embedded.undertow.UndertowWebServer - Graceful shutdown complete
+2020-06-30 12:50:32.615 [SpringContextShutdownHook] INFO  o.s.scheduling.concurrent.ThreadPoolTaskExecutor - Shutting down ExecutorService 'applicationTaskExecutor'

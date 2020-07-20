@@ -275,6 +275,29 @@ docker-compose -f docker-compose-walle.yml -p walle up -d && docker-compose -f d
 访客：reporter@walle-web.io \ Walle123
 ```
 
+### Grafana - 开源数据可视化工具(数据监控、数据统计、警报)
+
+```shell
+docker-compose -f docker-compose-grafana.yml -p grafana up -d
+```
+
+访问地址：[`http://127.0.0.1:3000`](http://127.0.0.1:3000)
+默认登录账号密码：`admin/admin`
+
+### Grafana Loki - 一个水平可扩展，高可用性，多租户的日志聚合系统
+
+```shell
+# 先授权，否则会报错：`cannot create directory '/var/lib/grafana/plugins': Permission denied`
+chmod 777 $PWD/grafana_promtail_loki/grafana/data
+chmod 777 $PWD/grafana_promtail_loki/grafana/log
+
+# 运行
+docker-compose -f docker-compose-grafana-promtail-loki.yml -p grafana_promtail_loki up -d
+```
+
+访问地址：[`http://127.0.0.1:3000`](http://127.0.0.1:3000)
+默认登录账号密码：`admin/admin`
+
 ==============================================================================\
 ========================  ↑↑↑↑↑↑ 环境部署 end ↑↑↑↑↑↑  ================================\
 ==============================================================================\
