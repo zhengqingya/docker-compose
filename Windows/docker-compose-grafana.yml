@@ -1,7 +1,7 @@
 version: '3'
 services:
   grafana:
-    image: grafana/grafana:master                                # 原镜像`grafana/grafana:master`
+    image: grafana/grafana:latest                                # 原镜像`grafana/grafana:latest`
     container_name: grafana                                      # 容器名为'grafana'
     restart: always                                              # 指定容器退出后的重启策略为始终重启
     volumes:                                                     # 数据卷挂载路径设置,将本机目录映射到容器目录
