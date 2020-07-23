@@ -2,9 +2,22 @@
 
 ![docker-compose-liunx.png](image/docker-compose-liunx.png)
 
+## 安装docker
+
+```shell
+# 通过yum源安装docker
+sudo yum -y install docker
+# 启动docker
+sudo systemctl start docker
+# 开机自启
+sudo systemctl enable docker
+```
+
 ## `docker-compose`安装
 
 ```shell
+# 如果有pip则直接执行此命令即可: sudo pip install -U docker-compose
+
 # 安装依赖
 yum -y install epel-release
 # 安装PIP
