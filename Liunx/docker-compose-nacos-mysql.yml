@@ -1,0 +1,22 @@
+# docker-compose参考：https://github.com/nacos-group/nacos-docker/blob/master/example/standalone-mysql-5.7.yaml
+version: '3'
+services:
+  nacos:
+    image: nacos/nacos-server:latest                             # 镜像`nacos/nacos-server:latest`
+    container_name: nacos_server                                 # 容器名为'nacos_server'
+    restart: always                                              # 指定容器退出后的重启策略为始终重启
+    volumes:                                                     # 数据卷挂载路径设置,将本机目录映射到容器目录
+      - "./nacos_mysql/logs:/home/nacos/logs"
+      - "./nacos_mysql/init.d/custom.properties:/home/nacos/init.d/custom.properties"
+    environment:                        # 设置环境变量,相当于docker run命令中的-e
+      - PREFER_HOST_MODE=hostname
+      - MODE=standalone                           # 单机模式启动
+      - SPRING_DATASOURCE_PLATFORM=mysql
+      - MYSQL_SERVICE_HOST=www.zhengqingya.com    # 注：这里不能为`127.0.0.1`或`localhost`方式！！！
+      - MYSQL_SERVICE_DB_NAME=nacos_config        # 所需sql脚本位于 `nacos-mysql/nacos-mysql.sql`
+      - MYSQL_SERVICE_PORT=3306
+      - MYSQL_SERVICE_USER=root
+      - MYSQL_SERVICE_PASSWORD=root
+    ports:                              # 映射端口
+      - "8848:8848"
+      - "9555:9555"

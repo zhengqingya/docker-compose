@@ -2,9 +2,22 @@
 
 ![docker-compose-liunx.png](image/docker-compose-liunx.png)
 
+## 安装docker
+
+```shell
+# 通过yum源安装docker
+sudo yum -y install docker
+# 启动docker
+sudo systemctl start docker
+# 开机自启
+sudo systemctl enable docker
+```
+
 ## `docker-compose`安装
 
 ```shell
+# 如果有pip则直接执行此命令即可: sudo pip install -U docker-compose
+
 # 安装依赖
 yum -y install epel-release
 # 安装PIP
@@ -71,6 +84,7 @@ docker run -it --net mynet --name container1 another_image
 ## 环境准备
 
 ```shell
+# 安装git命令： yum install -y git
 git clone https://gitee.com/zhengqingya/docker-compose.git
 cd docker-compose/Liunx
 ```
@@ -201,6 +215,9 @@ docker-compose -f docker-compose-minio.yml -p minio up -d
 
 ```shell
 docker-compose -f docker-compose-nacos.yml -p nacos up -d
+
+# mysql数据库版 【 需自己建库`nacos_config`, 并执行`/Windows/nacos_mysql/nacos-mysql.sql`脚本 】
+docker-compose -f docker-compose-nacos-mysql.yml -p nacos up -d
 ```
 
 访问地址：[`ip地址:8848/nacos`](www.zhengqingya.com:8848/nacos)
@@ -307,6 +324,27 @@ docker-compose -f docker-compose-graylog.yml -p graylog_demo up -d
 访问地址：[`http://ip地址:9001`](www.zhengqingya.com:9001)
 默认登录账号密码：`admin/admin`
 
+### FastDFS - 分布式文件系统
+
+```shell
+docker-compose -f docker-compose-fastdfs.yml -p fastdfs up -d
+```
+
+###### 测试
+
+```shell
+# 等待出现如下日志信息：
+# [2020-07-24 09:11:43] INFO - file: tracker_client_thread.c, line: 310, successfully connect to tracker server 39.106.45.72:22122, as a tracker client, my ip is 172.16.9.76
+
+# 进入storage容器
+docker exec -it fastdfs_storage /bin/bash
+# 进入`/var/fdfs`目录
+cd /var/fdfs
+# 执行如下命令,会返回在storage存储文件的路径信息,然后拼接上ip地址即可测试访问
+/usr/bin/fdfs_upload_file /etc/fdfs/client.conf test.jpg
+# ex:
+http://www.zhengqingya.com:8888/group1/M00/00/00/rBEAAl8aYsuABe4wAAhfG6Hv0Jw357.jpg
+```
 
 ==============================================================================\
 ========================  ↑↑↑↑↑↑ 环境部署 end ↑↑↑↑↑↑  ================================\
