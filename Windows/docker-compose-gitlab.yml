@@ -1,3 +1,4 @@
+# docker-compose.yml文件参考：https://github.com/sameersbn/docker-gitlab/blob/master/docker-compose.yml
 version: '2.3'
 
 services:

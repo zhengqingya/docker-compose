@@ -1,4 +1,4 @@
-# docker-compose
+# docker-compose-liunx
 
 ![docker-compose-liunx.png](image/docker-compose-liunx.png)
 
@@ -232,7 +232,6 @@ docker-compose -f docker-compose-sentinel.yml -p sentinel up -d
 访问地址：[`ip地址:8858`](www.zhengqingya.com:8858)
 登录账号密码：`sentinel/sentinel`
 
-
 ### Kafka
 
 ```shell
@@ -250,8 +249,6 @@ docker-compose -f docker-compose-tomcat.yml -p tomcat up -d
 访问地址：[`ip地址:8081`](www.zhengqingya.com:8081)
 
 ### GitLab
-
-> docker-compose-gitlab.yml文件参考：[https://github.com/sameersbn/docker-gitlab/blob/master/docker-compose.yml](https://github.com/sameersbn/docker-gitlab/blob/master/docker-compose.yml)
 
 ```shell
 docker-compose -f docker-compose-gitlab.yml -p gitlab up -d

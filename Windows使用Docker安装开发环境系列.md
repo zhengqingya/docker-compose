@@ -1,14 +1,10 @@
-# Windows使用Docker安装开发环境系列
+# docker-compose-windows
 
 ![docker-compose-windows.png](image/docker-compose-windows.png)
 
-## Docker安装
+## 环境准备
 
-[https://zhengqing.blog.csdn.net/article/details/103441358](https://zhengqing.blog.csdn.net/article/details/103441358)
-
-## 安装开发环境系列
-
-### 环境准备
+Docker安装教程：[https://zhengqing.blog.csdn.net/article/details/103441358](https://zhengqing.blog.csdn.net/article/details/103441358)
 
 > 注：建议使用`Git Bash Here`执行以下命令
 
@@ -20,6 +16,8 @@ cd E:/IT_zhengqing/soft/soft-dev/Docker
 git clone https://gitee.com/zhengqingya/docker-compose.git
 cd docker-compose/Windows
 ```
+
+## 运行服务
 
 ### 安装Docker可视化界面工具`Portainer`
 
@@ -181,8 +179,6 @@ docker-compose -f docker-compose-tomcat.yml -p tomcat up -d
 访问地址：[`http://127.0.0.1:8081`](http://127.0.0.1:8081)
 
 ### GitLab
-
-> docker-compose-gitlab.yml文件参考：[https://github.com/sameersbn/docker-gitlab/blob/master/docker-compose.yml](https://github.com/sameersbn/docker-gitlab/blob/master/docker-compose.yml)
 
 ```shell
 docker-compose -f docker-compose-gitlab.yml -p gitlab up -d
