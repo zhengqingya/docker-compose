@@ -1,5 +1,5 @@
 # docker-compose参考：https://github.com/nacos-group/nacos-docker/blob/master/example/standalone-mysql-5.7.yaml
-version: '3'
+version: '2'
 services:
   nacos:
     image: nacos/nacos-server:latest                             # 镜像`nacos/nacos-server:latest`
@@ -28,3 +28,4 @@ services:
     ports:                              # 映射端口
       - "8848:8848"
       - "9555:9555"
+    mem_limit: 300m   # 最大使用内存
