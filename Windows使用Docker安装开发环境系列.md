@@ -153,6 +153,20 @@ docker-compose -f docker-compose-nacos-mysql.yml -p nacos up -d
 访问地址：[`http://127.0.0.1:8848/nacos`](http://127.0.0.1:8848/nacos)
 登录账号密码默认：`nacos/nacos`
 
+> 注：`docker-compose-nacos-mysql.yml`已开启连接密码安全认证，在java连接时需新增配置如下
+
+```yml
+spring:
+  cloud:
+    nacos:
+      discovery:
+        username: nacos
+        password: nacos
+      config:
+        username: ${spring.cloud.nacos.discovery.username}
+        password: ${spring.cloud.nacos.discovery.password}
+```
+
 ### Sentinel
 
 ```shell

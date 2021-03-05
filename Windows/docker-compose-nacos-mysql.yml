@@ -8,6 +8,7 @@ services:
     volumes:                                                     # 数据卷挂载路径设置,将本机目录映射到容器目录
       - "./nacos_mysql/logs:/home/nacos/logs"
       - "./nacos_mysql/init.d/custom.properties:/home/nacos/init.d/custom.properties"
+      - "./nacos_mysql/conf/application.properties:/home/nacos/conf/application.properties"
     environment:                        # 设置环境变量,相当于docker run命令中的-e
       - PREFER_HOST_MODE=hostname                 # 如果支持主机名可以使用hostname,否则使用ip，默认也是ip
       - MODE=standalone                           # 单机模式启动
