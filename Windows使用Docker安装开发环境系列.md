@@ -311,3 +311,12 @@ log: mongodb load success...
 
 访问地址：[`http://127.0.0.1:3000`](http://127.0.0.1:3000)
 默认登录账号密码：`admin@admin.com/ymfe.org`
+
+
+### RocketMQ
+
+```shell
+docker-compose -f docker-compose-rocketmq.yml -p rocketmq up -d
+```
+
+访问地址：[`http://ip地址:9002`](www.zhengqingya.com:9002)
