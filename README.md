@@ -389,6 +389,16 @@ docker-compose -f docker-compose-rocketmq.yml -p rocketmq up -d
 访问地址：[`http://ip地址:9002`](www.zhengqingya.com:9002)
 
 
+### XXL-JOB - 分布式任务调度平台
+
+```shell
+docker-compose -f docker-compose-xxl-job.yml -p xxl-job up -d
+```
+
+访问地址：[`http://ip地址:9003`](www.zhengqingya.com:9003)
+默认登录账号密码：`admin/123456`
+
+
 ==============================================================================\
 ========================  ↑↑↑↑↑↑ 环境部署 end ↑↑↑↑↑↑  ================================\
 ==============================================================================\
