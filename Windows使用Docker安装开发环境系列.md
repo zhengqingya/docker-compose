@@ -321,7 +321,7 @@ log: mongodb load success...
 docker-compose -f docker-compose-rocketmq.yml -p rocketmq up -d
 ```
 
-访问地址：[`http://ip地址:9002`](www.zhengqingya.com:9002)
+访问地址：[`http://ip地址:9002`](http://127.0.0.1:9002)
 
 ### XXL-JOB - 分布式任务调度平台
 
@@ -329,5 +329,14 @@ docker-compose -f docker-compose-rocketmq.yml -p rocketmq up -d
 docker-compose -f docker-compose-xxl-job.yml -p xxl-job up -d
 ```
 
-访问地址：[`http://ip地址:9003`](www.zhengqingya.com:9003)
+访问地址：[`http://ip地址:9003/xxl-job-admin`](http://127.0.0.1:9003/xxl-job-admin)
 默认登录账号密码：`admin/123456`
+
+### MongoDB - 基于文档的通用分布式数据库
+
+```shell
+docker-compose -f docker-compose-mongodb.yml -p mongodb up -d
+```
+
+访问地址：[`http://ip地址:1234`](http://127.0.0.1:1234)
+Connection string：`mongodb://admin:123456@ip地址:27017`
