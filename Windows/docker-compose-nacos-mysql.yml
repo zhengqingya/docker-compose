@@ -2,7 +2,7 @@
 version: '2'
 services:
   nacos:
-    image: nacos/nacos-server:latest                             # 镜像`nacos/nacos-server:latest`
+    image: nacos/nacos-server:1.4.1                              # 镜像`nacos/nacos-server:1.4.1`
     container_name: nacos_server                                 # 容器名为'nacos_server'
     restart: always                                              # 指定容器退出后的重启策略为始终重启
     volumes:                                                     # 数据卷挂载路径设置,将本机目录映射到容器目录
