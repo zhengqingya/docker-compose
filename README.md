@@ -90,7 +90,7 @@ cd docker-compose/Liunx
 ```
 
 ====================================================================================\
-=========================  ↓↓↓↓↓↓ 环境部署 start ↓↓↓↓↓↓  ====================================\
+========================= ↓↓↓↓↓↓ 环境部署 start ↓↓↓↓↓↓ ====================================\
 ====================================================================================\
 
 ## 运行服务
@@ -295,6 +295,7 @@ docker-compose -f docker-compose-walle.yml -p walle up -d && docker-compose -f d
 
 访问地址：[`ip地址:80`](www.zhengqingya.com:80)
 初始登录账号如下：
+
 ```
 超管：super@walle-web.io \ Walle123
 所有者：owner@walle-web.io \ Walle123
@@ -388,7 +389,6 @@ docker-compose -f docker-compose-rocketmq.yml -p rocketmq up -d
 
 访问地址：[`http://ip地址:9002`](www.zhengqingya.com:9002)
 
-
 ### XXL-JOB - 分布式任务调度平台
 
 ```shell
@@ -407,7 +407,17 @@ docker-compose -f docker-compose-mongodb.yml -p mongodb up -d
 访问地址：[`http://ip地址:1234`](www.zhengqingya.com:1234)
 Connection string：`mongodb://admin:123456@ip地址:27017`
 
+### Zookeeper
+
+```shell
+docker-compose -f docker-compose-zookeeper.yml -p zookeeper up -d
+```
+
+可视化界面访问地址：[`http://ip地址:9090`](www.zhengqingya.com:9090)
+
+> 桌面可视化工具PrettyZoo: [https://github.com/vran-dev/PrettyZoo](https://github.com/vran-dev/PrettyZoo)
+
 
 ==============================================================================\
-========================  ↑↑↑↑↑↑ 环境部署 end ↑↑↑↑↑↑  ================================\
+======================== ↑↑↑↑↑↑ 环境部署 end ↑↑↑↑↑↑ ================================\
 ==============================================================================\
