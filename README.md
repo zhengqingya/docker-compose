@@ -110,7 +110,8 @@ docker-compose -f docker-compose-portainer.yml -p portainer up -d
 ### MySQL
 
 ```shell
-docker-compose -f docker-compose-mysql.yml -p mysql up -d
+# 5.7
+docker-compose -f docker-compose-mysql5.7.yml -p mysql up -d
 ```
 
 ### Yearning

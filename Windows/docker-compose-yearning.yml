@@ -1,10 +1,10 @@
 version: '3'
 services:
   mysql:
-    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/mysql5.7  # 原镜像`mysql:5.7`
-    container_name: mysql_3307                                   # 容器名为'mysql_3307'
-    restart: always                                              # 指定容器退出后的重启策略为始终重启
-    volumes:                                                     # 数据卷挂载路径设置,将本机目录映射到容器目录
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/mysql:5.7  # 原镜像`mysql:5.7`
+    container_name: mysql_3307                                    # 容器名为'mysql_3307'
+    restart: always                                               # 指定容器退出后的重启策略为始终重启
+    volumes:                                                      # 数据卷挂载路径设置,将本机目录映射到容器目录
       - "./yearning/mysql/my.cnf:/etc/mysql/my.cnf"
       - "./yearning/mysql/data:/var/lib/mysql"
       - "./yearning/mysql/conf.d:/etc/mysql/conf.d"

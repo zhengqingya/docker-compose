@@ -56,7 +56,8 @@ netsh interface portproxy add v4tov4 listenport=2375 connectaddress=127.0.0.1 co
 ### MySQL
 
 ```shell
-docker-compose -f docker-compose-mysql.yml -p mysql up -d
+# 5.7
+docker-compose -f docker-compose-mysql5.7.yml -p mysql up -d
 ```
 
 ### Yearning
