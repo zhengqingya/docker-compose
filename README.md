@@ -179,6 +179,8 @@ docker-compose -f docker-compose-nginx.yml -p nginx up -d
 docker-compose -f docker-compose-elasticsearch.yml -p elasticsearch up -d
 ```
 
+kibana访问地址：[`ip地址:5601/app/dev_tools#/console`](www.zhengqingya.com:5601/app/dev_tools#/console)
+
 ### RabbitMQ
 
 ```shell

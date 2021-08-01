@@ -1,0 +1,11 @@
+#
+# ** THIS IS AN AUTO-GENERATED FILE **
+#
+
+# Default Kibana configuration for docker target
+
+server.name: kibana
+server.host: "0.0.0.0"
+elasticsearch.hosts: [ "http://192.168.101.88:9200" ] # http://www.zhengqingya.com:9200 TODO 修改为自己的ip
+xpack.monitoring.ui.container.elasticsearch.enabled: true
+i18n.locale: zh-CN # 中文

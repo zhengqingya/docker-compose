@@ -1,14 +1,19 @@
 version: '3'
+
+# 网桥mongo -> 方便相互通讯
+networks:
+  es:
+
 services:
   elasticsearch:
-    image: elasticsearch                      # 镜像`elasticsearch`
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/elasticsearch:7.9.2      # 原镜像`elasticsearch:7.9.2`
     container_name: elasticsearch             # 容器名为'elasticsearch'
     restart: always                           # 指定容器退出后的重启策略为始终重启
-    # volumes:                                  # 数据卷挂载路径设置,将本机目录映射到容器目录
-    #      - "./elasticsearch/data:/usr/share/elasticsearch/data:rw"
-    #      - "./elasticsearch/conf/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
-    #      - "./elasticsearch/conf/jvm.options:/usr/share/elasticsearch/config/jvm.options"
-    #      - "./elasticsearch/logs:/usr/share/elasticsearch/logs:rw"
+    volumes:                                  # 数据卷挂载路径设置,将本机目录映射到容器目录
+      - "./elasticsearch/data:/usr/share/elasticsearch/data"
+      - "./elasticsearch/logs:/usr/share/elasticsearch/logs"
+      - "./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
+#      - "./elasticsearch/config/jvm.options:/usr/share/elasticsearch/config/jvm.options"
     environment:                              # 设置环境变量,相当于docker run命令中的-e
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
@@ -16,3 +21,20 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300"
+    networks:
+      - es
+
+  kibana:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/kibana:7.9.2       # 原镜像`kibana:7.9.2`
+    container_name: kibana
+    restart: always
+    volumes:
+      - ./elasticsearch/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    links:
+      - elasticsearch
+    networks:
+      - es
