@@ -1,7 +1,7 @@
 version: '3'
 services:
   redis:
-    image: redis:latest                                                               # 镜像'redis:latest'
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/redis:6.0.8                    # 镜像'redis:6.0.8'
     container_name: redis                                                             # 容器名为'redis'
     restart: always                                                                    # 指定容器退出后的重启策略为始终重启
     #    command: redis-server /etc/redis/redis.conf --requirepass 123456 --appendonly yes # 启动redis服务并添加密码为：123456,并开启redis持久化配置
