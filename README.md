@@ -176,6 +176,9 @@ docker-compose -f docker-compose-nginx.yml -p nginx up -d
 ### Elasticsearch
 
 ```shell
+# 赋予权限
+chmod -R 777 ./elasticsearch
+# 运行
 docker-compose -f docker-compose-elasticsearch.yml -p elasticsearch up -d
 ```
 
