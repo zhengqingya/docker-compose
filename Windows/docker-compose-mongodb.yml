@@ -7,7 +7,7 @@ networks:
 services:
   # mongodb
   mongodb:
-    image: mongo:latest
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/mongo:4.4.6  # 原镜像`mongo:4.4.6`
     restart: always
     container_name: mongodb
     environment:
