@@ -18,6 +18,7 @@ services:
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
       discovery.type: single-node
+      ES_JAVA_OPTS: "-Xmx512m -Xms512m"
     ports:
       - "9200:9200"
       - "9300:9300"
