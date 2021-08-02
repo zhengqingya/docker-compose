@@ -1,6 +1,6 @@
 version: '3'
 
-# 网桥mongo -> 方便相互通讯
+# 网桥es -> 方便相互通讯
 networks:
   es:
 
