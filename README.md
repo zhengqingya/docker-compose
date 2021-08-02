@@ -193,7 +193,7 @@ chmod -R 777 ./elk
 docker-compose -f docker-compose-elk.yml -p elk up -d
 ```
 
-kibana访问地址：[`ip地址:5601/app/dev_tools#/console`](www.zhengqingya.com:5601/app/dev_tools#/console)
+kibana访问地址：[`ip地址:5601`](www.zhengqingya.com:5601)
 
 ### RabbitMQ
 
