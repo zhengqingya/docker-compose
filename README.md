@@ -184,6 +184,17 @@ docker-compose -f docker-compose-elasticsearch.yml -p elasticsearch up -d
 
 kibana访问地址：[`ip地址:5601/app/dev_tools#/console`](www.zhengqingya.com:5601/app/dev_tools#/console)
 
+### ELK
+
+```shell
+# 当前目录下所有文件赋予权限(读、写、执行)
+chmod -R 777 ./elk
+# 运行
+docker-compose -f docker-compose-elk.yml -p elk up -d
+```
+
+kibana访问地址：[`ip地址:5601/app/dev_tools#/console`](www.zhengqingya.com:5601/app/dev_tools#/console)
+
 ### RabbitMQ
 
 ```shell

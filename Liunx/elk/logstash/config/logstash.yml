@@ -1,0 +1,3 @@
+http.host: "0.0.0.0"
+xpack.monitoring.elasticsearch.hosts: [ "http://elasticsearch:9200" ] # http://www.zhengqingya.com:9200 TODO 修改为自己的ip
+

@@ -1,0 +1,59 @@
+version: '3'
+
+# 网桥elk -> 方便相互通讯
+networks:
+  elk:
+
+services:
+  elasticsearch:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/elasticsearch:7.9.2      # 原镜像`elasticsearch:7.9.2`
+    container_name: elk_elasticsearch         # 容器名为'elk_elasticsearch'
+    restart: always                           # 指定容器退出后的重启策略为始终重启
+    volumes:                                  # 数据卷挂载路径设置,将本机目录映射到容器目录
+      - "./elk/elasticsearch/data:/usr/share/elasticsearch/data"
+      - "./elk/elasticsearch/logs:/usr/share/elasticsearch/logs"
+      - "./elk/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
+#      - "./elk/elasticsearch/config/jvm.options:/usr/share/elasticsearch/config/jvm.options"
+    environment:                              # 设置环境变量,相当于docker run命令中的-e
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+      discovery.type: single-node
+      ES_JAVA_OPTS: "-Xmx512m -Xms512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - elk
+
+  kibana:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/kibana:7.9.2       # 原镜像`kibana:7.9.2`
+    container_name: elk_kibana
+    restart: always
+    volumes:
+      - "./elk/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml"
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    links:
+      - elasticsearch
+    networks:
+      - elk
+
+  logstash:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/logstash:7.9.2     # 原镜像`logstash:7.9.2`
+    container_name: elk_logstash
+    restart: always
+    environment:
+      LS_JAVA_OPTS: "-Xmx512m -Xms512m"
+    volumes:
+      - "./elk/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml"
+      - "./elk/logstash/config/logstash.conf:/usr/share/logstash/config/logstash.conf"
+    command: logstash -f /usr/share/logstash/config/logstash.conf  # 指定logstash启动时使用的配置文件
+    ports:
+      - "9600:9600"
+      - "5044:5044"
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk
