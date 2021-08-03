@@ -1,0 +1,47 @@
+version: "3"
+
+# 网桥 -> 方便相互通讯
+networks:
+  prometheus:
+
+services:
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command: "--config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus"
+    ports:
+      - "9090:9090"
+    depends_on:
+      - exporter
+    networks:
+      - prometheus
+
+  exporter:
+    image: prom/node-exporter:latest
+    container_name: prometheus_exporter
+    ports:
+      - "9100:9100"
+    networks:
+      - prometheus
+
+  # 用于UI展示
+  grafana:
+    image: grafana/grafana
+    container_name: prometheus_grafana
+    restart: always
+    ports:
+      - "3000:3000"
+#    volumes:
+#      - "./prometheus/grafana/data:/var/lib/grafana"
+#      - "./prometheus/grafana/log:/var/log/grafana"
+#      - "/etc/localtime:/etc/localtime"
+    environment:
+      GF_EXPLORE_ENABLED: "true"
+      GF_SECURITY_ADMIN_PASSWORD: "admin"
+      GF_INSTALL_PLUGINS: "alexanderzobnin-zabbix-app"
+    depends_on:
+      - prometheus
+    networks:
+      - prometheus

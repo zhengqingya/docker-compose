@@ -451,6 +451,18 @@ docker-compose -f docker-compose-flowable.yml -p flowable up -d
 可视化界面访问地址：[`http://ip地址:9004/flowable-ui`](www.zhengqingya.com:9004/flowable-ui)
 默认登录账号密码：`admin/test`
 
+### Prometheus - 监控系统和时间序列数据库
+
+> 注：此为未完善版！
+
+```shell
+docker-compose -f docker-compose-prometheus.yml -p prometheus up -d
+```
+
+1. grafana访问地址：[`http://ip地址:3000`](www.zhengqingya.com:3000)
+   默认登录账号密码：`admin/admin`
+2. prometheus访问地址: [`http://ip地:9090`](http://127.0.0.1:9090)
+
 ==============================================================================\
 ======================== ↑↑↑↑↑↑ 环境部署 end ↑↑↑↑↑↑ ================================\
 ==============================================================================\
