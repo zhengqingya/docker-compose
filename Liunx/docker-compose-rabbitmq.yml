@@ -1,6 +1,5 @@
 # 环境变量可参考： https://www.rabbitmq.com/configure.html
 #               https://github.com/rabbitmq/rabbitmq-server/blob/master/deps/rabbit/docs/rabbitmq.conf.example
-#               https://github.com/rabbitmq/rabbitmq-server/blob/v3.7.x/deps/rabbit/docs/rabbitmq.config.example
 version: '3'
 services:
   rabbitmq:
@@ -12,10 +11,10 @@ services:
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
     volumes:                            # 数据卷挂载路径设置,将本机目录映射到容器目录
-#      - "./rabbitmq/config/rabbitmq.config:/etc/rabbitmq/rabbitmq.config"
-#      - "./rabbitmq/config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf"
+      - "./rabbitmq/config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf"
+      - "./rabbitmq/config/10-default-guest-user.conf:/etc/rabbitmq/conf.d/10-default-guest-user.conf"
       - "./rabbitmq/data:/var/lib/rabbitmq"
-#      - "./rabbitmq/log:/var/log/rabbitmq"
+      - "./rabbitmq/log:/var/log/rabbitmq"
     ports:                              # 映射端口
       - "5672:5672"
       - "15672:15672"
