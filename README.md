@@ -198,7 +198,13 @@ kibana访问地址：[`ip地址:5601`](www.zhengqingya.com:5601)
 ### RabbitMQ
 
 ```shell
+# 当前目录下所有文件赋予权限(读、写、执行)
+chmod -R 777 ./rabbitmq
+# 运行
 docker-compose -f docker-compose-rabbitmq.yml -p rabbitmq up -d
+
+# 运行3.7.8-management版本
+# docker-compose -f docker-compose-rabbitmq-3.7.8-management.yml -p rabbitmq up -d
 ```
 
 web管理端：[`ip地址:15672`](www.zhengqingya.com:15672)
