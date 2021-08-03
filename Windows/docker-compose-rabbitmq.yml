@@ -1,7 +1,7 @@
 version: '3'
 services:
   redis:
-    image: rabbitmq:3-management        # 镜像`rabbitmq:3-management` 【 注：该版本包含了web控制页面 】
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/rabbitmq:3-management        # 镜像`rabbitmq:3-management` 【 注：该版本包含了web控制页面 】
     container_name: rabbitmq            # 容器名为'rabbitmq'
     hostname: my-rabbit
     restart: always                     # 指定容器退出后的重启策略为始终重启
