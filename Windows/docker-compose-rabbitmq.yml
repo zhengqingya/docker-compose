@@ -11,6 +11,8 @@ services:
       RABBITMQ_DEFAULT_VHOST: my_vhost  # 主机名
       RABBITMQ_DEFAULT_USER: admin      # 登录账号
       RABBITMQ_DEFAULT_PASS: admin      # 登录密码
+    volumes: # 数据卷挂载路径设置,将本机目录映射到容器目录
+      - "./rabbitmq/data:/var/lib/rabbitmq"
     ports:                              # 映射端口
       - "5672:5672"
       - "15672:15672"
