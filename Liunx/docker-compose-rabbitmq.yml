@@ -14,7 +14,7 @@ services:
       - "./rabbitmq/config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf"
       - "./rabbitmq/config/10-default-guest-user.conf:/etc/rabbitmq/conf.d/10-default-guest-user.conf"
       - "./rabbitmq/data:/var/lib/rabbitmq"
-      - "./rabbitmq/log:/var/log/rabbitmq"
+#      - "./rabbitmq/log:/var/log/rabbitmq"
     ports:                              # 映射端口
       - "5672:5672"
       - "15672:15672"
