@@ -4,7 +4,7 @@ services:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/redis:6.0.8                    # 镜像'redis:6.0.8'
     container_name: redis                                                             # 容器名为'redis'
     restart: always                                                                   # 指定容器退出后的重启策略为始终重启
-    command: redis-server /etc/redis/redis.conf --requirepass 123456 --appendonly yes # 启动redis服务并添加密码为：123456,并开启redis持久化配置
+    command: redis-server /etc/redis/redis.conf --requirepass 123456 --appendonly no # 启动redis服务并添加密码为：123456,默认不开启redis-aof方式持久化配置
 #    command: redis-server --requirepass 123456 --appendonly yes # 启动redis服务并添加密码为：123456,并开启redis持久化配置
     environment:                        # 设置环境变量,相当于docker run命令中的-e
       TZ: Asia/Shanghai
