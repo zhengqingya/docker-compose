@@ -13,12 +13,13 @@ services:
       - PREFER_HOST_MODE=hostname                 # 如果支持主机名可以使用hostname,否则使用ip，默认也是ip
       - MODE=standalone                           # 单机模式启动
       - SPRING_DATASOURCE_PLATFORM=mysql          # 数据源平台 仅支持mysql或不保存empty
+      # TODO 修改mysql连接信息
       - MYSQL_SERVICE_HOST=www.zhengqingya.com    # 注：这里不能为`127.0.0.1`或`localhost`方式！！！
       - MYSQL_SERVICE_DB_NAME=nacos_config        # 所需sql脚本位于 `nacos-mysql/nacos-mysql.sql`
       - MYSQL_SERVICE_PORT=3306
       - MYSQL_SERVICE_USER=root
       - MYSQL_SERVICE_PASSWORD=root
-      # JVM调优参数
+      # TODO 修改JVM调优参数
       - JVM_XMS=128m   #-Xms default :2g
       - JVM_XMX=128m   #-Xmx default :2g
       - JVM_XMN=64m   #-Xmn default :1g

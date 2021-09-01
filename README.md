@@ -249,9 +249,10 @@ docker-compose -f docker-compose-minio.yml -p minio up -d
 ### Nacos
 
 ```shell
+# 注：需要修改docker-compose-nacos-mysql.yml 中相关数据库连接信息和JVM参数相关信息
 docker-compose -f docker-compose-nacos.yml -p nacos up -d
 
-# mysql数据库版 【 需自己建库`nacos_config`, 并执行`/Windows/nacos_mysql/nacos-mysql.sql`脚本 】
+# mysql数据库版 【 需自己建库`nacos_config`, 并执行`/Liunx/nacos_mysql/nacos-mysql.sql`脚本 】
 docker-compose -f docker-compose-nacos-mysql.yml -p nacos up -d
 ```
 
