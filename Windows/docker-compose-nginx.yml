@@ -1,7 +1,7 @@
 version: '3'
 services:
   nginx:
-    image: nginx:latest                 # 镜像`nginx:latest`
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/nginx:1.21.1                 # 镜像`nginx:1.21.1`
     container_name: nginx               # 容器名为'nginx'
     restart: always                     # 指定容器退出后的重启策略为始终重启
     volumes:                            # 数据卷挂载路径设置,将本机目录映射到容器目录
