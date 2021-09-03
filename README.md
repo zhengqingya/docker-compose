@@ -115,9 +115,6 @@ docker-compose -f docker-compose-portainer.yml -p portainer up -d
 ### MySQL
 
 ```shell
-# 创建bin-log日志存放位置
-mkdir -p ./mysql5.7/data/log-bin
-
 # 5.7
 docker-compose -f docker-compose-mysql5.7.yml -p mysql5.7 up -d
 # 8.0
