@@ -8,7 +8,7 @@ services:
     volumes:                                                      # 数据卷挂载路径设置,将本机目录映射到容器目录
       - "./mysql8.0/my.cnf:/etc/mysql/my.cnf"
       - "./mysql8.0/data:/var/lib/mysql"
-      - "./mysql8.0/conf.d:/etc/mysql/conf.d"
+#      - "./mysql8.0/conf.d:/etc/mysql/conf.d"
       - "./mysql8.0/mysql-files:/var/lib/mysql-files"
     environment:                        # 设置环境变量,相当于docker run命令中的-e
       TZ: Asia/Shanghai
