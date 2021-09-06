@@ -253,7 +253,10 @@ docker-compose -f docker-compose-minio.yml -p minio up -d
 docker-compose -f docker-compose-nacos.yml -p nacos up -d
 
 # mysql数据库版 【 需自己建库`nacos_config`, 并执行`/Liunx/nacos_mysql/nacos-mysql.sql`脚本 】
+# nacos1.4.1版本
 docker-compose -f docker-compose-nacos-mysql.yml -p nacos up -d
+# nacos2.0.3版本
+docker-compose -f docker-compose-nacos-mysql-2.0.3.yml -p nacos_v2.0.3 up -d
 ```
 
 访问地址：[`ip地址:8848/nacos`](www.zhengqingya.com:8848/nacos)
