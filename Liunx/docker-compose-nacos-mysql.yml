@@ -2,7 +2,7 @@
 version: '3'
 services:
   nacos:
-    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/nacos-server:1.4.1    # 镜像`nacos/nacos-server:1.4.1`
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/nacos-server:1.4.1    # 原镜像`nacos/nacos-server:1.4.1`
     container_name: nacos_server                                 # 容器名为'nacos_server'
     restart: always                                              # 指定容器退出后的重启策略为始终重启
     volumes:                                                     # 数据卷挂载路径设置,将本机目录映射到容器目录
@@ -22,10 +22,10 @@ services:
       # TODO 修改JVM调优参数
       - JVM_XMS=128m   #-Xms default :2g
       - JVM_XMX=128m   #-Xmx default :2g
-      - JVM_XMN=64m   #-Xmn default :1g
+      - JVM_XMN=64m    #-Xmn default :1g
       - JVM_MS=32m     #-XX:MetaspaceSize default :128m
       - JVM_MMS=32m    #-XX:MaxMetaspaceSize default :320m
-      - NACOS_DEBUG=n #是否开启远程debug，y/n，默认n
+      - NACOS_DEBUG=n  #是否开启远程debug，y/n，默认n
       - TOMCAT_ACCESSLOG_ENABLED=false #是否开始tomcat访问日志的记录，默认false
     ports:                              # 映射端口
       - "8848:8848"
