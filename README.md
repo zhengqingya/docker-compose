@@ -16,34 +16,26 @@ sudo systemctl enable docker
 ## `docker-compose`安装
 
 ```shell
-# 如果有pip则直接执行此命令即可: sudo pip3 install -U docker-compose
-
-# 安装依赖
-yum -y install epel-release
-# 安装PIP
-yum -y install python-pip
-# 升级PIP
-pip install --upgrade pip
-# 验证pip 版本
-pip --version
+# 安装EPEL软件包
+sudo yum -y install epel-release
+# 安装pip3
+sudo yum install -y python36-pip
+# 升级
+sudo pip3 install --upgrade pip
+# 验证pip3版本
 pip3 --version
-
-# 安装docker compose ( pip和pip3根据自己的环境选择 )
-pip install -U docker-compose==1.25.0
-# 或
-pip3 install -U docker-compose
-
-# 验证docker compose版本
+# docker-compose安装
+sudo pip3 install -U docker-compose
+# 验证docker-compose版本
 docker-compose --version
 # 安装补全插件
-curl -L https://raw.githubusercontent.com/docker/compose/1.25.0/contrib/completion/bash/docker-compose > /etc/bash_completion.d/docker-compose
+# curl -L https://raw.githubusercontent.com/docker/compose/1.25.0/contrib/completion/bash/docker-compose > /etc/bash_completion.d/docker-compose
 ```
 
 ## `docker-compose`卸载
 
 ```shell
-# pip卸载
-pip uninstall docker-compose
+pip3 uninstall docker-compose
 ```
 
 ## `docker-compose`相关命令
