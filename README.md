@@ -512,6 +512,14 @@ docker-compose -f docker-compose-zipkin.yml -p zipkin up -d
 可视化界面访问地址：[`http://ip地址:9411/zipkin`](www.zhengqingya.com:9411/zipkin)
 
 
+### Rancher - 开源容器管理平台
+
+```shell
+docker-compose -f docker-compose-rancher.yml -p rancher up -d
+```
+
+访问地址：[`http://ip地址:80`](www.zhengqingya.com:80)
+
 
 ==============================================================================\
 ======================== ↑↑↑↑↑↑ 环境部署 end ↑↑↑↑↑↑ ================================\
