@@ -6,7 +6,7 @@ services:
   mongo:
     image: mongo:3
     container_name: graylog_demo_mongo
-    restart: always
+    restart: unless-stopped
     #    volumes:
     #      - ./graylog/mongo_data:/data/db
     networks:
@@ -15,7 +15,7 @@ services:
   elasticsearch:
     image: elasticsearch
     container_name: graylog_demo_elasticsearch
-    restart: always
+    restart: unless-stopped
     #    volumes:
     #      - ./graylog/es_data:/usr/share/elasticsearch/data
     environment:
@@ -37,7 +37,7 @@ services:
   graylog:
     image: graylog/graylog:3.3
     container_name: graylog_demo_graylog
-    restart: always
+    restart: unless-stopped
     #    volumes:
     #      - ./graylog/graylog_data_journal:/usr/share/graylog/data/journal
     environment:

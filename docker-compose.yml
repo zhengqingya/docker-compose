@@ -11,7 +11,8 @@ services:
   yl3:
     image: xx                           # 镜像
     container_name: xx                  # 容器名为'xx'
-    restart: always                     # 指定容器退出后的重启策略为始终重启
+#    restart: always                     # 指定容器退出后的重启策略为始终重启
+    restart: unless-stopped             # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
     volumes:                            # 数据卷挂载路径设置,将本机目录映射到容器目录
       - "/xx/my.cnf:/xx/my.cnf"
     environment:                        # 设置环境变量,相当于docker run命令中的-e

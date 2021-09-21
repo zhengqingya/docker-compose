@@ -8,7 +8,7 @@ services:
   elasticsearch:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/elasticsearch:7.9.2      # 原镜像`elasticsearch:7.9.2`
     container_name: elasticsearch             # 容器名为'elasticsearch'
-    restart: always                           # 指定容器退出后的重启策略为始终重启
+    restart: unless-stopped                           # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
     volumes:                                  # 数据卷挂载路径设置,将本机目录映射到容器目录
       - "./elasticsearch/data:/usr/share/elasticsearch/data"
       - "./elasticsearch/logs:/usr/share/elasticsearch/logs"
@@ -28,7 +28,7 @@ services:
   kibana:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/kibana:7.9.2       # 原镜像`kibana:7.9.2`
     container_name: kibana
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./elasticsearch/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
     ports:

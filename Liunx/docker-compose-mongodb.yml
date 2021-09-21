@@ -8,7 +8,7 @@ services:
   # mongodb
   mongodb:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/mongo:4.4.6  # 原镜像`mongo:4.4.6`
-    restart: always
+    restart: unless-stopped
     container_name: mongodb
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
@@ -26,7 +26,7 @@ services:
   # 可视化图形工具
   adminmongo:
     image: mrvautin/adminmongo
-    restart: always
+    restart: unless-stopped
     container_name: adminmongo
     environment:
       - HOST=0.0.0.0

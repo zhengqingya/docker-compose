@@ -16,7 +16,7 @@ services:
       - /data/walle/mysql:/var/lib/mysql
     networks:
       - walle-net
-    restart: always
+    restart: unless-stopped
 
   python:
     image: alenx/walle-python:2.1
@@ -37,7 +37,7 @@ services:
       - db
     networks:
       - walle-net
-    restart: always
+    restart: unless-stopped
 
   web:
     image: alenx/walle-web:2.1
@@ -51,7 +51,7 @@ services:
       - python
     networks:
       - walle-net
-    restart: always
+    restart: unless-stopped
 
 networks:
   walle-net:

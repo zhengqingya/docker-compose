@@ -3,7 +3,7 @@ services:
   jenkins:
     image: jenkins/jenkins:lts                  # 镜像`jenkins/jenkins:lts`
     container_name: jenkins                     # 容器名为'jenkins'
-    restart: always                             # 指定容器退出后的重启策略为始终重启
+    restart: unless-stopped                             # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
     volumes:                                    # 数据卷挂载路径设置,将本机目录映射到容器目录 (下面映射可在容器中执行宿主机docker命令)
       - "/usr/bin/docker:/usr/bin/docker"
       - "/var/run/docker.sock:/var/run/docker.sock"

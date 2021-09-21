@@ -3,7 +3,7 @@ services:
   nginx:
     build: ./
     container_name: grafana_promtail_loki_nginx_demo_nginx
-    restart: always
+    restart: unless-stopped
     ports:
       - "80:80"
     volumes:
@@ -12,7 +12,7 @@ services:
   loki:
     image: grafana/loki:master
     container_name: grafana_promtail_loki_nginx_demo_loki
-    restart: always
+    restart: unless-stopped
     ports:
       - "3100:3100"
     volumes:
@@ -21,7 +21,7 @@ services:
   promtail:
     image: grafana/promtail:make-images-static-26a87c9
     container_name: grafana_promtail_loki_nginx_demo_promtail
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./:/etc/promtail
       - ./log:/var/log
@@ -30,7 +30,7 @@ services:
   grafana:
     image: grafana/grafana:master
     container_name: grafana_promtail_loki_nginx_demo_grafana
-    restart: always
+    restart: unless-stopped
     ports:
       - "3000:3000"
     environment:

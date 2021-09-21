@@ -11,7 +11,7 @@ services:
   yapi:
     image: mrjin/yapi:latest
     container_name: yapi_web
-    restart: always
+    restart: unless-stopped
     privileged: true
     environment:
       - VERSION=1.5.6
@@ -35,7 +35,7 @@ services:
   mongo:
     image:  mongo
     container_name: yapi_mongo
-    restart: always
+    restart: unless-stopped
     #    volumes:
     #      - "./yapi/mongo_data:/data/db"
     ports:

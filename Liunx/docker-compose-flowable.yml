@@ -6,7 +6,7 @@ services:
   flowable-ui:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/flowable-ui:6.6.0  # 原镜像`flowable/flowable-ui:6.6.0`
     container_name: flowable-ui
-    restart: always
+    restart: unless-stopped
     volumes:
       - "./flowable/mysql-connector-java-8.0.22.jar:/app/WEB-INF/lib/mysql-connector-java-8.0.22.jar"
     environment:

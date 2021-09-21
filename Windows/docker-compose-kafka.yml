@@ -4,7 +4,7 @@ services:
     image: zookeeper                                 # 原镜像`zookeeper`
     hostname: "zookeeper.local"
     container_name: zookeeper                        # 容器名为'zookeeper'
-    restart: always                                  # 指定容器退出后的重启策略为始终重启
+    restart: unless-stopped                                  # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
     ports:                                           # 映射端口
       - "2181:2181"
     networks:                                        # 设置网络别名
@@ -16,7 +16,7 @@ services:
     image: wurstmeister/kafka                                # 原镜像`wurstmeister/kafka`
     hostname: "kafka.local"
     container_name: kafka                                    # 容器名为'kafka'
-    restart: always                                          # 指定容器退出后的重启策略为始终重启
+    restart: unless-stopped                                          # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
     environment:                                                       # 设置环境变量,相当于docker run命令中的-e
       KAFKA_ADVERTISED_HOST_NAME: kafka.local                          # TODO 本机IP
       KAFKA_ADVERTISED_PORT: 9092                                      # 端口
@@ -37,7 +37,7 @@ services:
   kafka-manager:
     image: sheepkiller/kafka-manager                         # 原镜像`sheepkiller/kafka-manager`
     container_name: kafka-manager                            # 容器名为'kafka-manager'
-    restart: always                                          # 指定容器退出后的重启策略为始终重启
+    restart: unless-stopped                                          # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
     environment:                          # 设置环境变量,相当于docker run命令中的-e
       ZK_HOSTS: zookeeper:2181            # TODO zookeeper地址
       APPLICATION_SECRET: zhengqing

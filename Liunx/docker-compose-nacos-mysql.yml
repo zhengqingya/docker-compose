@@ -4,7 +4,7 @@ services:
   nacos:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/nacos-server:1.4.1    # 原镜像`nacos/nacos-server:1.4.1`
     container_name: nacos_server                                 # 容器名为'nacos_server'
-    restart: always                                              # 指定容器退出后的重启策略为始终重启
+    restart: unless-stopped                                              # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
     volumes:                                                     # 数据卷挂载路径设置,将本机目录映射到容器目录
       - "./nacos_mysql/logs:/home/nacos/logs"
       - "./nacos_mysql/init.d/custom.properties:/home/nacos/init.d/custom.properties"

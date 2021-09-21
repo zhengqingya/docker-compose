@@ -3,7 +3,7 @@ services:
   zookeeper:
     image: zookeeper:3.7.0
     container_name: zookeeper
-    restart: always
+    restart: unless-stopped
     volumes:
       - "./zookeeper/data:/data"
       - "./zookeeper/datalog:/datalog"
@@ -14,7 +14,7 @@ services:
   zookeeper-webui:
     image: tobilg/zookeeper-webui
     container_name: zookeeper-webui
-    restart: always
+    restart: unless-stopped
     environment:
       ZK_DEFAULT_NODE: zookeeper:2181
     depends_on:

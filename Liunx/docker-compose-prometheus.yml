@@ -30,7 +30,7 @@ services:
   grafana:
     image: grafana/grafana
     container_name: prometheus_grafana
-    restart: always
+    restart: unless-stopped
     ports:
       - "3000:3000"
 #    volumes:
