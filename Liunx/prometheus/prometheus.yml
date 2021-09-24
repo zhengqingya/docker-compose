@@ -20,13 +20,13 @@ scrape_configs:
   # prometheus
   - job_name: prometheus
     static_configs:
-      - targets: ['localhost:9090']
+      - targets: ['www.zhengqingya.com:9090']
         labels:
           instance: prometheus
 
   # 采集node exporter监控数据，即linux
   - job_name: linux
     static_configs:
-      - targets: ['localhost:9100']
+      - targets: ['www.zhengqingya.com:9100']
         labels:
           instance: localhost
