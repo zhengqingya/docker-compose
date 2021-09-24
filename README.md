@@ -460,6 +460,8 @@ docker-compose -f docker-compose-flowable.yml -p flowable up -d
 ### Prometheus - 监控系统和时间序列数据库
 
 > 注：此为未完善版！
+> `docker-compose-prometheus.yml` 需修改grafana中配置的mysql连接信息
+> `prometheus.yml` 自行配置
 
 ```shell
 docker-compose -f docker-compose-prometheus.yml -p prometheus up -d
@@ -467,7 +469,13 @@ docker-compose -f docker-compose-prometheus.yml -p prometheus up -d
 
 1. grafana访问地址：[`http://ip地址:3000`](www.zhengqingya.com:3000)
    默认登录账号密码：`admin/admin`
-2. prometheus访问地址: [`http://ip地:9090`](http://127.0.0.1:9090)
+2. prometheus访问地址: [`http://ip地址:9090`](www.zhengqingya.com:9090)
+3. exporter访问地址: [`http://ip地址:9100/metrics`](www.zhengqingya.com:9100/metrics)
+
+
+#### 其它
+
+1. grafana面板资源 https://grafana.com/grafana/dashboards
 
 ### Zipkin - 分布式追踪系统
 
