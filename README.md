@@ -1,5 +1,7 @@
 # docker-compose-liunx
 
+通过docker-compose编排一系列环境进行一键快速部署运行，小白运维神器。
+
 ![docker-compose-liunx.png](image/docker-compose-liunx.png)
 
 ## 安装docker
