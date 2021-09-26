@@ -53,6 +53,7 @@ services:
     ports:
       - "9600:9600"
       - "5044:5044"
+      - "10001-10010:10001-10010"
     depends_on:
       - elasticsearch
     networks:
