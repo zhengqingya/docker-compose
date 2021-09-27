@@ -47,12 +47,14 @@ services:
     environment:
       LS_JAVA_OPTS: "-Xmx512m -Xms512m"
     volumes:
+      - "./elk/logstash/data:/usr/share/logstash/data"
       - "./elk/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml"
-      - "./elk/logstash/config/logstash.conf:/usr/share/logstash/config/logstash.conf"
-    command: logstash -f /usr/share/logstash/config/logstash.conf  # 指定logstash启动时使用的配置文件
+#      - "./elk/logstash/config/logstash.conf:/usr/share/logstash/config/logstash.conf"
+      - "./elk/logstash/config/java-demo:/usr/share/logstash/config/java-demo"
+#    command: logstash -f /usr/share/logstash/config/logstash.conf  # 指定logstash启动时使用的配置文件 - 指定单个文件
+    command: logstash -f /usr/share/logstash/config/java-demo       # 指定logstash启动时使用的配置文件 - 指定目录夹（系统会自动读取文件夹下所有配置文件，并在内存中整合）
     ports:
       - "9600:9600"
-      - "5044:5044"
       - "10001-10010:10001-10010"
     depends_on:
       - elasticsearch

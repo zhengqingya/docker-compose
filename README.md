@@ -195,6 +195,8 @@ kibana访问地址：[`ip地址:5601/app/dev_tools#/console`](www.zhengqingya.co
 chmod -R 777 ./elk
 # 运行
 docker-compose -f docker-compose-elk.yml -p elk up -d
+# 若运行之后启动日志再次报相关权限问题，再次给新产生的文件赋予权限
+chmod -R 777 ./elk
 ```
 
 kibana访问地址：[`ip地址:5601`](www.zhengqingya.com:5601)
