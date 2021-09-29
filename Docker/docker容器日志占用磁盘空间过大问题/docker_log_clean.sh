@@ -13,7 +13,7 @@ set -eu
 
 echo "================== ↓↓↓↓↓↓ 清理docker容器日志 ↓↓↓↓↓↓ =================="
 
-logs=$(find /var/lib/docker/containers/ -name *-json.log*)
+logs=$(find /var/lib/docker/containers/ -name '*-json.log*')
 
 for log in $logs
 do
