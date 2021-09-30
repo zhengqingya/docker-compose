@@ -1,0 +1,90 @@
+# ============================== Filebeat inputs ===============================
+#input设置，支持Docker,Container,HTTP JSON,Log,Kafka,MQTT,NetFlow,Redis,TCP,DCP,Syslog,Stdin
+
+filebeat.inputs:
+  #input类型，默认是log
+  #一个type表示一个input，可以有多个
+  - type: log
+
+    #是否启用该type
+    enabled: true
+
+    #input文件的位置，可以有多个
+    paths:
+      - /usr/share/filebeat/my-log/*.log
+      - /usr/share/filebeat/my-log/test.log
+
+
+    #不发送包含str的内容，支持正则
+    exclude_lines: ['str']
+
+    #发送包含str的内容，支持正则
+    include_lines: ['str']
+
+    #忽略文件file，支持正则
+    exclude_files: ['file']
+
+    #向output的每一条内容添加额外的信息
+    #可以在output中根据该设置区分多个input
+    fields:
+      #向output内容添加一个级别定义信息
+      level: debug
+      #向output内容添加一个name信息
+      name: test
+
+      #output标签
+      #可以在output中根据该设置区分多个input
+      tags: ["logs1"]
+
+
+# ================================== Outputs ===================================
+
+#output设置，可以output到kafka,logstash,elasticsearch,redis,file,console,elastic cloud
+#output到任意一个都行
+
+# ---------------------------- Elasticsearch Output ----------------------------
+
+#output到elasticsearch
+output.elasticsearch:
+  #es主机访问URL，可以有多个，用逗号","隔开
+  hosts: ["http://www.zhengqingya.com:9200"]
+
+  #若使用API密钥连接到Elasticsearch，需设置以下配置
+#  api_key: "id:api_key"
+#  username: "elastic"
+#  password: "123456"
+
+
+# ------------------------------ Logstash Output -------------------------------
+
+#output到logstash
+#output.logstash:
+#  #logstash服务器地址，可以有多个，以逗号","隔开
+#  hosts: ["www.zhengqingya.com:5044"]
+#
+#  #hosts配置了多个主机时，是否将输出负载平衡到所有hosts主机
+#  loadbalance: true
+#
+#  #指定output到哪个索引
+#  index: filebeat
+#
+#  #HTTPS配置
+#  ssl.certificate_authorities: ["/etc/pki/root/ca.pem"]
+#  ssl.certificate: "/etc/pki/client/cert.pem"
+#  ssl.key: "/etc/pki/client/cert.key"
+
+
+# ================================== Logging ===================================
+
+#filebeat日志级别，error, warning, info, debug，默认info
+logging.level: info
+
+
+# ============================== Filebeat modules ==============================
+
+filebeat.config.modules:
+  #用于配置加载的全局模式
+  path: ${path.config}/modules.d/*.yml
+
+  #是否启用配置重载
+  reload.enabled: false
