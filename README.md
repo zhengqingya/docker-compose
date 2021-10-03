@@ -326,7 +326,10 @@ spring:
 ### Sentinel
 
 ```shell
+# 普通版
 docker-compose -f docker-compose-sentinel.yml -p sentinel up -d
+# 持久化配置到mysql版
+# docker-compose -f docker-compose-sentinel-mysql.yml -p sentinel up -d
 ```
 
 访问地址：[`ip地址:8858`](www.zhengqingya.com:8858)
