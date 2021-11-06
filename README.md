@@ -173,6 +173,41 @@ show slave status \G
 #               Replicate_Do_DB:
 ```
 
+###### 解决主从同步数据不一致问题
+
+```shell
+# 注意：操作的时候停止主库数据写入
+
+# 在从库查看主从同步状态
+docker exec -it mysql_slave /bin/bash
+mysql -uroot -proot
+show slave status \G
+#              Slave_IO_Running: Yes
+#             Slave_SQL_Running: No
+
+# 1、手动同步主从库数据
+# 先在从库停止主从同步
+stop slave;
+# 导出主库数据
+mysqldump -h www.zhengqingya.com -P 3306 -uroot -proot --all-databases > /tmp/all.sql
+# 导入到从库
+mysql -uroot -proot
+source /tmp/all.sql;
+
+# 2、开启主从同步
+# 查看主库状态 => 拿到File和Position字段的值
+docker exec -it mysql_master /bin/bash
+mysql -uroot -proot
+show master status;
+# 从库操作
+change master to master_host='www.zhengqingya.com',master_port=3306, master_user='slave', master_password='123456', master_log_file='mysql-bin.000004', master_log_pos= 488117, master_connect_retry=30;
+start slave;
+# 查看主从同步状态
+show slave status \G
+#              Slave_IO_Running: Yes
+#             Slave_SQL_Running: Yes
+```
+
 ### Yearning
 
 ```shell
