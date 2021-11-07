@@ -231,6 +231,16 @@ Navicat可视化工具连接参数
 
 ![mycat-connect.png](./image/mycat-connect.png)
 
+### Mycat-web
+
+> Mycat可视化运维的管理和监控平台
+
+```shell
+docker-compose -f docker-compose-mycat-web.yml -p mycat-web up -d
+```
+
+访问地址：[`ip地址:8082/mycat`](www.zhengqingya.com:8082/mycat)
+
 ### Yearning
 
 ```shell
