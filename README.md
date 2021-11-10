@@ -719,6 +719,16 @@ docker-compose -f docker-compose-rancher.yml -p rancher up -d
 
 访问地址：[`http://ip地址:80`](www.zhengqingya.com:80)
 
+### Seata - 分布式事务
+
+```shell
+# 运行
+docker-compose -f docker-compose-seata.yml -p seata up -d
+# 查看日志
+docker exec -it seata_server sh
+```
+
+
 
 ==============================================================================\
 ======================== ↑↑↑↑↑↑ 环境部署 end ↑↑↑↑↑↑ ================================\
