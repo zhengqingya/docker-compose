@@ -19,17 +19,15 @@ services:
       LANG: en_US.UTF-8
 #      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: rabbitmq-plugins enable rabbitmq_delayed_message_exchange
     volumes:                            # 数据卷挂载路径设置,将本机目录映射到容器目录
-      - "./rabbitmq-cluster/config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf"
-      - "./rabbitmq-cluster/data:/var/lib/rabbitmq"
+      - "./rabbitmq-cluster/rabbitmq-1/config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf"
+      - "./rabbitmq-cluster/rabbitmq-1/data:/var/lib/rabbitmq"
       - "./rabbitmq-cluster/plugins/rabbitmq_delayed_message_exchange-3.9.0.ez:/opt/rabbitmq/plugins/rabbitmq_delayed_message_exchange-3.9.0.ez"
-#      - "./rabbitmq/log:/var/log/rabbitmq"
       - "./rabbitmq-cluster/.erlang.cookie:/var/lib/rabbitmq/.erlang.cookie"
     ports:                              # 映射端口
       - "5672:5672"
       - "15672:15672"
     networks:
       - rabbitmq
-
 
   rabbitmq-2:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/rabbitmq:3.9.1-management        # 镜像`rabbitmq:3.9.1-management` 【 注：该版本包含了web控制页面 】
@@ -40,10 +38,9 @@ services:
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
     volumes:                            # 数据卷挂载路径设置,将本机目录映射到容器目录
-      - "./rabbitmq-cluster/config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf"
-      - "./rabbitmq-cluster/data:/var/lib/rabbitmq"
+      - "./rabbitmq-cluster/rabbitmq-2/config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf"
+      - "./rabbitmq-cluster/rabbitmq-2/data:/var/lib/rabbitmq"
       - "./rabbitmq-cluster/plugins/rabbitmq_delayed_message_exchange-3.9.0.ez:/opt/rabbitmq/plugins/rabbitmq_delayed_message_exchange-3.9.0.ez"
-#      - "./rabbitmq/log:/var/log/rabbitmq"
       - "./rabbitmq-cluster/.erlang.cookie:/var/lib/rabbitmq/.erlang.cookie"
     ports:                              # 映射端口
       - "5673:5672"

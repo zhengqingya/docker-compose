@@ -409,8 +409,17 @@ chmod -R 777 ./rabbitmq-cluster
 chmod 600 ./rabbitmq-cluster/.erlang.cookie
 # 运行 [ 注：如果之前有安装过，需要清除浏览器缓存和删除rabbitmq相关的存储数据(如:这里映射到宿主机的data数据目录)，再重装，否则会出现一定问题！ ]
 docker-compose -f docker-compose-rabbitmq-cluster.yml -p rabbitmq-cluster up -d
+
 # 执行脚本 => 配置集群
 sh ./rabbitmq-cluster/init-rabbitmq.sh
+
+# 配置镜像队列(允许内建双活冗余选项，与普通队列不同，镜像节点在集群中的其他节点拥有从队列拷贝，一旦主节点不可用，最老的从队列将被选举为新的主队列)
+docker exec -it rabbitmq-1 /bin/bash
+rabbitmqctl set_policy -p my_vhost ha-all "^" '{"ha-mode":"all"}' --apply-to all
+# 查看镜像队列`ha-all`
+rabbitmqctl list_policies -p my_vhost
+# 删除镜像队列`ha-all`
+rabbitmqctl clear_policy -p my_vhost ha-all
 ```
 
 web管理端：[`ip地址:15672`](www.zhengqingya.com:15672)
