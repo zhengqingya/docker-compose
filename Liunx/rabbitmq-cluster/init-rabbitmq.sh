@@ -23,15 +23,15 @@ echo "Starting to build rabbitmq cluster with two ram nodes."
 docker exec rabbitmq-2 /bin/bash -c 'rabbitmqctl stop_app'
 docker exec rabbitmq-2 /bin/bash -c 'rabbitmqctl reset'
 # 参数“--ram”表示设置为内存节点，忽略此参数默认为磁盘节点
-# docker exec rabbitmq-2 /bin/bash -c 'rabbitmqctl join_cluster rabbit@my-rabbit-1'
-docker exec rabbitmq-2 /bin/bash -c 'rabbitmqctl join_cluster --ram rabbit@my-rabbit-1'
+docker exec rabbitmq-2 /bin/bash -c 'rabbitmqctl join_cluster rabbit@my-rabbit-1'
+# docker exec rabbitmq-2 /bin/bash -c 'rabbitmqctl join_cluster --ram rabbit@my-rabbit-1'
 docker exec rabbitmq-2 /bin/bash -c 'rabbitmqctl start_app'
 
 
 # check cluster status
-echo "Check cluster status:"
-docker exec rabbitmq-1 /bin/bash -c 'rabbitmqctl cluster_status'
-docker exec rabbitmq-2 /bin/bash -c 'rabbitmqctl cluster_status'
+#echo "Check cluster status:"
+#docker exec rabbitmq-1 /bin/bash -c 'rabbitmqctl cluster_status'
+#docker exec rabbitmq-2 /bin/bash -c 'rabbitmqctl cluster_status'
 
 
 #echo "Starting to create user."

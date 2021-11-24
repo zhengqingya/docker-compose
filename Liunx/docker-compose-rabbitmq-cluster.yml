@@ -17,7 +17,6 @@ services:
     environment:                        # 设置环境变量,相当于docker run命令中的-e
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
-#      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: rabbitmq-plugins enable rabbitmq_delayed_message_exchange
     volumes:                            # 数据卷挂载路径设置,将本机目录映射到容器目录
       - "./rabbitmq-cluster/rabbitmq-1/config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf"
       - "./rabbitmq-cluster/rabbitmq-1/data:/var/lib/rabbitmq"
