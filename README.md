@@ -410,6 +410,9 @@ chmod 600 ./rabbitmq-cluster/.erlang.cookie
 # 运行 [ 注：如果之前有安装过，需要清除浏览器缓存和删除rabbitmq相关的存储数据(如:这里映射到宿主机的data数据目录)，再重装，否则会出现一定问题！ ]
 docker-compose -f docker-compose-rabbitmq-cluster.yml -p rabbitmq-cluster up -d
 
+# 启用延时插件
+docker exec rabbitmq-1 /bin/bash -c 'rabbitmq-plugins enable rabbitmq_delayed_message_exchange'
+
 # 执行脚本 => 配置集群
 sh ./rabbitmq-cluster/init-rabbitmq.sh
 

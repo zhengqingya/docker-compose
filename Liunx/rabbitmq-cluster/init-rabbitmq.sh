@@ -16,8 +16,6 @@ echo "Reset first rabbitmq node."
 docker exec rabbitmq-1 /bin/bash -c 'rabbitmqctl stop_app'
 docker exec rabbitmq-1 /bin/bash -c 'rabbitmqctl reset'
 docker exec rabbitmq-1 /bin/bash -c 'rabbitmqctl start_app'
-# 启用延时插件
-docker exec rabbitmq-1 /bin/bash -c 'rabbitmq-plugins enable rabbitmq_delayed_message_exchange'
 
 
 # build cluster
@@ -28,8 +26,6 @@ docker exec rabbitmq-2 /bin/bash -c 'rabbitmqctl reset'
 # docker exec rabbitmq-2 /bin/bash -c 'rabbitmqctl join_cluster rabbit@my-rabbit-1'
 docker exec rabbitmq-2 /bin/bash -c 'rabbitmqctl join_cluster --ram rabbit@my-rabbit-1'
 docker exec rabbitmq-2 /bin/bash -c 'rabbitmqctl start_app'
-# 启用延时插件
-docker exec rabbitmq-2 /bin/bash -c 'rabbitmq-plugins enable rabbitmq_delayed_message_exchange'
 
 
 # check cluster status
