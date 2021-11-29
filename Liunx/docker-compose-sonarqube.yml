@@ -14,8 +14,7 @@ services:
       - "./sonarqube/data:/opt/sonarqube/data"
       - "./sonarqube/logs:/opt/sonarqube/logs"
       - "./sonarqube/extensions/plugins/sonar-l10n-zh-plugin-1.19.jar:/opt/sonarqube/extensions/plugins/sonar-l10n-zh-plugin-1.19.jar"
-      - "./sonarqube/extensions/:/opt/sonarqube/extensions"
-      - "./sonarqube/conf/:/opt/sonarqube/conf"
+#      - "./sonarqube/conf:/opt/sonarqube/conf"
     environment:
       SONARQUBE_JDBC_USERNAME: root
       SONARQUBE_JDBC_PASSWORD: root
