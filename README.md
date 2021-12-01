@@ -769,6 +769,8 @@ docker exec -it seata_server sh
 
 ```shell
 docker-compose -f docker-compose-sonarqube.yml -p sonarqube up -d
+# mysql配置版
+# docker-compose -f docker-compose-sonarqube6.7.1.yml -p sonarqube up -d
 ```
 
 访问地址：[`http://ip地址:9005`](www.zhengqingya.com:9005)
