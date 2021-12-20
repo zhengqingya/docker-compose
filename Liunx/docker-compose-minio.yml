@@ -1,3 +1,4 @@
+# 可参考 https://docs.min.io/docs/minio-docker-quickstart-guide.html
 version: '3'
 services:
   minio:
@@ -14,11 +15,11 @@ services:
       MINIO_PROMETHEUS_AUTH_TYPE: "public"
       MINIO_ACCESS_KEY: "root"                        # 登录账号
       MINIO_SECRET_KEY: "password"                    # 登录密码
-    command: server /data
+    command: server /data  --console-address ":9001"
     logging:
       driver: "json-file"
       options:
         max-size: "100m"
     ports:                              # 映射端口
-      - "9001:9000"
+      - "9001:9001"
       - "42330:42330"
