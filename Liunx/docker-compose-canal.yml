@@ -41,6 +41,7 @@ services:
     environment:                              # 设置环境变量,相当于docker run命令中的-e
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
+      canal.register.ip: www.zhengqingya.com
       canal.admin.manager: canal_admin:8089
       canal.admin.port: 11110
       canal.admin.user: admin
