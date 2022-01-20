@@ -30,10 +30,7 @@ services:
     depends_on:                         # 解决容器依赖启动先后问题
       - yl1
       - yl2
-    build:                              # host(容器与宿主机网络相通 TODO 注：未实践)
-      context: .
-      network: host
-
+    network_mode: host # 容器使用宿主机网络 ( tips:此配置和`ports`/`links`不可结合使用 )
 
 
 
