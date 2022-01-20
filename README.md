@@ -782,12 +782,10 @@ docker-compose -f docker-compose-sonarqube.yml -p sonarqube up -d
 阿里巴巴 MySQL binlog 增量订阅&消费组件
 
 ```shell
-# tips: 先修改映射到宿主机的相关配置文件信息
-
 # 导入初始化SQL
 Liunx/canal/canal_admin/canal_manager.sql
 
-# 运行
+# 运行  (tips:先修改配置文件信息)
 docker-compose -f docker-compose-canal.yml -p canal up -d
 ```
 
