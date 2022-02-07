@@ -1,5 +1,7 @@
 ### Docker安装
 
+> 可参考 https://docs.docker.com/engine/install/centos
+
 ```shell
 # 通过yum源安装docker
 sudo yum -y install docker
