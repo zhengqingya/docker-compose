@@ -20,12 +20,13 @@ yum list installed |grep docker
 rpm -qa |grep docker
 # 删除所有安装的docker文件包 注：docker-ce根据上面查询显示的名称来选择 ex:"docker-ce.x86_64 0:18.06.0.ce-3.el7"
 yum -y remove docker-ce*
+sudo yum remove docker  docker-common docker-selinux docker-engine
 # 删除docker的镜像文件，默认在/var/lib/docker目录下 
 rm -rf /var/lib/docker
 ```
 
 
-## `docker-compose`安装
+### `docker-compose`安装
 
 ```shell
 # 安装EPEL软件包
@@ -44,13 +45,13 @@ docker-compose --version
 # curl -L https://raw.githubusercontent.com/docker/compose/1.25.0/contrib/completion/bash/docker-compose > /etc/bash_completion.d/docker-compose
 ```
 
-## `docker-compose`卸载
+### `docker-compose`卸载
 
 ```shell
 pip3 uninstall docker-compose
 ```
 
-## `docker-compose`相关命令
+### `docker-compose`相关命令
 
 ```shell
 # 构建镜像
@@ -73,7 +74,7 @@ docker-compose images
 docker-compose pull 镜像名
 ```
 
-## 常用shell组合
+### 常用shell组合
 
 ```shell
 # 删除所有容器
