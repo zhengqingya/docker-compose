@@ -37,6 +37,48 @@ systemctl restart docker
 docker run --net=host --name ubuntu_bash -i -t ubuntu:latest /bin/bash
 ```
 
-#### 法四：重装docker
+#### 法四：关闭SELinux
+
+```shell
+# 查看SELinux状态
+getenforce
+
+# 临时关闭SELinux
+setenforce 0
+
+# 永久关闭SELinux
+vim /etc/selinux/config
+# 将 `SELINUX=enforcing` 改成 `SELINUX=disabled`
+
+# 重启liunx
+reboot
+```
+
+#### 法五
+
+> 参考 https://github.com/coolsnowwolf/lede/issues/1760
+
+```shell
+# 修改配置
+echo "net.bridge.bridge-nf-call-ip6tables = 1" >> /etc/sysctl.conf
+echo "net.bridge.bridge-nf-call-iptables = 1" >> /etc/sysctl.conf
+echo "net.bridge.bridge-nf-call-arptables = 1" >> /etc/sysctl.conf
+
+# Luci > 网络 > 防火墙 > 转发：接受
+# Luci > 状态 > 防火墙 > 重启防火墙
+
+service docker restart
+```
+
+#### 法六：重装docker
 
 > 此方式乃是最后无奈之举了...
+
+
+---
+
+#### 临时测试容器内能够ping
+
+```shell
+docker run --rm alpine ping -c 5 baidu.com
+```
