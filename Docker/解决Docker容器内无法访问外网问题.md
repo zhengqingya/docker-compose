@@ -70,7 +70,16 @@ echo "net.bridge.bridge-nf-call-arptables = 1" >> /etc/sysctl.conf
 service docker restart
 ```
 
-#### 法六：重装docker
+#### 法六：
+
+```shell
+rm -rf /var/lib/docker/network/*
+
+systemctl restart docker
+```
+
+
+#### 法七：重装docker
 
 > 此方式乃是最后无奈之举了...
 

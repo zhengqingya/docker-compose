@@ -4,7 +4,8 @@
 
 ```shell
 # 通过yum源安装docker
-sudo yum -y install docker
+# sudo yum -y install docker
+sudo yum install docker-ce
 # 启动docker
 sudo systemctl start docker
 # 开机自启
