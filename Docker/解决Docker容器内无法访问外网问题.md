@@ -30,6 +30,13 @@ sysctl net.ipv4.ip_forward
 systemctl restart docker
 ```
 
-#### 法三：重装docker
+#### 法三：使用`--net=host`宿主机网络方式启动容器
+
+```shell
+# 示例
+docker run --net=host --name ubuntu_bash -i -t ubuntu:latest /bin/bash
+```
+
+#### 法四：重装docker
 
 > 此方式乃是最后无奈之举了...
