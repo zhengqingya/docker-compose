@@ -35,6 +35,8 @@ systemctl restart docker
 ```shell
 # 示例
 docker run --net=host --name ubuntu_bash -i -t ubuntu:latest /bin/bash
+
+docker run --net=host --rm alpine ping -c 5 baidu.com
 ```
 
 #### 法四：关闭SELinux
