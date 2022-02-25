@@ -203,14 +203,27 @@ chmod -R 777 ./redis
 chmod -R 777 ./redis-master-slave
 # 运行 -- 单机模式
 docker-compose -f docker-compose-redis.yml -p redis up -d
-# 运行 -- 主从复制模式
+# 运行 -- 主从复制模式（主写从读）
 docker-compose -f docker-compose-redis-master-slave.yml -p redis up -d
+# 运行 -- 哨兵模式（sentinel监视redis主从服务，当某个master服务下线时，自动将该master下的某个从服务升级为master服务替代已下线的master服务继续处理请求 -- 即主节点切换）
+docker-compose -f docker-compose-redis-master-slave-sentinel.yml -p redis up -d
 ```
 
 连接redis
 
 ```shell
 docker exec -it redis redis-cli -a 123456  # 密码为123456
+```
+
+哨兵模式查看 -- 未通过暂备份版
+
+```shell
+# 连接
+docker exec -it redis-sentinel-1 redis-cli -p 26379 -a 123456
+# 查看redis主信息
+sentinel master mymaster
+# 查看redis从信息
+sentinel slaves mymaster
 ```
 
 ### Jrebel
