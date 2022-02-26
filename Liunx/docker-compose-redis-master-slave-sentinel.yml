@@ -17,7 +17,7 @@ services:
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
     volumes:                            # 数据卷挂载路径设置,将本机目录映射到容器目录
-#      - "./redis-master-slave-sentinel/redis/master/data:/data"
+      - "./redis-master-slave-sentinel/redis/master/data:/data"
       - "./redis-master-slave-sentinel/redis/master/config/redis.conf:/etc/redis/redis.conf"  # `redis.conf`文件内容`http://download.redis.io/redis-stable/redis.conf`
     ports:                              # 映射端口
       - "6380:6380"
@@ -33,7 +33,7 @@ services:
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
     volumes:                            # 数据卷挂载路径设置,将本机目录映射到容器目录
-#      - "./redis-master-slave-sentinel/redis/slave-1/data:/data"
+      - "./redis-master-slave-sentinel/redis/slave-1/data:/data"
       - "./redis-master-slave-sentinel/redis/slave-1/config/redis.conf:/etc/redis/redis.conf"  # `redis.conf`文件内容`http://download.redis.io/redis-stable/redis.conf`
     ports:                              # 映射端口
       - "6381:6381"
@@ -53,7 +53,7 @@ services:
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
     volumes:                            # 数据卷挂载路径设置,将本机目录映射到容器目录
-#      - "./redis-master-slave-sentinel/redis/slave-2/data:/data"
+      - "./redis-master-slave-sentinel/redis/slave-2/data:/data"
       - "./redis-master-slave-sentinel/redis/slave-2/config/redis.conf:/etc/redis/redis.conf"  # `redis.conf`文件内容`http://download.redis.io/redis-stable/redis.conf`
     ports:                              # 映射端口
       - "6382:6382"
@@ -105,7 +105,7 @@ services:
     depends_on:
       - redis-master
       - redis-slave-1
-#      - redis-slave-2
+      - redis-slave-2
       - redis-sentinel-1
     links:
       - redis-master
