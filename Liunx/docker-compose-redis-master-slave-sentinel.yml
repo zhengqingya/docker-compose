@@ -53,7 +53,7 @@ services:
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
     volumes:                            # 数据卷挂载路径设置,将本机目录映射到容器目录
-      - "./redis-master-slave-sentinel/redis/slave-2/data:/data"
+#      - "./redis-master-slave-sentinel/redis/slave-2/data:/data"
       - "./redis-master-slave-sentinel/redis/slave-2/config/redis.conf:/etc/redis/redis.conf"  # `redis.conf`文件内容`http://download.redis.io/redis-stable/redis.conf`
     ports:                              # 映射端口
       - "6382:6382"
@@ -77,7 +77,7 @@ services:
     ports:
       - "26379:26379"
     volumes:
-      - "./redis-master-slave-sentinel/sentinel/redis-sentinel-1.conf:/etc/redis/sentinel.conf"
+      - "./redis-master-slave-sentinel/sentinel/redis-sentinel-1.conf:/etc/redis/sentinel.conf" # `sentinel.conf`文件内容`http://download.redis.io/redis-stable/sentinel.conf`
     networks:
       - redis
     depends_on:
@@ -97,15 +97,15 @@ services:
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
     ports:
-      - "26380:26379"
+      - "26380:26380"
     volumes:
-      - "./redis-master-slave-sentinel/sentinel/redis-sentinel-2.conf:/etc/redis/sentinel.conf"
+      - "./redis-master-slave-sentinel/sentinel/redis-sentinel-2.conf:/etc/redis/sentinel.conf" # `sentinel.conf`文件内容`http://download.redis.io/redis-stable/sentinel.conf`
     networks:
       - redis
     depends_on:
       - redis-master
       - redis-slave-1
-      - redis-slave-2
+#      - redis-slave-2
       - redis-sentinel-1
     links:
       - redis-master
@@ -120,9 +120,9 @@ services:
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
     ports:
-      - "26381:26379"
+      - "26381:26381"
     volumes:
-      - "./redis-master-slave-sentinel/sentinel/redis-sentinel-3.conf:/etc/redis/sentinel.conf"
+      - "./redis-master-slave-sentinel/sentinel/redis-sentinel-3.conf:/etc/redis/sentinel.conf" # `sentinel.conf`文件内容`http://download.redis.io/redis-stable/sentinel.conf`
     networks:
       - redis
     depends_on:
