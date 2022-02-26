@@ -215,7 +215,7 @@ docker-compose -f docker-compose-redis-master-slave-sentinel.yml -p redis up -d
 docker exec -it redis redis-cli -a 123456  # 密码为123456
 ```
 
-哨兵模式查看 -- 未通过暂备份版
+哨兵模式查看
 
 ```shell
 # 连接
