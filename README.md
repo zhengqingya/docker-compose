@@ -255,6 +255,8 @@ docker exec -it redis-6381 redis-cli -c -h redis-6381 -p 6381 -a 123456
 cluster info
 # 查看集群节点信息
 cluster nodes
+# 查看slots分片
+cluster slots
 ```
 
 ### Jrebel
