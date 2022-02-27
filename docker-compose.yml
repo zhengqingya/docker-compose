@@ -1,12 +1,24 @@
 version: '3'
+
+# 网桥xx -> 方便相互通讯
+networks:
+  xx:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.22.0.0/24"
+
 services:
   yl1:
     image: xx
-    links:                              # 配置指定容器与当前服务连接， 并指定服务别名
-      - "zookeeper:zk"
 
   yl2:
     image: xx
+    links:                              # 配置指定容器与当前服务连接， 并指定服务别名
+      - "yl1:zk"
+    networks:
+      xx:
+        ipv4_address: 172.22.0.11       # 设置固定IP地址
 
   yl3:
     image: xx                           # 镜像
