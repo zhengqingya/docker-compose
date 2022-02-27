@@ -24,7 +24,7 @@ services:
         - "6381:6381"
     networks:
       redis:
-        ipv4_address: 172.22.0.1
+        ipv4_address: 172.22.0.11
   redis-6382:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/redis:6.0.8                   # 镜像'redis:6.0.8'
     container_name: redis-6382                                                       # 容器名为'redis-6382'

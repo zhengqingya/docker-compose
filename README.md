@@ -212,13 +212,13 @@ docker-compose -f docker-compose-redis-master-slave-sentinel.yml -p redis up -d
 docker-compose -f docker-compose-redis-cluster.yml -p redis up -d
 ```
 
-连接redis
+###### 连接redis
 
 ```shell
 docker exec -it redis redis-cli -a 123456  # 密码为123456
 ```
 
-哨兵模式查看
+###### 哨兵模式查看
 
 ```shell
 # 连接
@@ -227,6 +227,25 @@ docker exec -it redis-sentinel-1 redis-cli -p 26379 -a 123456
 sentinel master mymaster
 # 查看redis从信息
 sentinel slaves mymaster
+```
+
+###### Redis Cluster 集群
+
+创建集群
+
+```shell
+docker exec -it redis-6381 redis-cli -h 172.22.0.11 -p 6381 -a 123456 --cluster create 172.22.0.11:6381 redis-6382:6382 redis-6383:6383 redis-6384:6384 redis-6385:6385 redis-6386:6386 --cluster-replicas 1
+```
+
+查看集群
+
+```shell
+# 连接集群某个节点
+docker exec -it redis-6381 redis-cli -c -h redis-6381 -p 6381 -a 123456
+# 查看集群信息
+cluster info
+# 查看集群节点信息
+cluster nodes
 ```
 
 ### Jrebel
