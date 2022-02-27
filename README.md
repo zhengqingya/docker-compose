@@ -208,6 +208,8 @@ docker-compose -f docker-compose-redis.yml -p redis up -d
 docker-compose -f docker-compose-redis-master-slave.yml -p redis up -d
 # 运行 -- 哨兵模式（sentinel监视redis主从服务，当某个master服务下线时，自动将该master下的某个从服务升级为master服务替代已下线的master服务继续处理请求 -- 即主节点切换）
 docker-compose -f docker-compose-redis-master-slave-sentinel.yml -p redis up -d
+# 运行 -- Redis Cluster 集群
+docker-compose -f docker-compose-redis-cluster.yml -p redis up -d
 ```
 
 连接redis
