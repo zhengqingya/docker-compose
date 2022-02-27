@@ -231,6 +231,14 @@ sentinel slaves mymaster
 
 ###### Redis Cluster 集群
 
+redis.conf中主要新增了如下配置
+
+```
+cluster-enabled yes
+cluster-config-file nodes-6379.conf
+cluster-node-timeout 15000
+```
+
 创建集群
 
 ```shell
