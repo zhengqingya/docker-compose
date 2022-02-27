@@ -202,6 +202,7 @@ docker-compose -f docker-compose-couchbase.yml -p couchbase up -d
 chmod -R 777 ./redis
 chmod -R 777 ./redis-master-slave
 chmod -R 777 ./redis-master-slave-sentinel
+chmod -R 777 ./redis-cluster
 # 运行 -- 单机模式
 docker-compose -f docker-compose-redis.yml -p redis up -d
 # 运行 -- 主从复制模式（主写从读）
