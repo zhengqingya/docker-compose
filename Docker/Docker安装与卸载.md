@@ -1,6 +1,8 @@
 ### Docker安装
 
 > 可参考 https://docs.docker.com/engine/install/centos
+> 
+> tips: 基于 CentOS Linux release 7.6.1810 (Core)
 
 ```shell
 # 通过yum源安装docker
