@@ -9,13 +9,15 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/usr/lib64/libltdl.so.7:/usr/lib/x86_64-linux-gnu/libltdl.so.7"
       - "./jenkins/jenkins_home:/var/jenkins_home"
+      # ThinBackup插件备份jenkins配置存储目录
+      - "./jenkins/jenkins_config:/var/jenkins_config"
       # 解决jenkins安装插件报错： An error occurred during installation: No such plugin: cloudbees-folder
       # 下载地址  http://ftp.icm.edu.pl/packages/jenkins/plugins/cloudbees-folder/
 #      - "./jenkins/jenkins_home/war/META-INF/detached-plugins/cloudbees-folder.hpi:/var/jenkins_home/war/META-INF/detached-plugins/cloudbees-folder.hpi"
     environment:                                # 设置环境变量,相当于docker run命令中的-e
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
-#      JAVA_OPTS: '-Djava.util.logging.config.file=/var/jenkins_home/log.properties -Duser.timezone=Asia/Shanghai -Dserver.port=8080'
+      JAVA_OPTS: '-Xmx1024M -Xms1024M -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:MaxNewSize=128m -Djava.util.logging.config.file=/var/jenkins_home/log.properties -Duser.timezone=Asia/Shanghai'
     user: root                                  # 使用root权限运行容器【docker中通过`-u root`命令】
     ports:                                      # 映射端口
       - "8080:8080"
