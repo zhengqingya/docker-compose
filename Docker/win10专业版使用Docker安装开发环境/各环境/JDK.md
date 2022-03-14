@@ -1,4 +1,4 @@
-### 8、Docker 安装 JDK
+### Docker 安装 JDK
 
 > 失败版！！！
 
