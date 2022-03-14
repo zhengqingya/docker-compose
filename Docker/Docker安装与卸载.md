@@ -12,6 +12,8 @@ sudo yum -y install docker
 sudo systemctl start docker
 # 开机自启
 sudo systemctl enable docker
+# 查看运行情况
+sudo service docker status
 ```
 
 ### Docker卸载
