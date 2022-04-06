@@ -96,10 +96,25 @@ cat /etc/resolv.conf
 docker run --rm alpine ping -c 5 baidu.com
 ```
 
-#### 法八：重装docker
+#### 法八：和网络工程师沟通下是否做了一定限制
+
+```shell
+# 先运行一个访问外网的程序
+docker run --rm alpine ping -c 50 baidu.com
+
+# 安装tcpdump
+yum install tcpdump
+# 利用tcpdump进行抓包分析
+tcpdump -i docker0 icmp
+# 发现有request包，表明本机到baidu的包，baidu是接收到的，可能是百度没响应（可能性不大）或者被公司防火墙阻断了
+```
+
+![tcpdump抓包docker0.png](../image/tcpdump抓包docker0.png)
+
+
+#### 法九：重装docker
 
 > 此方式乃是最后无奈之举了...
-
 
 ---
 
