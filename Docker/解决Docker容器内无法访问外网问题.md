@@ -80,8 +80,23 @@ rm -rf /var/lib/docker/network/*
 systemctl restart docker
 ```
 
+#### 法七：修改DNS客户端解析文件`resolv.conf`
 
-#### 法七：重装docker
+```shell
+# 写入Liunx的DNS客户端解析文件resolv.conf里
+#                 114.114.114.114 => 国内移动、电信和联通通用的DNS
+#                 8.8.8.8 => google提供，更适合国外以及访问国外网站的用户使用
+# echo nameserver 8.8.8.8 > /etc/resolv.conf
+echo nameserver 114.114.114.114 > /etc/resolv.conf
+
+# 查看配置
+cat /etc/resolv.conf
+
+# 测试
+docker run --rm alpine ping -c 5 baidu.com
+```
+
+#### 法八：重装docker
 
 > 此方式乃是最后无奈之举了...
 
