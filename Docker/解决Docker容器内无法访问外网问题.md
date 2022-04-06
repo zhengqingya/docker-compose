@@ -72,7 +72,7 @@ echo "net.bridge.bridge-nf-call-arptables = 1" >> /etc/sysctl.conf
 service docker restart
 ```
 
-#### 法六：
+#### 法六
 
 ```shell
 rm -rf /var/lib/docker/network/*
@@ -111,8 +111,24 @@ tcpdump -i docker0 icmp
 
 ![tcpdump抓包docker0.png](../image/tcpdump抓包docker0.png)
 
+#### 法九：宿主机防火墙开启伪装IP功能
 
-#### 法九：重装docker
+> tips: 感觉无用，小编直接关防火墙也没解决网络问题
+
+```shell
+# 查看防火墙状态
+firewall-cmd --state
+# 查看防火墙是否开启ip地址转发（ip地址伪装）
+firewall-cmd --query-masquerade
+# 开启ip地址转发
+firewall-cmd --add-masquerade --permanent
+# 将网络接口 docker0 加入 trusted zone，解决 DNS 问题
+firewall-cmd --permanent --zone=trusted --add-interface=docker0
+# 更新防火墙规则
+firewall-cmd --reload
+```
+
+#### 法十：重装docker
 
 > 此方式乃是最后无奈之举了...
 
@@ -123,3 +139,10 @@ tcpdump -i docker0 icmp
 ```shell
 docker run --rm alpine ping -c 5 baidu.com
 ```
+
+#### 小编个人问题记录 -- 未解决
+
+基于`电信网`环境，在局域网window上安装centos7.6系统，宿主机能正常访问外网，但容器内不行，且容器内dns解析有问题；
+如果直接访问ip的话，`tcpdump`抓包`docker0`发现只有请求，无任何响应。
+
+临时使用`--net=host`方式解决外网访问问题，还待持续研究!
