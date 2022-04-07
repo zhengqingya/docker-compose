@@ -14,7 +14,7 @@ services:
       - MODE=standalone                           # 单机模式启动
       - SPRING_DATASOURCE_PLATFORM=mysql          # 数据源平台 仅支持mysql或不保存empty
       - MYSQL_SERVICE_HOST=192.168.0.88           # 注：这里不能为`127.0.0.1`或`localhost`方式！！！
-      - MYSQL_SERVICE_DB_NAME=nacos_config        # 所需sql脚本位于 `nacos_mysql/nacos-mysql.sql`
+      - MYSQL_SERVICE_DB_NAME=nacos_config        # 所需sql脚本位于 `nacos_xxx/nacos-mysql.sql`
       - MYSQL_SERVICE_PORT=3306
       - MYSQL_SERVICE_USER=root
       - MYSQL_SERVICE_PASSWORD=root
