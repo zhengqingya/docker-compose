@@ -286,7 +286,14 @@ docker-compose -f docker-compose-jrebel.yml -p jrebel up -d
 ### Nginx
 
 ```shell
+# 运行
 docker-compose -f docker-compose-nginx.yml -p nginx up -d
+
+# 进入容器
+docker exec -it nginx /bin/bash
+
+# nginx修改配置后重载
+nginx -s reload
 ```
 
 访问地址：[`ip地址:80`](www.zhengqingya.com:80)
@@ -458,6 +465,8 @@ docker-compose -f docker-compose-nacos.yml -p nacos up -d
 docker-compose -f docker-compose-nacos-1.4.1.yml -p nacos_v1.4.1 up -d
 # nacos2.0.3版本
 docker-compose -f docker-compose-nacos-2.0.3.yml -p nacos_v2.0.3 up -d
+# nacos集群2.0.3版本
+docker-compose -f docker-compose-nacos-cluster-2.0.3.yml -p nacos_cluster_v2.0.3 up -d
 ```
 
 访问地址：[`ip地址:8848/nacos`](www.zhengqingya.com:8848/nacos)
@@ -475,6 +484,19 @@ spring:
       config:
         username: ${spring.cloud.nacos.discovery.username}
         password: ${spring.cloud.nacos.discovery.password}
+```
+
+集群
+![nacos_cluster_nodes.png](image/nacos_cluster_nodes.png)
+
+
+nginx配置修改生效
+
+```shell
+# 进入容器
+docker exec -it nacos_nginx /bin/bash
+# nginx修改配置后重载
+nginx -s reload
 ```
 
 ### Sentinel
