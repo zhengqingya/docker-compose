@@ -22,7 +22,7 @@ services:
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
     ports:                              # 映射端口
-      - "8880:80"
+      - "8880:8880"
     networks:
       - nacos
     depends_on:
