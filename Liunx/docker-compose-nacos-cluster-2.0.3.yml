@@ -65,3 +65,22 @@ services:
     networks:
       - nacos
     mem_limit: 1000m   # 最大使用内存
+  # nacos节点3
+  nacos_server_3:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/nacos-server:2.0.3    # 原镜像`nacos/nacos-server:2.0.3`
+    container_name: nacos_server_3                                           # 容器名为'nacos_server_3'
+    restart: unless-stopped                                              # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
+    env_file:
+      - ./nacos_cluster_2.0.3/env/nacos-hostname.env
+    volumes:                                                     # 数据卷挂载路径设置,将本机目录映射到容器目录
+      - "./nacos_cluster_2.0.3/nacos_3_logs:/home/nacos/logs"
+      - "./nacos_cluster_2.0.3/init.d/custom.properties:/home/nacos/init.d/custom.properties"
+      - "./nacos_cluster_2.0.3/conf/application.properties:/home/nacos/conf/application.properties"
+    ports:                              # 映射端口  (Nacos2.0版本相比1.X新增了gRPC的通信方式，因此需要增加2个端口：9848、9849)
+      - "28848:8848"
+      - "29848:9848"
+      - "29849:9849"
+      - "29555:9555"
+    networks:
+      - nacos
+    mem_limit: 1000m   # 最大使用内存

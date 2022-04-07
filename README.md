@@ -466,6 +466,7 @@ docker-compose -f docker-compose-nacos-1.4.1.yml -p nacos_v1.4.1 up -d
 # nacos2.0.3版本
 docker-compose -f docker-compose-nacos-2.0.3.yml -p nacos_v2.0.3 up -d
 # nacos集群2.0.3版本
+# -Dspring.cloud.nacos.discovery.server-addr=www.zhengqingya.com:8880 -Dspring.cloud.nacos.discovery.username=nacos -Dspring.cloud.nacos.discovery.password=nacos
 docker-compose -f docker-compose-nacos-cluster-2.0.3.yml -p nacos_cluster_v2.0.3 up -d
 ```
 
@@ -487,8 +488,7 @@ spring:
 ```
 
 集群
-![nacos_cluster_nodes.png](image/nacos_cluster_nodes.png)
-
+![nacos集群节点列表.png](image/nacos-cluster-nodes.png)
 
 nginx配置修改生效
 
@@ -497,6 +497,27 @@ nginx配置修改生效
 docker exec -it nacos_nginx /bin/bash
 # nginx修改配置后重载
 nginx -s reload
+```
+
+###### 问题
+
+客户端连接报错如下
+
+```
+request: /nacos/v1/ns/instance/list failed, servers: [www.zhengqingya.com:8848], code: 500, msg: server is DOWNnow, detailed error message: Optional[Distro protocol is not initialized]
+```
+
+解决：进入nacos容器删除`protocol`文件夹，重启nacos
+
+```shell
+docker exec nacos_server_1 /bin/bash -c 'rm -rf /home/nacos/data/protocol'
+docker restart nacos_server_1
+
+docker exec nacos_server_2 /bin/bash -c 'rm -rf /home/nacos/data/protocol'
+docker restart nacos_server_2
+
+docker exec nacos_server_3 /bin/bash -c 'rm -rf /home/nacos/data/protocol'
+docker restart nacos_server_3
 ```
 
 ### Sentinel
