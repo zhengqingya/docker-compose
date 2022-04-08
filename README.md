@@ -457,7 +457,7 @@ docker-compose -f docker-compose-minio.yml -p minio up -d
 ### Nacos
 
 ```shell
-# 注：需要修改docker-compose-nacos-mysql.yml 中相关数据库连接信息和JVM参数相关信息
+# 普通单机模式版本  注：需要修改docker-compose-nacos.yml 中相关数据库连接信息和JVM参数相关信息
 docker-compose -f docker-compose-nacos.yml -p nacos up -d
 
 # mysql数据库版 【 需自己建库`nacos_config`, 并执行`/Liunx/nacos_xxx/nacos-mysql.sql`脚本 】
@@ -466,7 +466,7 @@ docker-compose -f docker-compose-nacos-1.4.1.yml -p nacos_v1.4.1 up -d
 # nacos2.0.3版本
 docker-compose -f docker-compose-nacos-2.0.3.yml -p nacos_v2.0.3 up -d
 # nacos集群2.0.3版本
-# -Dspring.cloud.nacos.discovery.server-addr=www.zhengqingya.com:8880 -Dspring.cloud.nacos.discovery.username=nacos -Dspring.cloud.nacos.discovery.password=nacos
+# java客户端连接 "-Dspring.cloud.nacos.discovery.server-addr=www.zhengqingya.com:8880 -Dspring.cloud.nacos.discovery.username=nacos -Dspring.cloud.nacos.discovery.password=nacos"
 docker-compose -f docker-compose-nacos-cluster-2.0.3.yml -p nacos_cluster_v2.0.3 up -d
 ```
 
@@ -497,27 +497,6 @@ nginx配置修改生效
 docker exec -it nacos_nginx /bin/bash
 # nginx修改配置后重载
 nginx -s reload
-```
-
-###### 问题
-
-客户端连接报错如下
-
-```
-request: /nacos/v1/ns/instance/list failed, servers: [www.zhengqingya.com:8848], code: 500, msg: server is DOWNnow, detailed error message: Optional[Distro protocol is not initialized]
-```
-
-解决：进入nacos容器删除`protocol`文件夹，重启nacos
-
-```shell
-docker exec nacos_server_1 /bin/bash -c 'rm -rf /home/nacos/data/protocol'
-docker restart nacos_server_1
-
-docker exec nacos_server_2 /bin/bash -c 'rm -rf /home/nacos/data/protocol'
-docker restart nacos_server_2
-
-docker exec nacos_server_3 /bin/bash -c 'rm -rf /home/nacos/data/protocol'
-docker restart nacos_server_3
 ```
 
 ### Sentinel
