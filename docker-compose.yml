@@ -9,7 +9,8 @@ networks:
         - subnet: "172.22.0.0/24"
 
 services:
-  yl1:
+  # tips:不要使用带下划线的名称 ex:yl_1   原因：在某些程序里，解析不了此数据
+  yl-1:
     image: xx
 
   yl2:
