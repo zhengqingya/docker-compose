@@ -45,7 +45,8 @@ services:
     restart: unless-stopped
     ports:
       - "3000:3000"
-#    volumes:
+    volumes:
+      - "./prometheus/grafana/grafana.ini:/etc/grafana/grafana.ini" # 邮箱配置
 #      - "./prometheus/grafana/grafana-storage:/var/lib/grafana"
 #      - "./prometheus/grafana/public:/usr/share/grafana/public" # 这里面可处理汉化包 可参考 https://github.com/WangHL0927/grafana-chinese
 #      - "./prometheus/grafana/conf:/usr/share/grafana/conf"
