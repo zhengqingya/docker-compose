@@ -742,7 +742,9 @@ docker-compose -f docker-compose-prometheus.yml -p prometheus up -d
 
 #### 其它
 
-1. grafana面板资源 https://grafana.com/grafana/dashboards
+grafana面板资源 https://grafana.com/grafana/dashboards
+
+node-exporter =》 https://grafana.com/grafana/dashboards/8919
 
 ### Zipkin - 分布式追踪系统
 
