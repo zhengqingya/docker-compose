@@ -725,9 +725,8 @@ docker-compose -f docker-compose-flowable.yml -p flowable up -d
 可视化界面访问地址：[`http://ip地址:9004/flowable-ui`](www.zhengqingya.com:9004/flowable-ui)
 默认登录账号密码：`admin/test`
 
-### Prometheus - 监控系统和时间序列数据库
+### Prometheus - 开源的系统监控和报警系统
 
-> 注：此为未完善版！
 > `docker-compose-prometheus.yml` 需修改grafana中配置的mysql连接信息
 > `prometheus.yml` 自行配置
 
