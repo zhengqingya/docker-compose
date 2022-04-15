@@ -15,18 +15,18 @@ scrape_configs:
       password: 123456
     static_configs:
       - targets:
-          - 172.16.5.2:9200 # TODO 此处填写SpringBoot应用的IP+端口号
+          - 192.168.101.88:9200 # TODO 此处填写SpringBoot应用的IP+端口号
 
   # prometheus
   - job_name: prometheus
     static_configs:
-      - targets: ['www.zhengqingya.com:9090']
+      - targets: ['prometheus:9090']
         labels:
           instance: prometheus
 
   # 采集node exporter监控数据，即linux
   - job_name: linux
     static_configs:
-      - targets: ['www.zhengqingya.com:9100']
+      - targets: ['node-exporter:9100']
         labels:
           instance: localhost

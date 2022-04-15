@@ -731,7 +731,10 @@ docker-compose -f docker-compose-flowable.yml -p flowable up -d
 > `prometheus.yml` 自行配置
 
 ```shell
+# 运行
 docker-compose -f docker-compose-prometheus.yml -p prometheus up -d
+# 查看grafana日志
+docker logs -fn10 prometheus-grafana
 ```
 
 1. grafana访问地址：[`http://ip地址:3000`](www.zhengqingya.com:3000)
@@ -739,6 +742,9 @@ docker-compose -f docker-compose-prometheus.yml -p prometheus up -d
 2. prometheus访问地址: [`http://ip地址:9090`](www.zhengqingya.com:9090)
 3. exporter访问地址: [`http://ip地址:9100/metrics`](www.zhengqingya.com:9100/metrics)
 
+![prometheus-targets.png](image/prometheus-targets.png)
+
+![prometheus-grafana-jvm.png](image/prometheus-grafana-jvm.png)
 
 #### 其它
 
