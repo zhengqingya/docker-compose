@@ -26,8 +26,8 @@ yum list installed |grep docker
 # 查看docker相关的rpm源文件
 rpm -qa |grep docker
 # 删除所有安装的docker文件包 注：docker-ce根据上面查询显示的名称来选择 ex:"docker-ce.x86_64 0:18.06.0.ce-3.el7"
+# yum remove docker docker-common docker-selinux docker-engine
 yum -y remove docker*
-sudo yum remove docker  docker-common docker-selinux docker-engine
 # 删除docker的镜像文件，默认在/var/lib/docker目录下 
 rm -rf /var/lib/docker
 ```
