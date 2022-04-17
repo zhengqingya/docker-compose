@@ -47,6 +47,9 @@ EOF
 sudo systemctl daemon-reload
 
 sudo systemctl restart docker
+
+# 查看 `Registry Mirrors`
+docker info
 ```
 
 ---
