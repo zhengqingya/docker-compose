@@ -1,5 +1,4 @@
-# Watchtower - 自动更新 Docker 镜像与容器
-
+# 自动更新Docker镜像与容器 - Watchtower
 
 ### 自动清除旧镜像
 
@@ -29,7 +28,6 @@ docker run -d \
 
 可以建立一个更新列表文件, 然后通过变量的方式去调用这个列表
 
-
 ```shell script
 cd /zhengqingya/soft/docker
 # ① 
@@ -44,7 +42,6 @@ docker run -d \
     containrrr/watchtower -c \
     $(cat ~/.watchtower.list)
 ```
-
 
 ### 设置自动更新检查频率
 
@@ -70,7 +67,6 @@ docker run -d \
     containrrr/watchtower -c \
     --schedule "0 2 * * * *"
 ```
-
 
 ### 最终实战命令
 

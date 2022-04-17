@@ -1,4 +1,4 @@
-# Docker将容器打包成镜像
+# Docker基于容器创建一个新的镜像
 
 ```shell
 # -a :提交的镜像作者；
@@ -6,13 +6,15 @@
 # -m :提交时的说明文字；
 # -p :在commit时，将容器暂停。
 
-# bulid
+# 基于容器创建一个新的镜像
 docker commit -m "This is MySQL Database 5.7 image" -a "zhengqingya" mysql_server_test registry.cn-hangzhou.aliyuncs.com/zhengqing/mysql5.7:latest
 # push
 docker push registry.cn-hangzhou.aliyuncs.com/zhengqing/mysql5.7:latest
 ```
 
-###### ex: 提交一个centos6.6
+---
+
+### ex: 提交一个centos6.6
 
 ```shell
 # 拉取镜像
@@ -36,7 +38,7 @@ docker pull registry.cn-hangzhou.aliyuncs.com/zhengqing/centos:latest
 docker run -i -t registry.cn-hangzhou.aliyuncs.com/zhengqing/centos:latest bash
 ```
 
-###### ex: 提交redis
+### ex: 提交redis
 
 ```shell
 # 运行进入
@@ -56,7 +58,7 @@ docker push registry.cn-hangzhou.aliyuncs.com/zhengqing/redis_test:latest
 docker run --name redis_test_server -p 6000:6379 -d registry.cn-hangzhou.aliyuncs.com/zhengqing/redis_test:latest redis-server
 ```
 
-###### ex: 提交jenkins
+### ex: 提交jenkins
 
 ```shell
 # 检查容器里文件结构的更改

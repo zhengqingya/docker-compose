@@ -1,9 +1,6 @@
 # 常用命令
 
 ```shell
-# 重启docker 
-systemctl restart docker
-
 # 查看当前docker版本
 docker -v
 

@@ -10,6 +10,8 @@ sudo yum -y install docker
 # sudo yum install docker-ce
 # 启动docker
 sudo systemctl start docker
+# 重启docker 
+sudo systemctl restart docker
 # 开机自启
 sudo systemctl enable docker
 # 查看运行情况
