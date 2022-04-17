@@ -37,17 +37,13 @@ rm -rf /var/lib/docker
 ```shell
 # 修改daemon配置文件`/etc/docker/daemon.json`
 sudo mkdir -p /etc/docker
-
 sudo tee /etc/docker/daemon.json <<-'EOF'
 {
   "registry-mirrors": ["加速器地址"]
 }
 EOF
-
 sudo systemctl daemon-reload
-
 sudo systemctl restart docker
-
 # 查看 `Registry Mirrors`
 docker info
 ```
