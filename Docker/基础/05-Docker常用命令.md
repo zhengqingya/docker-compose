@@ -75,17 +75,26 @@ docker run -i -t 容器ID /bin/bash
 
 
 # 查看容器日志 -t:显示时间戳
-docker logs -f -t 容器id 
+docker logs -f -t 容器id
+docker logs -fn10 -t 容器id
+
+
+
 # 登陆镜像仓库
 docker login
 # 登录阿里云仓库
 docker login -u 用户名 -p 密码 registry.cn-hangzhou.aliyuncs.com
+
 # 获取镜像
 docker pull 镜像仓库地址
 # 上传镜像
 docker push 镜像仓库地址
+
+
 # 查看镜像的创建历史
 docker history 镜像仓库地址
+
+
 
 
 # 构造镜像
