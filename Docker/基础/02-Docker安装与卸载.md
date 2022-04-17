@@ -1,7 +1,7 @@
 ### Docker安装
 
 > 可参考 https://docs.docker.com/engine/install/centos
-> 
+>
 > tips: 基于 CentOS Linux release 7.6.1810 (Core)
 
 ```shell
@@ -32,6 +32,24 @@ yum -y remove docker*
 rm -rf /var/lib/docker
 ```
 
+### 配置镜像加速器
+
+```shell
+# 修改daemon配置文件`/etc/docker/daemon.json`
+sudo mkdir -p /etc/docker
+
+sudo tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["加速器地址"]
+}
+EOF
+
+sudo systemctl daemon-reload
+
+sudo systemctl restart docker
+```
+
+---
 
 ### `docker-compose`安装
 
