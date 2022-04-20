@@ -23,8 +23,11 @@ sudo systemctl start docker
 sudo systemctl restart docker
 # 开机自启
 sudo systemctl enable docker
+# 设置开机自启 & 现在启动
+sudo systemctl enable --now docker
+
 # 查看运行情况
-sudo service docker status
+sudo systemctl status docker
 
 # 测试
 docker run --rm alpine ping -c 5 baidu.com
