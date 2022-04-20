@@ -5,9 +5,18 @@
 > tips: 基于 CentOS Linux release 7.6.1810 (Core)
 
 ```shell
+# 配置yum源
+sudo yum install -y yum-utils
+sudo yum-config-manager \
+    --add-repo \
+    http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+
+
 # 通过yum源安装docker
-sudo yum -y install docker
-# sudo yum install docker-ce
+# sudo yum -y install docker
+# 指定版本安装
+sudo yum install -y docker-ce-20.10.7 docker-ce-cli-20.10.7 containerd.io-1.4.6
+
 # 启动docker
 sudo systemctl start docker
 # 重启docker 
@@ -16,20 +25,21 @@ sudo systemctl restart docker
 sudo systemctl enable docker
 # 查看运行情况
 sudo service docker status
+
+# 测试
+docker run --rm alpine ping -c 5 baidu.com
 ```
 
 ### Docker卸载
 
 ```shell
-# 查看yum安装的docker文件包
+# 查看yum安装的docker软件包
 yum list installed |grep docker
-# 查看docker相关的rpm源文件
-rpm -qa |grep docker
-# 删除所有安装的docker文件包 注：docker-ce根据上面查询显示的名称来选择 ex:"docker-ce.x86_64 0:18.06.0.ce-3.el7"
-# yum remove docker docker-common docker-selinux docker-engine
-yum -y remove docker*
-# 删除docker的镜像文件，默认在/var/lib/docker目录下 
+# 删除相关软件包
+yum -y remove docker* containerd.io
+# 删除关联数据
 rm -rf /var/lib/docker
+rm -rf /var/lib/containerd
 ```
 
 ### 配置镜像加速器
