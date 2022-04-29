@@ -23,8 +23,8 @@ docker images
 # 运行进入
 docker run -i -t centos:6.6 bash
 ls
-mkdir -p /IT_zhengqing/soft
-cd IT_zhengqing
+mkdir -p /zhengqingya/soft
+cd zhengqingya
 echo '测试' > test.txt
 exit
 # 查看操作
@@ -44,8 +44,8 @@ docker run -i -t registry.cn-hangzhou.aliyuncs.com/zhengqing/centos:latest bash
 # 运行进入
 docker run --name redis_server -p 6379:6379 -d redis:latest redis-server
 ls
-mkdir -p /IT_zhengqing/soft
-cd IT_zhengqing
+mkdir -p /zhengqingya/soft
+cd zhengqingya
 echo '测试' > test.txt
 exit
 # 查看操作
