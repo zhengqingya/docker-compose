@@ -6,6 +6,7 @@
 
 server.name: kibana
 server.host: "0.0.0.0"
+server.publicBaseUrl: "http://kibana:5601"  # 这里地址改为你访问kibana的地址，不能以 / 结尾
 elasticsearch.hosts: [ "http://elasticsearch:9200" ] # http://www.zhengqingya.com:9200 TODO 修改为自己的ip
 xpack.monitoring.ui.container.elasticsearch.enabled: true
 elasticsearch.username: "elastic"  # es账号
