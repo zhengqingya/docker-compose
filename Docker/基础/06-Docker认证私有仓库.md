@@ -1,11 +1,12 @@
 ### 认证私有仓库
 
 ```shell
-# 登陆镜像仓库
-docker login
+# 认证
+docker login -u 用户名 -p 密码 私有仓库地址
 # ex:认证阿里云
-docker login -u 用户名 -p 密码 registry.cn-hangzhou.aliyuncs.com
-docker login --username=xxx registry.cn-hangzhou.aliyuncs.com
+# docker login -u xxx registry.cn-hangzhou.aliyuncs.com
+# 认证harbor私服
+docker login -u admin -p Harbor12345 harbor.zhengqingya.com:11000
 ```
 
 ### 查看密码
@@ -25,19 +26,24 @@ cat ~/.docker/config.json
                 },
                 "registry.cn-hangzhou.aliyuncs.com": {
                         "auth": "emhxxxnLg=="
+                },
+                "harbor.zhengqingya.com:11000": {
+                        "auth": "YWRtaW46SGFyYm9yMTIzNDU="
                 }
         }
 }
 
 
 # 解密
-echo 'emhxxxnLg==' | base64 --decode
+echo 'YWRtaW46SGFyYm9yMTIzNDU=' | base64 --decode
 # username:password
 ```
 
 ### 移除认证凭证
 
 ```shell
-# 移除阿里云认证
+# 移除认证
+docker logout 私有仓库地址
+# ex:移除阿里云认证
 docker logout registry.cn-hangzhou.aliyuncs.com
 ```
