@@ -15,6 +15,8 @@ sudo service docker start
 
 #### 法二：开启宿主机的ipv4转发功能
 
+> 针对解决`WARNING: IPv4 forwarding is disabled. Networking will not work.`
+
 ```shell
 # 修改配置
 echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
