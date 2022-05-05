@@ -65,7 +65,7 @@ http:
 # Uncomment external_url if you want to enable external proxy
 # And when it enabled the hostname will no longer used
 # external_url: https://reg.mydomain.com:8433
-external_url: https://harbor.zhengqingya.com:11000
+external_url: http://harbor.zhengqingya.com:11000
 
 # The initial password of Harbor admin
 # It only works in first time to install harbor
