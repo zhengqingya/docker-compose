@@ -1,7 +1,10 @@
 ### 认证私有仓库
 
 ```shell
-# 认证阿里云
+# 登陆镜像仓库
+docker login
+# ex:认证阿里云
+docker login -u 用户名 -p 密码 registry.cn-hangzhou.aliyuncs.com
 docker login --username=xxx registry.cn-hangzhou.aliyuncs.com
 ```
 
