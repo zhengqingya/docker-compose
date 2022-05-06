@@ -29,6 +29,9 @@ echo '<!DOCTYPE html>
 # -m :提交时的说明文字；
 # -p :在commit时，将容器暂停。
 docker commit -m "This is my nginx image" -a "zhengqingya" nginx my-nginx:v1
+
+# 查看自制镜像
+docker images my-nginx:v1
 ```
 
 ### 导出镜像
