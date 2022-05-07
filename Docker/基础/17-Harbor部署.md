@@ -255,10 +255,14 @@ proxy:
 
 ```shell
 # 温馨小提示：在harbor安装目录下执行如下命令
+
 # 运行harbor
 docker-compose start
+
 # 停止harbor
 docker-compose stop
+# 删除harbor
+docker-compose rm
 ```
 
 
@@ -268,6 +272,8 @@ docker-compose stop
 
 ```shell
 docker login -u admin -p Harbor12345 127.0.0.1:11000
+# 通过ip认证需要配置`/etc/docker/daemon.json`
+# docker login -u admin -p Harbor12345 192.168.101.90:11000
 ```
 
 报错如下
@@ -282,18 +288,13 @@ docker login -u admin -p Harbor12345 127.0.0.1:11000
 sudo vim /etc/docker/daemon.json
 # 新增配置 { "insecure-registries":["harbor的ip:port"] }
 {
-   "insecure-registries": [ "127.0.0.1:11000" ] 
+   "insecure-registries": [ "192.168.101.90:11000" ] 
 }
 
 # 加载配置文件
 systemctl daemon-reload
 # 重启docker
 systemctl restart docker
-
-# 停止harbor
-docker-compose stop
-# 运行harbor
-docker-compose start
 ```
 
 ###### 法二：hosts解析
