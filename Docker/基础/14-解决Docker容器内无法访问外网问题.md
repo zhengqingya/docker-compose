@@ -130,7 +130,39 @@ firewall-cmd --permanent --zone=trusted --add-interface=docker0
 firewall-cmd --reload
 ```
 
-#### 法十：重装docker
+#### 法十：修改DNS解析配置
+
+```shell
+# 1、进入容器
+docker exex -it 容器ID/容器名 /bin/bash
+
+# 2、先查看DNS配置
+cat /etc/resolv.conf
+# 配置文件如下
+nameserver 127.0.0.11
+options timeout:2 attempts:3 rotate single-request-reopen ndots:0
+
+# 3、修改配置 => 注释`options timeout:2 attempts:3 rotate single-request-reopen ndots:0`即可
+nameserver 127.0.0.11
+# options timeout:2 attempts:3 rotate single-request-reopen ndots:0
+
+# 4、测试
+ping baidu.com
+```
+
+> 注： 网上有人说程序重启后，需手动修改，根本的解决办法如下
+> 这一步小编未测试！！！
+
+```shell
+# 注释其中的内容 `options timeout:2 attempts:3 rotate single-request-reopen ndots:0`
+# 原因为：`/etc/resolvconf/resolv.conf.d/tail`文件会默认覆盖 `/etc/resolv.conf` 中的最后一行配置。
+vim /etc/resolvconf/resolv.conf.d/tail
+
+# 使修改生效
+sudo resolvconf -u
+```
+
+#### 法十一：重装docker
 
 > 此方式乃是最后无奈之举了...
 
