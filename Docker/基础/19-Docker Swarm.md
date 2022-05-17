@@ -1,15 +1,14 @@
 ﻿# Docker Swarm
 
 - `Docker Compose`: 在单机上创建多个容器
-- `Docker Swarm`: 在多服务器上创建容器集群服务，更有利于微服务的部署
+- `Docker Swarm`: 在多服务器上创建容器集群服务 => 更有利于微服务的部署
 
 ### 环境准备
 
 | 机器           | 说明       |
 | -------------- | ---------- |
-| 192.168.101.20 | node1 |
-| 192.168.101.21 | node2  |
-| 192.168.101.22 | node3  |
+| 192.168.101.90 | node1 |
+| 192.168.101.22 | node2  |
 
 #### Docker安装
 
@@ -33,18 +32,20 @@
 ```shell
 docker pull swarm
 # `--advertise-addr`参数表示其它swarm中的worker节点使用此ip地址与manager联系。命令的输出包含了其它节点如何加入集群的命令。
-docker swarm init --advertise-addr 192.168.101.20
+docker swarm init --advertise-addr 192.168.101.90
 
 # 查看管理节点的 token
 docker swarm join-token manager
 # 查看工作节点的 token
-docker swarm join-token worker 	
+docker swarm join-token worker
 ```
+
+![docker-swarm-init.png](../../image/docker-swarm-init.png)
 
 #### 添加集群节点
 
 ```shell
-docker swarm join --token xxx 192.168.101.20:2377
+docker swarm join --token SWMTKN-1-5xqun1zp8r8vs96ebvg0h9md8bgzca574aefa0yuonja974klt-4vojkqztakadjjv688anzr30e 192.168.101.90:2377
 ```
 
 #### 查看集群节点
@@ -63,6 +64,8 @@ docker node ls
 # 查看节点详情
 docker node inspect 节点名称|节点ID
 ```
+
+![docker-swarm-cluster-nodes.png](../../image/docker-swarm-cluster-nodes.png)
 
 #### 删除节点
 
@@ -114,7 +117,11 @@ docker service inspect mynginx
 docker service ps mynginx
 ```
 
+![docker-swarm-service-nginx.png](../../image/docker-swarm-service-nginx.png)
+
 访问 `集群任意IP:80`
+
+![docker-swarm-service-nginx-run.png](../../image/docker-swarm-service-nginx-run.png)
 
 #### 弹性服务（动态扩缩容）
 
@@ -132,6 +139,8 @@ docker service update --replicas 3 mynginx
 docker service ps mynginx
 ```
 
+![docker-swarm-service-nginx-replicas.png](../../image/docker-swarm-service-nginx-replicas.png)
+
 #### 删除服务
 
 ```shell
@@ -145,12 +154,12 @@ docker service ls
 
 ```shell
 # 创建 5 个副本，每次更新 2 个，更新间隔 10s，20% 任务失败继续执行，超出 20% 执行回滚，每次回滚 2 个
-# --update-delay：定义滚动更新的时间间隔；
-# --update-parallelism：定义并行更新的副本数量，默认为 1；
-# --update-failure-action：定义容器启动失败之后所执行的动作；
-# --rollback-monitor：定义回滚的监控时间；
-# --rollback-parallelism：定义并行回滚的副本数量；
-# --rollback-max-failure-ratio：任务失败回滚比率，超过该比率执行回滚操作，0.2 表示 20%。
+#   --update-delay：定义滚动更新的时间间隔；
+#   --update-parallelism：定义并行更新的副本数量，默认为 1；
+#   --update-failure-action：定义容器启动失败之后所执行的动作；
+#   --rollback-monitor：定义回滚的监控时间；
+#   --rollback-parallelism：定义并行回滚的副本数量；
+#   --rollback-max-failure-ratio：任务失败回滚比率，超过该比率执行回滚操作，0.2 表示 20%。
 docker service create --replicas 5 --name redis \
     --update-delay 10s \
     --update-parallelism 2 \
@@ -159,7 +168,12 @@ docker service create --replicas 5 --name redis \
     --rollback-parallelism 2 \
     --rollback-max-failure-ratio 0.2 \
     redis:5
+    
+# 查看服务运行情况
+docker service ps redis
 ```
+
+![docker-swarm-service-redis.png](../../image/docker-swarm-service-redis.png)
 
 滚动更新
 
