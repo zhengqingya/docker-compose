@@ -115,6 +115,9 @@ docker service inspect mynginx
 
 # 查看服务运行在哪些节点上
 docker service ps mynginx
+
+# 测试删除其中1个nginx容器后，会自动创建1个新的nginx来保证一直运行上面指定的2个实例
+docker rm -f 容器ID/容器名
 ```
 
 ![docker-swarm-service-nginx.png](../../image/docker-swarm-service-nginx.png)
