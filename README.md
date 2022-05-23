@@ -515,7 +515,7 @@ docker-compose -f docker-compose-sentinel.yml -p sentinel up -d
 访问地址：[`ip地址:8858`](www.zhengqingya.com:8858)
 登录账号密码：`sentinel/sentinel`
 
-#### 规则持久化到nacos
+#### SpringCloud中规则持久化到nacos
 
 ```xml
 <!-- Sentinel规则持久化至Nacos -->
