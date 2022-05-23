@@ -504,8 +504,12 @@ nginx -s reload
 ```shell
 # 普通版
 docker-compose -f docker-compose-sentinel.yml -p sentinel up -d
-# 持久化配置到mysql版
+
+# 监控数据持久化到mysql版
 # docker-compose -f docker-compose-sentinel-mysql.yml -p sentinel up -d
+
+# 规则持久化到nacos
+# docker-compose -f docker-compose-sentinel-nacos.yml -p sentinel up -d
 ```
 
 访问地址：[`ip地址:8858`](www.zhengqingya.com:8858)
