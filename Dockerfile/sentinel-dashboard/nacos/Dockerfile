@@ -9,7 +9,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # 设置环境变量-运行时也可传参进来耍哈
 ENV SENTINEL_AUTH_USERNAME sentinel
 ENV SENTINEL_AUTH_PASSWORD sentinel
-ENV NACOS_SERVER_ADDR 127.0.0.1
+ENV NACOS_SERVER_ADDR 127.0.0.1:8848
 ENV NACOS_NAMESPACE dev
 ENV NACOS_GROUP sentinel-group
 ENV NACOS_USERNAME nacos

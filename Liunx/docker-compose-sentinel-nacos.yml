@@ -10,7 +10,7 @@ services:
       SENTINEL_AUTH_USERNAME: sentinel # sentinel账号
       SENTINEL_AUTH_PASSWORD: sentinel # sentinel密码
       # TODO nacos配置信息
-      NACOS_SERVER_ADDR: www.zhengqingya.com    # 注：这里不能为`127.0.0.1`或`localhost`方式！！！
+      NACOS_SERVER_ADDR: www.zhengqingya.com:8848    # 注：这里不能为`127.0.0.1`或`localhost`方式！！！
       NACOS_NAMESPACE: prod
       NACOS_GROUP: sentinel-group
       NACOS_USERNAME: nacos
