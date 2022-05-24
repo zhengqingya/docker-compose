@@ -533,6 +533,7 @@ spring:
     sentinel:
       enabled: true # 自动化配置是否生效
       eager: true   # 禁用控制台懒加载
+      web-context-unify: false # 关闭调用链路收敛 => 实现链路流控
       transport:
         dashboard: www.zhengqingya.com:8858 # 控制台地址
         client-ip: ${spring.cloud.client.ip-address} # 获取本机IP地址
