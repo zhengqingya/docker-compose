@@ -59,10 +59,10 @@ esac
 str=`file -L $JAVA | grep 64-bit`
 if [ -n "$str" ]; then
 #        JAVA_OPTS="-server -Xms2048m -Xmx3072m"
-        JAVA_OPTS="-server -Xms300m -Xmx300m"
+        JAVA_OPTS="-server -Xms500m -Xmx500m"
 else
 #        JAVA_OPTS="-server -Xms1024m -Xmx1024m"
-        JAVA_OPTS="-server -Xms300m -Xmx300m"
+        JAVA_OPTS="-server -Xms500m -Xmx500m"
 fi
 
 JAVA_OPTS="$JAVA_OPTS -XX:+UseG1GC -XX:MaxGCPauseMillis=250 -XX:+UseGCOverheadLimit -XX:+ExplicitGCInvokesConcurrent -XX:+PrintAdaptiveSizePolicy -XX:+PrintTenuringDistribution"
