@@ -962,6 +962,16 @@ docker-compose -f docker-compose-nps.yml -p nps up -d
 docker run -d --name npc --net=host ffdfgdfg/npc:v0.26.10 -server=服务端ip地址:8024 -vkey=唯一验证密钥 -type=tcp
 ```
 
+### OpenSumi
+
+一款帮助你快速搭建本地和云端 IDE 的框架。
+
+```shell
+docker-compose -f docker-compose-opensumi-web.yml -p opensumi-web up -d
+```
+
+访问地址：[`http://ip地址:20000`](www.zhengqingya.com:20000)
+
 
 ==============================================================================\
 ======================== ↑↑↑↑↑↑ 环境部署 end ↑↑↑↑↑↑ ================================\
