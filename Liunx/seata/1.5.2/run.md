@@ -4,6 +4,9 @@
 > `seata-server.properties` => https://github.com/seata/seata/blob/develop/script/config-center/config.txt
 
 ```shell
+# 新建数据库`seata-server`，导入sql脚本`./sql/seata-server.sql`
+# 修改seata配置文件`./seata-server/resources/application.yml`
+# 修改`docker-compose-seata.yml`相关IP配置
 # nacos命名空间`prod`下新建配置`seataServer.properties`
 # 运行
 docker-compose -f docker-compose-seata.yml -p seata up -d
