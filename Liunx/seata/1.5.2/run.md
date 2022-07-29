@@ -1,0 +1,27 @@
+### Seata - 分布式事务
+
+> `seata-server.sql` => https://github.com/seata/seata/blob/develop/script/server/db/mysql.sql
+> `seata-server.properties` => https://github.com/seata/seata/blob/develop/script/config-center/config.txt
+
+```shell
+# nacos命名空间`prod`下新建配置`seataServer.properties`
+# 运行
+docker-compose -f docker-compose-seata.yml -p seata up -d
+# 进入容器
+docker exec -it seata-server sh
+# 查看日志
+docker logs -f seata-server
+```
+
+访问seata控制台：[`ip地址:7091`](http://www.zhengqingya.com:7091)
+登录账号密码默认：`seata/seata`
+
+![seata-login.png](../../../image/seata-login.png)
+
+![seata-TransactionInfo.png](../../../image/seata-TransactionInfo.png)
+
+![seata-GlobalLockInfo.png](../../../image/seata-GlobalLockInfo.png)
+
+nacos服务注册
+
+![seata-nacos.png](../../../image/seata-nacos.png)
