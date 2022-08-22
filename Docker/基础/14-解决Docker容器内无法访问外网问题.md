@@ -54,7 +54,7 @@ setenforce 0
 vim /etc/selinux/config
 # 将 `SELINUX=enforcing` 改成 `SELINUX=disabled`
 
-# 重启liunx
+# 重启linux
 reboot
 ```
 
@@ -85,7 +85,7 @@ systemctl restart docker
 #### 法七：修改DNS客户端解析文件`resolv.conf`
 
 ```shell
-# 写入Liunx的DNS客户端解析文件resolv.conf里
+# 写入Linux的DNS客户端解析文件resolv.conf里
 #                 114.114.114.114 => 国内移动、电信和联通通用的DNS
 #                 8.8.8.8 => google提供，更适合国外以及访问国外网站的用户使用
 # echo nameserver 8.8.8.8 > /etc/resolv.conf

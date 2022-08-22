@@ -4,7 +4,7 @@
 
 ```shell
 # 导入初始化SQL
-Liunx/canal/canal/canal_admin/canal_manager.sql
+Linux/canal/canal/canal_admin/canal_manager.sql
 
 # 运行  (tips:先修改配置文件信息)
 docker-compose -f docker-compose-canal.yml -p canal up -d

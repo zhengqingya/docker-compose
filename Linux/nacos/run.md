@@ -4,7 +4,7 @@
 # 普通单机模式版本  注：需要修改docker-compose-nacos.yml 中相关数据库连接信息和JVM参数相关信息
 docker-compose -f docker-compose-nacos.yml -p nacos up -d
 
-# mysql数据库版 【 需自己建库`nacos_config`, 并执行`/Liunx/nacos_xxx/nacos-mysql.sql`脚本 】
+# mysql数据库版 【 需自己建库`nacos_config`, 并执行`/Linux/nacos_xxx/nacos-mysql.sql`脚本 】
 # nacos1.4.1版本
 docker-compose -f docker-compose-nacos-1.4.1.yml -p nacos_v1.4.1 up -d
 # nacos2.0.3版本
