@@ -1,4 +1,4 @@
-# docker run -d -p 8888:8888 registry.cn-hangzhou.aliyuncs.com/zhengqing/jrebel
+# docker run -d -p 8888:8888 --name jrebel registry.cn-hangzhou.aliyuncs.com/zhengqing/jrebel
 version: '3'
 services:
   jrebel:
