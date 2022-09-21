@@ -25,7 +25,11 @@ CMD java -jar /home/app.jar
 ### 构建镜像
 
 ```shell
-# 构建镜像 -f:指定Dockerfile文件路径 --no-cache:构建镜像时不使用缓存
+# 构建镜像
+# -f：指定Dockerfile文件路径
+# -t：镜像命名
+# --no-cache：构建镜像时不使用缓存
+# 最后有一个点 “.”：当构建的时候，由用户指定构建镜像的上下文环境路径，然后将此路径下的所有文件打包上传给Docker引擎，引擎内将这些内容展开后，就能获取到所有指定上下文中的文件了。
 docker build -f Dockerfile -t "registry.cn-hangzhou.aliyuncs.com/zhengqingya/demo:dev" . --no-cache
 ```
 
