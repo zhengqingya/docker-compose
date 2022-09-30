@@ -9,6 +9,7 @@ services:
       - "./mysql5.7/data:/var/lib/mysql"
 #      - "./mysql5.7/conf.d:/etc/mysql/conf.d"
       - "./mysql5.7/log/mysql/error.log:/var/log/mysql/error.log"
+      - "./mysql5.7/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d" # 可执行初始化sql脚本的目录 -- tips:`/var/lib/mysql`目录下无数据的时候才会执行(即第一次启动的时候才会执行)
     environment:                        # 设置环境变量,相当于docker run命令中的-e
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
