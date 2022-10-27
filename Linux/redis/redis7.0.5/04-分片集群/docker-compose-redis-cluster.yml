@@ -13,7 +13,9 @@ services:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/redis:7.0.5                   # 镜像'redis:7.0.5'
     container_name: redis-6381                                                       # 容器名为'redis-6381'
     restart: unless-stopped                                                                   # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
-    command: redis-server /etc/redis/redis.conf --port 6381 --requirepass 123456 --appendonly no  # 启动redis服务并添加密码为：123456,默认不开启redis-aof方式持久化配置,连接并认证master节点
+    # 启动redis服务并添加密码为：123456,默认不开启redis-aof方式持久化配置
+    # `--slave-announce-ip 宿主机IP --slave-announce-port 端口`: 填写宿主机ip和端口 =》 强制绑定IP和端口号，默认为容器内部的ip信息
+    command: redis-server /etc/redis/redis.conf --port 6381 --slave-announce-ip 172.16.16.88 --slave-announce-port 6381 --requirepass 123456 --appendonly no
     environment:                        # 设置环境变量,相当于docker run命令中的-e
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
@@ -29,7 +31,9 @@ services:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/redis:7.0.5                   # 镜像'redis:7.0.5'
     container_name: redis-6382                                                       # 容器名为'redis-6382'
     restart: unless-stopped                                                                   # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
-    command: redis-server /etc/redis/redis.conf --port 6382 --requirepass 123456 --appendonly no  # 启动redis服务并添加密码为：123456,默认不开启redis-aof方式持久化配置,连接并认证master节点
+    # 启动redis服务并添加密码为：123456,默认不开启redis-aof方式持久化配置
+    # `--slave-announce-ip 宿主机IP --slave-announce-port 端口`: 填写宿主机ip和端口 =》 强制绑定IP和端口号，默认为容器内部的ip信息
+    command: redis-server /etc/redis/redis.conf --port 6382 --slave-announce-ip 172.16.16.88 --slave-announce-port 6382 --requirepass 123456 --appendonly no
     environment:                        # 设置环境变量,相当于docker run命令中的-e
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
@@ -45,7 +49,9 @@ services:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/redis:7.0.5                   # 镜像'redis:7.0.5'
     container_name: redis-6383                                                       # 容器名为'redis-6383'
     restart: unless-stopped                                                                   # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
-    command: redis-server /etc/redis/redis.conf --port 6383 --requirepass 123456 --appendonly no  # 启动redis服务并添加密码为：123456,默认不开启redis-aof方式持久化配置,连接并认证master节点
+    # 启动redis服务并添加密码为：123456,默认不开启redis-aof方式持久化配置
+    # `--slave-announce-ip 宿主机IP --slave-announce-port 端口`: 填写宿主机ip和端口 =》 强制绑定IP和端口号，默认为容器内部的ip信息
+    command: redis-server /etc/redis/redis.conf --port 6383 --slave-announce-ip 172.16.16.88 --slave-announce-port 6383 --requirepass 123456 --appendonly no
     environment:                        # 设置环境变量,相当于docker run命令中的-e
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
@@ -61,7 +67,9 @@ services:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/redis:7.0.5                   # 镜像'redis:7.0.5'
     container_name: redis-6384                                                       # 容器名为'redis-6384'
     restart: unless-stopped                                                                   # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
-    command: redis-server /etc/redis/redis.conf --port 6384 --requirepass 123456 --appendonly no  # 启动redis服务并添加密码为：123456,默认不开启redis-aof方式持久化配置,连接并认证master节点
+    # 启动redis服务并添加密码为：123456,默认不开启redis-aof方式持久化配置
+    # `--slave-announce-ip 宿主机IP --slave-announce-port 端口`: 填写宿主机ip和端口 =》 强制绑定IP和端口号，默认为容器内部的ip信息
+    command: redis-server /etc/redis/redis.conf --port 6384 --slave-announce-ip 172.16.16.88 --slave-announce-port 6384 --requirepass 123456 --appendonly no
     environment:                        # 设置环境变量,相当于docker run命令中的-e
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
@@ -77,7 +85,9 @@ services:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/redis:7.0.5                   # 镜像'redis:7.0.5'
     container_name: redis-6385                                                       # 容器名为'redis-6385'
     restart: unless-stopped                                                                   # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
-    command: redis-server /etc/redis/redis.conf --port 6385 --requirepass 123456 --appendonly no  # 启动redis服务并添加密码为：123456,默认不开启redis-aof方式持久化配置,连接并认证master节点
+    # 启动redis服务并添加密码为：123456,默认不开启redis-aof方式持久化配置
+    # `--slave-announce-ip 宿主机IP --slave-announce-port 端口`: 填写宿主机ip和端口 =》 强制绑定IP和端口号，默认为容器内部的ip信息
+    command: redis-server /etc/redis/redis.conf --port 6385 --slave-announce-ip 172.16.16.88 --slave-announce-port 6385 --requirepass 123456 --appendonly no
     environment:                        # 设置环境变量,相当于docker run命令中的-e
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
@@ -93,7 +103,9 @@ services:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/redis:7.0.5                    # 镜像'redis:7.0.5'
     container_name: redis-6386                                                        # 容器名为'redis-6386'
     restart: unless-stopped                                                                   # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
-    command: redis-server /etc/redis/redis.conf --port 6386 --requirepass 123456 --appendonly no  # 启动redis服务并添加密码为：123456,默认不开启redis-aof方式持久化配置
+    # 启动redis服务并添加密码为：123456,默认不开启redis-aof方式持久化配置
+    # `--slave-announce-ip 宿主机IP --slave-announce-port 端口`: 填写宿主机ip和端口 =》 强制绑定IP和端口号，默认为容器内部的ip信息
+    command: redis-server /etc/redis/redis.conf --port 6386 --slave-announce-ip 172.16.16.88 --slave-announce-port 6386 --requirepass 123456 --appendonly no
     environment:                        # 设置环境变量,相当于docker run命令中的-e
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
