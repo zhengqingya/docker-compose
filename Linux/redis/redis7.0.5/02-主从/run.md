@@ -11,5 +11,5 @@ docker-compose -f docker-compose-redis-master-slave.yml -p redis up -d
 
 ```shell
 # 密码为123456
-docker exec -it redis redis-cli -a 123456
+docker exec -it redis-master redis-cli -p 6380 -a 123456
 ```
