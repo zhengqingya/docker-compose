@@ -6,7 +6,7 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: "172.22.0.0/24"
+        - subnet: "172.28.0.0/24"
 
 services:
   redis-6381:
@@ -24,7 +24,7 @@ services:
         - "6381:6381"
     networks:
       redis:
-        ipv4_address: 172.22.0.11
+        ipv4_address: 172.28.0.11
   redis-6382:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/redis:7.0.5                   # 镜像'redis:7.0.5'
     container_name: redis-6382                                                       # 容器名为'redis-6382'
@@ -40,7 +40,7 @@ services:
         - "6382:6382"
     networks:
       redis:
-        ipv4_address: 172.22.0.2
+        ipv4_address: 172.28.0.2
   redis-6383:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/redis:7.0.5                   # 镜像'redis:7.0.5'
     container_name: redis-6383                                                       # 容器名为'redis-6383'
@@ -56,7 +56,7 @@ services:
         - "6383:6383"
     networks:
       redis:
-        ipv4_address: 172.22.0.3
+        ipv4_address: 172.28.0.3
   redis-6384:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/redis:7.0.5                   # 镜像'redis:7.0.5'
     container_name: redis-6384                                                       # 容器名为'redis-6384'
@@ -72,7 +72,7 @@ services:
         - "6384:6384"
     networks:
       redis:
-        ipv4_address: 172.22.0.4
+        ipv4_address: 172.28.0.4
   redis-6385:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/redis:7.0.5                   # 镜像'redis:7.0.5'
     container_name: redis-6385                                                       # 容器名为'redis-6385'
@@ -88,7 +88,7 @@ services:
         - "6385:6385"
     networks:
       redis:
-        ipv4_address: 172.22.0.5
+        ipv4_address: 172.28.0.5
   redis-6386:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/redis:7.0.5                    # 镜像'redis:7.0.5'
     container_name: redis-6386                                                        # 容器名为'redis-6386'
@@ -104,4 +104,4 @@ services:
       - "6386:6386"
     networks:
       redis:
-        ipv4_address: 172.22.0.6
+        ipv4_address: 172.28.0.6
