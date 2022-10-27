@@ -130,8 +130,8 @@ services:
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
     volumes:                            # 数据卷挂载路径设置,将本机目录映射到容器目录
-      - "./redis-cluster/redis-6386/data:/data"
-      - "./redis-cluster/redis-6386/config/redis.conf:/etc/redis/redis.conf"  # `redis.conf`文件内容`http://download.redis.io/redis-stable/redis.conf`
+      - "./redis-cluster/redis-6388/data:/data"
+      - "./redis-cluster/redis-6388/config/redis.conf:/etc/redis/redis.conf"  # `redis.conf`文件内容`http://download.redis.io/redis-stable/redis.conf`
     ports:                              # 映射端口
       - "6388:6388"
     networks:
