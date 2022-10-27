@@ -6,7 +6,7 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: "172.22.0.0/24"
+        - subnet: "172.26.0.0/24"
 
 services:
   # ============================ ↓↓↓↓↓↓ redis ↓↓↓↓↓↓ ============================
@@ -29,7 +29,7 @@ services:
       - "6380:6380"
     networks:
       redis:
-        ipv4_address: 172.22.0.11
+        ipv4_address: 172.26.0.11
   # 从1
   redis-slave-1:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/redis:7.0.5                   # 镜像'redis:7.0.5'
@@ -37,7 +37,7 @@ services:
     restart: unless-stopped                                                                   # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
     # 启动redis服务并添加密码为：123456,默认不开启redis-aof方式持久化配置,连接并认证master节点
     # `--slave-announce-ip 宿主机IP --slave-announce-port 端口`: 填写宿主机ip和端口 =》 强制绑定IP和端口号，默认为容器内部的ip信息 =》 解决java连接问题“Cannot reconnect to [172.18.0.3:6382]: Connection refused: no further information: /172.18.0.3:6382”
-    command: redis-server /etc/redis/redis.conf --port 6381 --slave-announce-ip 172.16.16.88 --slave-announce-port 6381 --requirepass 123456 --appendonly no --slaveof 172.22.0.11 6380 --masterauth 123456
+    command: redis-server /etc/redis/redis.conf --port 6381 --slave-announce-ip 172.16.16.88 --slave-announce-port 6381 --requirepass 123456 --appendonly no --slaveof 172.26.0.11 6380 --masterauth 123456
     environment:                        # 设置环境变量,相当于docker run命令中的-e
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
@@ -48,7 +48,7 @@ services:
       - "6381:6381"
     networks:
       redis:
-        ipv4_address: 172.22.0.12
+        ipv4_address: 172.26.0.12
     depends_on:
       - redis-master
     links:
@@ -59,8 +59,8 @@ services:
     container_name: redis-slave-2                                                    # 容器名为'redis-slave-2'
     restart: unless-stopped                                                                   # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
     # 启动redis服务并添加密码为：123456,默认不开启redis-aof方式持久化配置,连接并认证master节点
-    # `--slave-announce-ip 宿主机IP --slave-announce-port 端口`: 填写宿主机ip和端口 =》 强制绑定IP和端口号，默认为容器内部的ip信息 =》 解决java连接问题“Cannot reconnect to [172.22.0.13:6382]: Connection refused: no further information: /172.18.0.3:6382”
-    command: redis-server /etc/redis/redis.conf --port 6382 --slave-announce-ip 172.16.16.88 --slave-announce-port 6382 --requirepass 123456 --appendonly no --slaveof 172.22.0.11 6380 --masterauth 123456
+    # `--slave-announce-ip 宿主机IP --slave-announce-port 端口`: 填写宿主机ip和端口 =》 强制绑定IP和端口号，默认为容器内部的ip信息 =》 解决java连接问题“Cannot reconnect to [172.26.0.13:6382]: Connection refused: no further information: /172.18.0.3:6382”
+    command: redis-server /etc/redis/redis.conf --port 6382 --slave-announce-ip 172.16.16.88 --slave-announce-port 6382 --requirepass 123456 --appendonly no --slaveof 172.26.0.11 6380 --masterauth 123456
     environment:                        # 设置环境变量,相当于docker run命令中的-e
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
@@ -71,7 +71,7 @@ services:
       - "6382:6382"
     networks:
       redis:
-        ipv4_address: 172.22.0.13
+        ipv4_address: 172.26.0.13
     depends_on:
       - redis-master
     links:
@@ -96,7 +96,7 @@ services:
       - "./redis-master-slave-sentinel/sentinel/01:/etc/redis" # `sentinel.conf`文件内容`http://download.redis.io/redis-stable/sentinel.conf`
     networks:
       redis:
-        ipv4_address: 172.22.0.21
+        ipv4_address: 172.26.0.21
     depends_on:
       - redis-master
       - redis-slave-1
@@ -122,7 +122,7 @@ services:
       - "./redis-master-slave-sentinel/sentinel/02:/etc/redis" # `sentinel.conf`文件内容`http://download.redis.io/redis-stable/sentinel.conf`
     networks:
       redis:
-        ipv4_address: 172.22.0.22
+        ipv4_address: 172.26.0.22
     depends_on:
       - redis-master
       - redis-slave-1
@@ -149,7 +149,7 @@ services:
       - "./redis-master-slave-sentinel/sentinel/03:/etc/redis" # `sentinel.conf`文件内容`http://download.redis.io/redis-stable/sentinel.conf`
     networks:
       redis:
-        ipv4_address: 172.22.0.23
+        ipv4_address: 172.26.0.23
     depends_on:
       - redis-master
       - redis-slave-1
