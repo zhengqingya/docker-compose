@@ -43,3 +43,5 @@ cluster nodes
 # 查看slots分片
 cluster slots
 ```
+
+![img.png](images/redis-cluster-test.png)

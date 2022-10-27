@@ -25,3 +25,6 @@ sentinel master mymaster
 sentinel slaves mymaster
 ```
 
+sentinel启动日志&测试主从切换
+
+![img.png](images/redis-sentinel.png)
