@@ -38,7 +38,7 @@ services:
     hostname: nacos-server-1                                                 # 指定容器hostname
     restart: unless-stopped                                              # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
     env_file:
-      - ./nacos_cluster_2.0.3/env/nacos-hostname.env
+      - nacos_cluster_2.0.3/env/nacos-hostname.env
     volumes:                                                     # 数据卷挂载路径设置,将本机目录映射到容器目录
       - "./nacos_cluster_2.0.3/nacos_1_logs:/home/nacos/logs"
       - "./nacos_cluster_2.0.3/init.d/custom.properties:/home/nacos/init.d/custom.properties"
@@ -68,7 +68,7 @@ services:
     hostname: nacos-server-2                                                 # 指定容器hostname
     restart: unless-stopped                                              # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
     env_file:
-      - ./nacos_cluster_2.0.3/env/nacos-hostname.env
+      - nacos_cluster_2.0.3/env/nacos-hostname.env
     volumes:                                                     # 数据卷挂载路径设置,将本机目录映射到容器目录
       - "./nacos_cluster_2.0.3/nacos_2_logs:/home/nacos/logs"
       - "./nacos_cluster_2.0.3/init.d/custom.properties:/home/nacos/init.d/custom.properties"
@@ -97,7 +97,7 @@ services:
     hostname: nacos-server-3                                                 # 指定容器hostname
     restart: unless-stopped                                              # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
     env_file:
-      - ./nacos_cluster_2.0.3/env/nacos-hostname.env
+      - nacos_cluster_2.0.3/env/nacos-hostname.env
     volumes:                                                     # 数据卷挂载路径设置,将本机目录映射到容器目录
       - "./nacos_cluster_2.0.3/nacos_3_logs:/home/nacos/logs"
       - "./nacos_cluster_2.0.3/init.d/custom.properties:/home/nacos/init.d/custom.properties"
