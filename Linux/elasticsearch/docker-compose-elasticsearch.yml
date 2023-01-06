@@ -14,6 +14,7 @@ services:
       - "./elasticsearch/logs:/usr/share/elasticsearch/logs"
       - "./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
 #      - "./elasticsearch/config/jvm.options:/usr/share/elasticsearch/config/jvm.options"
+      - "./elasticsearch/plugins/ik:/usr/share/elasticsearch/plugins/ik" # IK中文分词插件
     environment:                              # 设置环境变量,相当于docker run命令中的-e
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8

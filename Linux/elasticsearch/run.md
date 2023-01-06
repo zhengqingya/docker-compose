@@ -37,3 +37,7 @@ curl 127.0.0.1:9200 -u elastic:123456
 # 修改elastic密码为123456 (注：执行命令时会让认证之前账号密码)
 curl -H "Content-Type:application/json" -XPOST -u elastic 'http://127.0.0.1:9200/_xpack/security/user/elastic/_password' -d '{ "password" : "123456" }'
 ```
+
+#### IK中文分词插件
+
+下载地址 https://github.com/medcl/elasticsearch-analysis-ik/releases
