@@ -7,9 +7,9 @@ chmod -R 777 ./jenkins
 docker-compose -f docker-compose-jenkins.yml -p jenkins up -d
 ```
 
-访问地址：[`ip地址:8080`](http://www.zhengqingya.com:8080)
+访问地址：[`ip地址:10000`](http://www.zhengqingya.com:10000)
 
-###### 查看密码
+#### 查看密码
 
 ```shell
 # 普通权限进入到docker容器
@@ -20,7 +20,9 @@ docker exec -it -u root jenkins /bin/bash
 cat /var/jenkins_home/secrets/initialAdminPassword
 ```
 
-###### jenkins升级问题
+### 问题
+
+#### jenkins升级问题
 
 ```shell
 # docker下jenkins升级只要需要替换容器中的jenkins.war文件并重启docker容器
@@ -33,8 +35,9 @@ docker exec -u root -it jenkins /bin/bash
 # 备注：在进行容器部署时可以将容器的【/user/share/jenkins】目录挂载在宿主机上，以后升级只需替换jenkins.war文件即可。此种方式存在一个问题，在部署后由于宿主机的挂载文件夹为空，所以在部署后无法正常启动容器，放入jenkins.war与ref文件即可正常启动。
 ```
 
-###### jenkins时区设置问题
-```shell script
+#### jenkins时区设置问题
+
+```shell
 # 1.进入系统管理->脚本命令行，执行下面命令设置为上海时间(该方式重启后失效)
 System.setProperty('org.apache.commons.jelly.tags.fmt.timeZone', 'Asia/Shanghai') 
 # 2.在部署容器时添加参数，-e JAVA_OPTS=-Duser.timezone=Asia/Shanghai（一直有效）
