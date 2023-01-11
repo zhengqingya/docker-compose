@@ -12,6 +12,6 @@ docker-compose -f docker-compose.yml -p plumelog up -d
 chmod -R 777 ./app/elasticsearch
 ```
 
-访问地址：[`ip地址:8891`](http://127.0.0.1:8891)
-账号：admin
-密码：admin
+- 访问地址：[`ip地址:8891`](http://127.0.0.1:8891)
+- 账号：admin
+- 密码：admin
