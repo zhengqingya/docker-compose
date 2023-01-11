@@ -49,5 +49,9 @@ EXPOSE ${APP_PORT}
 
 # 以exec格式的CMD指令 -- 可实现优雅停止容器服务
 # "sh", "-c" : 可通过exec模式执行shell  =》 获得环境变量
-ENV RUN_CMD "java -jar ${JAVA_OPTS} /home/${APP_JAR}"
-CMD ["sh", "-c", "echo \"****** 运行命令：${RUN_CMD}\"   &   ${RUN_CMD}"]
+
+# tips: 下面2行配置无法正常获取动态变量`JAVA_OPTS`值，因此废弃掉...
+#ENV RUN_CMD "java -jar ${JAVA_OPTS} /home/${APP_JAR}"
+#CMD ["sh", "-c", "echo \"****** 运行命令：${RUN_CMD}\"   &   ${RUN_CMD}"]
+
+CMD ["sh", "-c", "echo \"****** 运行命令：java -jar ${JAVA_OPTS} /home/app.jar\"   &   java -jar ${JAVA_OPTS} /home/app.jar"]
