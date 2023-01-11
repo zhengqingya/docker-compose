@@ -21,9 +21,9 @@ services:
     environment: # 设置环境变量,相当于docker run命令中的-e
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
-      JAVA_OPTS: "-XX:+UseG1GC -Dspring.config.location=application.properties,classpath:application.properties,"
+      JAVA_OPTS: "-XX:+UseG1GC -Dspring.config.location=/home/application.properties,classpath:application.properties,"
     ports:
-      - "8091:8091"
+      - "8891:8891"
     depends_on:
       - elasticsearch
       - redis
