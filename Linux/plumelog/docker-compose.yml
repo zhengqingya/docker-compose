@@ -6,7 +6,7 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: "172.22.0.0/24"
+        - subnet: "172.23.0.0/24"
 
 services:
   plumelog:
@@ -14,14 +14,15 @@ services:
     container_name: plumelog
     restart: unless-stopped
     volumes:
-      # 引用外部配置文件 TODO 注意修改其中的配置信息    ex: es,redis
+      # 引用外部配置文件    ex: es,redis   (配置也可通过 -e 去修改)
       - ./app/plumelog/application.properties:/home/application.properties
-      # 日志
-      - ./app/plumelog/logs:/home/logs
     environment: # 设置环境变量,相当于docker run命令中的-e
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
       JAVA_OPTS: "-XX:+UseG1GC -Dspring.config.location=/home/application.properties,classpath:application.properties,"
+      plumelog.queue.redis.redisHost: 172.23.0.33:6379
+      plumelog.redis.redisHost: 172.23.0.33:6379
+      plumelog.es.esHosts: 172.23.0.22:9200
     ports:
       - "8891:8891"
     depends_on:
@@ -29,7 +30,7 @@ services:
       - redis
     networks:
       plumelog:
-        ipv4_address: 172.22.0.11
+        ipv4_address: 172.23.0.11
 
   elasticsearch:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/elasticsearch:7.14.1      # 原镜像`elasticsearch:7.14.1`
@@ -51,7 +52,7 @@ services:
       - "9300:9300"
     networks:
       plumelog:
-        ipv4_address: 172.22.0.22
+        ipv4_address: 172.23.0.22
 
   redis:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/redis:7.0.5                    # 镜像'redis:7.0.5'
@@ -69,5 +70,5 @@ services:
       - "6379:6379"
     networks:
       plumelog:
-        ipv4_address: 172.22.0.33
+        ipv4_address: 172.23.0.33
 
