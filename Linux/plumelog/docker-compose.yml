@@ -1,0 +1,73 @@
+version: "3"
+
+# 网桥 -> 方便相互通讯
+networks:
+  plumelog:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.22.0.0/24"
+
+services:
+  plumelog:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/plumelog:3.5.3
+    container_name: plumelog
+    restart: unless-stopped
+    volumes:
+      # 引用外部配置文件 TODO 注意修改其中的配置信息    ex: es,redis
+      - ./app/plumelog/application.properties:/home/application.properties
+      # 日志
+      - ./app/plumelog/logs:/home/logs
+    environment: # 设置环境变量,相当于docker run命令中的-e
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+      JAVA_OPTS: "-XX:+UseG1GC -Dspring.config.location=application.properties,classpath:application.properties,"
+    ports:
+      - "8091:8091"
+    depends_on:
+      - elasticsearch
+      - redis
+    networks:
+      plumelog:
+        ipv4_address: 172.22.0.11
+
+  elasticsearch:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/elasticsearch:7.14.1      # 原镜像`elasticsearch:7.14.1`
+    container_name: plumelog_elasticsearch         # 容器名为'elk_elasticsearch'
+    restart: unless-stopped                   # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
+    volumes:                                  # 数据卷挂载路径设置,将本机目录映射到容器目录
+      - "./app/elasticsearch/data:/usr/share/elasticsearch/data"
+      - "./app/elasticsearch/logs:/usr/share/elasticsearch/logs"
+      - "./app/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
+    #      - "./app/elasticsearch/config/jvm.options:/usr/share/elasticsearch/config/jvm.options"
+    environment:                              # 设置环境变量,相当于docker run命令中的-e
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+      discovery.type: single-node
+      ES_JAVA_OPTS: "-Xmx1024m -Xms1024m"
+      ELASTIC_PASSWORD: "123456" # elastic账号密码
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      plumelog:
+        ipv4_address: 172.22.0.22
+
+  redis:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/redis:7.0.5                    # 镜像'redis:7.0.5'
+    container_name: plumelog_redis                                                             # 容器名为'redis'
+    restart: unless-stopped                                                                   # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
+    command: redis-server /etc/redis/redis.conf --requirepass 123456 --appendonly no # 启动redis服务并添加密码为：123456,默认不开启redis-aof方式持久化配置
+    #    command: redis-server --requirepass 123456 --appendonly yes # 启动redis服务并添加密码为：123456,并开启redis持久化配置
+    environment:                        # 设置环境变量,相当于docker run命令中的-e
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    volumes:                            # 数据卷挂载路径设置,将本机目录映射到容器目录
+      - "./app/redis/data:/data"
+      - "./app/redis/config/redis.conf:/etc/redis/redis.conf"  # `redis.conf`文件内容`http://download.redis.io/redis-stable/redis.conf`
+    ports:                              # 映射端口
+      - "6379:6379"
+    networks:
+      plumelog:
+        ipv4_address: 172.22.0.33
+
