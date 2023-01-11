@@ -1,5 +1,5 @@
 # https://github.com/rancher/rancher
-# sudo docker run --privileged -d --restart=unless-stopped -p 80:80 -p 443:443 --name rancher registry.cn-hangzhou.aliyuncs.com/zhengqing/rancher:v2.6.0
+# sudo docker run --privileged -d --restart=unless-stopped -p 80:80 -p 443:443 --name rancher registry.cn-hangzhou.aliyuncs.com/zhengqing/rancher:v2.7.0
 version: '3'
 services:
   rancher:
