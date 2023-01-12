@@ -1,0 +1,10 @@
+2023-01-12 17:28:44.001 DEBUG 7284 --- [   scheduling-1] c.zhengqing.demo.task.AppScheduledJobs   : ==================================================================================
+2023-01-12 17:28:44.002 ERROR 7284 --- [   scheduling-1] c.zhengqing.demo.task.AppScheduledJobs   : <<<<<< error Start: 【2023-01-12 17:28:44】 >>>>>>
+2023-01-12 17:28:44.003  WARN 7284 --- [   scheduling-1] c.zhengqing.demo.task.AppScheduledJobs   : <<<<<< warn Start: 【2023-01-12 17:28:44】 >>>>>>
+2023-01-12 17:28:44.004  INFO 7284 --- [   scheduling-1] c.zhengqing.demo.task.AppScheduledJobs   : <<<<<< info Start: 【2023-01-12 17:28:44】 >>>>>>
+2023-01-12 17:28:44.004 DEBUG 7284 --- [   scheduling-1] c.zhengqing.demo.task.AppScheduledJobs   : <<<<<< debug Start: 【2023-01-12 17:28:44】 >>>>>>
+2023-01-12 17:28:45.002 DEBUG 7284 --- [   scheduling-1] c.zhengqing.demo.task.AppScheduledJobs   : ==================================================================================
+2023-01-12 17:28:45.002 ERROR 7284 --- [   scheduling-1] c.zhengqing.demo.task.AppScheduledJobs   : <<<<<< error Start: 【2023-01-12 17:28:45】 >>>>>>
+2023-01-12 17:28:45.003  WARN 7284 --- [   scheduling-1] c.zhengqing.demo.task.AppScheduledJobs   : <<<<<< warn Start: 【2023-01-12 17:28:45】 >>>>>>
+2023-01-12 17:28:45.003  INFO 7284 --- [   scheduling-1] c.zhengqing.demo.task.AppScheduledJobs   : <<<<<< info Start: 【2023-01-12 17:28:45】 >>>>>>
+2023-01-12 17:28:45.003 DEBUG 7284 --- [   scheduling-1] c.zhengqing.demo.task.AppScheduledJobs   : <<<<<< debug Start: 【2023-01-12 17:28:45】 >>>>>>
