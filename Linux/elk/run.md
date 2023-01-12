@@ -1,5 +1,11 @@
 ### ELK
 
+`Elasticsearch` + `Logstash` + `Kibana` 搭建日志监控系统
+
+1. `Logstash` 日志收集+解析+转换
+2. `Elasticsearch` 日志搜索
+3. `Kibana` 日志展示
+
 ```shell
 # 当前目录下所有文件赋予权限(读、写、执行)
 chmod -R 777 ./elk
