@@ -7,7 +7,8 @@ filebeat:
       enabled: true
       paths:
         - /usr/share/filebeat/my-log/demo*.log
-      tags: ["demo"]
+      tags: [ "demo" ]
+      # java多行日志合并
       multiline:
         pattern: '^\d{4}\-\d{2}\-\d{2}\s\d{2}:\d{2}:\d{2}' # 匹配的正则 不是以 2021-10-01 12:00:00 格式开头的将合并到上一行
         negate: true                                       # 是否反向匹配
@@ -22,4 +23,5 @@ output.elasticsearch:
   password: "123456"              # ES密码
   indices:
     - index: "demo-%{+yyyy.MM.dd}"     # 以日期为后缀，每天新建一个索引
-
+      when.contains:
+        tags: "demo"
