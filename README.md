@@ -2,9 +2,7 @@
 
 通过`docker-compose`编排一系列环境进行一键快速部署运行，小白运维神器。
 
-[//]: # (![docker-compose-linux.png]&#40;./image/docker-compose-linux.png&#41;)
-
-## 环境准备
+### 一、环境准备
 
 ```shell
 # 安装git命令： yum install -y git
@@ -12,62 +10,79 @@ git clone https://gitee.com/zhengqingya/docker-compose.git
 cd docker-compose/Linux
 ```
 
-## 运行服务
+### 二、运行服务
 
-> 环境部署见每个服务下的`run.md`
+> 环境部署见每个服务下的`run.md`；
 > ex: `Linux/portainer/run.md`
 
-1. [activemq](./Linux/activemq)
-2. [baidupcs-web](./Linux/baidupcs-web)
+#### 数据库
+
+1. [mysql](./Linux/mysql)
+2. [mycat](./Linux/mycat)
 3. [canal](./Linux/canal)
-4. [couchbase](./Linux/couchbase)
-5. [efk](./Linux/efk)
-6. [elasticsearch](./Linux/elasticsearch)
-7. [elk](./Linux/elk)
-8. [elkf](./Linux/elkf)
-9. [fastdfs](./Linux/fastdfs)
-10. [filebeat](./Linux/filebeat)
-11. [flowable](./Linux/flowable)
-12. [gitlab](./Linux/gitlab)
-13. [grafana](./Linux/grafana)
-14. [grafana-promtail-loki-nginx-demo](./Linux/grafana-promtail-loki-nginx-demo)
-15. [grafana_promtail_loki](./Linux/grafana_promtail_loki)
-16. [graylog](./Linux/graylog)
-17. [jenkins](./Linux/jenkins)
-18. [jrebel](./Linux/jrebel)
-19. [jumpserver](./Linux/jumpserver)
-20. [kafka](./Linux/kafka)
-21. [minio](./Linux/minio)
-22. [mongodb](./Linux/mongodb)
-23. [mycat](./Linux/mycat)
-24. [mysql](./Linux/mysql)
-25. [nacos](./Linux/nacos)
-26. [nextcloud](./Linux/nextcloud)
-27. [nginx](./Linux/nginx)
-28. [nps](./Linux/nps)
-29. [opensumi-web](./Linux/opensumi-web)
-30. [oracle18c](./Linux/oracle18c)
-31. [plumelog](./Linux/plumelog)
-32. [portainer](./Linux/portainer)
-33. [postgresql](./Linux/postgresql)
-34. [prometheus](./Linux/prometheus)
-35. [rabbitmq](./Linux/rabbitmq)
-36. [rancher](./Linux/rancher)
-37. [redis](./Linux/redis)
-38. [rocketmq](./Linux/rocketmq)
-39. [seata](./Linux/seata)
-40. [sentinel](./Linux/sentinel)
-41. [sonarqube](./Linux/sonarqube)
-42. [tomcat](./Linux/tomcat)
-43. [walle](./Linux/walle)
-44. [xxl-job](./Linux/xxl-job)
-45. [yapi](./Linux/yapi)
-46. [yearning](./Linux/yearning)
-47. [zipkin](./Linux/zipkin)
-48. [zookeeper](./Linux/zookeeper)
+4. [oracle18c](./Linux/oracle18c)
+5. [redis](./Linux/redis)
+6. [couchbase](./Linux/couchbase)
+7. [mongodb](./Linux/mongodb)
+8. [seata](./Linux/seata)
+9. [postgresql](./Linux/postgresql)
+10. [yearning](./Linux/yearning)
+
+#### 消息队列
+
+1. [activemq](./Linux/activemq)
+2. [kafka](./Linux/kafka)
+3. [rabbitmq](./Linux/rabbitmq)
+4. [rocketmq](./Linux/rocketmq)
+
+#### 日志系统
+
+1. [elk](./Linux/elk)
+2. [efk](./Linux/efk)
+3. [elkf](./Linux/elkf)
+4. [filebeat](./Linux/filebeat)
+5. [graylog](./Linux/graylog)
+6. [grafana_promtail_loki](./Linux/grafana_promtail_loki)
+7. [grafana-promtail-loki-nginx-demo](./Linux/grafana-promtail-loki-nginx-demo)
+8. [plumelog](./Linux/plumelog)
+9. [zipkin](./Linux/zipkin)
+
+#### CI/CD
+
+1. [portainer](./Linux/portainer)
+2. [jenkins](./Linux/jenkins)
+3. [rancher](./Linux/rancher)
+4. [gitlab](./Linux/gitlab)
+5. [sonarqube](./Linux/sonarqube)
+6. [prometheus](./Linux/prometheus)
+7. [grafana](./Linux/grafana)
+8. [nginx](./Linux/nginx)
+
+#### 文件存储
+
+1. [fastdfs](./Linux/fastdfs)
+2. [minio](./Linux/minio)
+3. [baidupcs-web](./Linux/baidupcs-web)
+4. [nextcloud](./Linux/nextcloud)
+
+#### 其它
+
+1. [elasticsearch](./Linux/elasticsearch)
+2. [flowable](./Linux/flowable)
+3. [jrebel](./Linux/jrebel)
+4. [jumpserver](./Linux/jumpserver)
+5. [nacos](./Linux/nacos)
+6. [nps](./Linux/nps)
+7. [opensumi-web](./Linux/opensumi-web)
+8. [sentinel](./Linux/sentinel)
+9. [tomcat](./Linux/tomcat)
+10. [walle](./Linux/walle)
+11. [xxl-job](./Linux/xxl-job)
+12. [yapi](./Linux/yapi)
+13. [zookeeper](./Linux/zookeeper)
 
 ---
 
-## windows使用docker-compose安装开发环境系列
+### windows 使用 docker-compose 安装开发环境系列
 
-> 见[windows使用docker-compose安装开发环境系列.md](./windows使用docker-compose安装开发环境系列.md)
+> 见[windows 使用 docker-compose 安装开发环境系列.md](./windows使用docker-compose安装开发环境系列.md)
