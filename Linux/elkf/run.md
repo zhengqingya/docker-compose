@@ -7,11 +7,16 @@
 3. `Elasticsearch` 日志搜索
 4. `Kibana` 日志展示
 
+> tips: 目前版本存在filebeat收集日志到logstash时乱码问题；
+> 如果直接在springboot中推日志到logstash中则正常。
+
 ```shell
 # 运行
 docker-compose -f docker-compose.yml -p elkf up -d
 # 当前目录下所有文件赋予权限(读、写、执行)  -- 解决es启动报错问题...
 chmod -R 777 ./app/elasticsearch
+# 解决logstash启动报错问题...
+chmod -R 777 ./app/logstash
 ```
 
 1. ES访问地址：[`ip地址:9200`](http://127.0.0.1:9200)
