@@ -7,9 +7,6 @@
 3. `Elasticsearch` 日志搜索
 4. `Kibana` 日志展示
 
-> tips: 目前版本存在filebeat收集日志到logstash时乱码问题；
-> 如果直接在springboot中推日志到logstash中则正常。
-
 ```shell
 # 运行
 docker-compose -f docker-compose.yml -p elkf up -d
@@ -46,4 +43,33 @@ http://127.0.0.1:5601/app/management/kibana/indexPatterns
 ![img.png](images/log-05.png)
 ![img.png](images/log-06.png)
 
+---
 
+### 遇到的问题
+
+filebeat收集日志到logstash时乱码问题；
+如果直接在springboot中推日志到logstash中则正常。
+
+解决： 将 logstash 的输入配置从
+
+```
+input {
+    tcp {
+        mode => "server"
+        host => "0.0.0.0"   # 允许任意主机发送日志
+        type => "demo"      # 设定type以区分每个输入源
+        port => 5044
+        codec => json_lines # 数据格式
+    }
+}
+```
+
+修改为
+
+```
+input {
+    beats {
+        port => 5044
+    }
+}
+```
