@@ -73,3 +73,31 @@ input {
     }
 }
 ```
+
+### logstash - Grok过滤器配置
+
+ex: java日志如下
+
+```
+2023-01-17 14:16:59.763  INFO 29332 --- [           main] com.zhengqing.demo.DemoApplication       : Started DemoApplication in 1.912 seconds (JVM running for 2.415)
+```
+
+Grok 模式
+
+```
+(?<datetime>\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\.\d{3})\s+(?<level>\w+)\s+\d+\s+-+\s\[[^\[\]]+\]\s+(?<class>\S+)\s+:(?<msg>.*)
+```
+
+处理后，数据格式如下
+
+```
+{
+  "msg": " Started DemoApplication in 1.912 seconds (JVM running for 2.415)",
+  "datetime": "2023-01-17 14:16:59.763",
+  "level": "INFO",
+  "class": "com.zhengqing.demo.DemoApplication"
+}
+```
+
+可以到 http://127.0.0.1:5601/app/dev_tools#/grokdebugger 中测试
+![img.png](images/grok-debugger.png)
