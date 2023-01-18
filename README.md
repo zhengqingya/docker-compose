@@ -80,6 +80,7 @@ cd docker-compose/Linux
 11. [xxl-job](./Linux/xxl-job)
 12. [yapi](./Linux/yapi)
 13. [zookeeper](./Linux/zookeeper)
+14. [jpom](./Linux/jpom)
 
 ---
 

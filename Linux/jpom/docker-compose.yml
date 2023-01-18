@@ -1,0 +1,16 @@
+# docker run -d -p 9000:9000 --restart=always --name portainer -v /var/run/docker.sock:/var/run/docker.sock registry.cn-hangzhou.aliyuncs.com/zhengqing/portainer:1.24.1
+version: '3'
+services:
+  portainer:
+    image: jpomdocker/jpom
+    container_name: jpom-server                                          # 容器名为'jpom-server'
+    restart: unless-stopped                                              # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
+    volumes:                                                             # 数据卷挂载路径设置,将本机目录映射到容器目录
+      - "./jpom/logs:/usr/local/jpom-server/logs"
+      - "./jpom/data:/usr/local/jpom-server/data"
+      - "./jpom/conf:/usr/local/jpom-server/conf"
+    environment:                        # 设置环境变量,相当于docker run命令中的-e
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    ports:                              # 映射端口
+      - "2122:2122"
