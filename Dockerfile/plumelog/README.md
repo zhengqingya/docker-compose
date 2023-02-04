@@ -18,7 +18,7 @@ docker pull registry.cn-hangzhou.aliyuncs.com/zhengqing/plumelog:3.5.3
 docker run -d -p 8891:8891 --name plumelog -e JAVA_OPTS="-Dserver.port=8891" registry.cn-hangzhou.aliyuncs.com/zhengqing/plumelog:3.5.3
 
 # 删除旧容器
-docker ps -a | grep plumelog | grep 3.5.3 | awk '{print $1}' | xargs -I docker stop {} | xargs -I docker rm {}
+docker ps -a | grep plumelog | grep 3.5.3 | awk '{print $1}' | xargs -i docker stop {} | xargs -I docker rm {}
 
 # 删除旧镜像
 docker images | grep -E plumelog | grep 3.5.3 | awk '{print $3}' | uniq | xargs -I {} docker rmi --force {}

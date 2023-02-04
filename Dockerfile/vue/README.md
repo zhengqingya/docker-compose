@@ -19,7 +19,7 @@ registry.cn-hangzhou.aliyuncs.com/zhengqing/small-tools-web:prod
 docker run -d --name small-tools-web -p 80:80 --restart=always registry.cn-hangzhou.aliyuncs.com/zhengqing/small-tools-web:prod
 
 # 删除旧容器
-docker ps -a | grep small-tools-web | grep prod | awk '{print $1}' | xargs -I docker stop {} | xargs -I docker rm {}
+docker ps -a | grep small-tools-web | grep prod | awk '{print $1}' | xargs -i docker stop {} | xargs -I docker rm {}
 
 # 删除旧镜像
 docker images | grep -E small-tools-web | grep prod | awk '{print $3}' | uniq | xargs -I {} docker rmi --force {}

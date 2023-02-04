@@ -16,7 +16,7 @@ docker pull registry.cn-hangzhou.aliyuncs.com/zhengqing/test:dev
 docker run -d -p 8080:8080 --name test registry.cn-hangzhou.aliyuncs.com/zhengqing/test:dev
 
 # 删除旧容器
-docker ps -a | grep test | grep dev | awk '{print $1}' | xargs -I docker stop {} | xargs -I docker rm {}
+docker ps -a | grep test | grep dev | awk '{print $1}' | xargs -i docker stop {} | xargs -I docker rm {}
 
 # 删除旧镜像
 docker images | grep -E test | grep dev | awk '{print $3}' | uniq | xargs -I {} docker rmi --force {}
