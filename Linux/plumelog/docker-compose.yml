@@ -21,8 +21,13 @@ services:
       LANG: en_US.UTF-8
       JAVA_OPTS: "-XX:+UseG1GC -Dspring.config.location=/home/application.properties,classpath:application.properties,"
       plumelog.queue.redis.redisHost: 172.23.0.33:6379
-      plumelog.redis.redisHost: 172.23.0.33:6379
+      plumelog.queue.redis.redisPassWord: 123456
+      plumelog.queue.redis.redisDb: 10
       plumelog.es.esHosts: 172.23.0.22:9200
+      plumelog.es.userName: elastic
+      plumelog.es.passWord: 123456
+      login.username: admin
+      login.password: admin
     ports:
       - "8891:8891"
     depends_on:
