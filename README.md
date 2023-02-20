@@ -78,9 +78,10 @@ cd docker-compose/Linux
 9. [tomcat](./Linux/tomcat)
 10. [walle](./Linux/walle)
 11. [xxl-job](./Linux/xxl-job)
-12. [yapi](./Linux/yapi)
-13. [zookeeper](./Linux/zookeeper)
-14. [jpom](./Linux/jpom)
+12. [PowerJob](./Linux/PowerJob)
+13. [yapi](./Linux/yapi)
+14. [zookeeper](./Linux/zookeeper)
+15. [jpom](./Linux/jpom)
 
 ---
 
