@@ -45,3 +45,7 @@ curl -H "Content-Type:application/json" -XPOST -u elastic 'http://127.0.0.1:9200
 #### IK中文分词插件
 
 下载地址 https://github.com/medcl/elasticsearch-analysis-ik/releases
+
+#### 谷歌ES插件`Multi Elasticsearch Head`
+
+https://chrome.google.com/webstore/detail/multi-elasticsearch-head/cpmmilfkofbeimbmgiclohpodggeheim?hl=zh-CN
