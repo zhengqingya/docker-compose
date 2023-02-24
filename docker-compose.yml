@@ -9,19 +9,19 @@ networks:
         - subnet: "172.22.0.0/24"
 
 services:
-  # tips:不要使用带下划线的名称 ex:yl_1   原因：在某些程序里，解析不了此数据
-  yl-1:
+  # tips:不要使用带下划线的名称 ex:zq_1   原因：在某些程序里，解析不了此数据
+  zq-1:
     image: xx
 
-  yl2:
+  zq2:
     image: xx
     links:                              # 配置指定容器与当前服务连接， 并指定服务别名
-      - "yl1:zk"
+      - "zq1:zk"
     networks:
       xx:
         ipv4_address: 172.22.0.11       # 设置固定IP地址
 
-  yl3:
+  zq3:
     image: xx                           # 镜像
     container_name: xx                  # 容器名为'xx'
     hostname: localhost                 # 指定容器hostname
@@ -37,15 +37,18 @@ services:
       - "xx:xx"
       - "10001-10010:10001-10010"       # 端口组
     links:                              # 配置容器互相连接
-      - yl1
-      - yl2
+      - zq1
+      - zq2
     entrypoint: /code/entrypoint.sh     # 指定接入点,用于定义容器启动以后的执行体的
     command: bundle exec thin -p 3000   # 设置容器的默认执行的命令。`CMD/command`设定的命令会在`entrypoint`之后执行。
     depends_on:                         # 解决容器依赖启动先后问题
-      - yl1
-      - yl2
+      - zq1
+      - zq2
     network_mode: host # 容器使用宿主机网络 ( tips:此配置和`ports`/`links`不可结合使用 )
-
-
-
+    # 日志
+    logging:
+      driver: "json-file"   # 默认的文件日志驱动
+      options:
+        max-size: "100m"    # 单个日志文件大小为100m
+        max-file: "3"       # 最多3个日志文件
 

@@ -9,10 +9,28 @@ du -d1 -h /var/lib/docker/containers | sort -h
 
 #### 法一：运行时控制
 
+##### docker
+
 ```shell
 # max-size：容器日志最大100M
 # max-file：最大日志数3个（ ex: *-json.log, *-json.log.1, *-json.log.2 ）
 docker run -it --log-opt max-size=100m --log-opt max-file=3 redis
+```
+
+##### docker-compose
+
+```shell
+version: '3'
+
+services:
+  test:
+    image: xxx 
+    # 日志
+    logging:
+      driver: "json-file"   # 默认的文件日志驱动
+      options:
+        max-size: "100m"    # 单个日志文件大小为100m
+        max-file: "3"       # 最多3个日志文件
 ```
 
 #### 法二：全局配置
@@ -27,7 +45,8 @@ cat /etc/docker/daemon.json
 {
     "log-driver": "json-file",
     "log-opts": {
-        "max-size":"100m", "max-file":"3"
+        "max-size":"100m", 
+        "max-file":"3"
     }
 }
 
