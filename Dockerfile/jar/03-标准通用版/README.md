@@ -13,7 +13,7 @@ docker push registry.cn-hangzhou.aliyuncs.com/zhengqing/test:dev
 docker pull registry.cn-hangzhou.aliyuncs.com/zhengqing/test:dev
 
 # 运行
-docker run -d -p 8080:8080 --name test registry.cn-hangzhou.aliyuncs.com/zhengqing/test:dev
+docker run -d -p 8080:666 --name test -e server.port=666 registry.cn-hangzhou.aliyuncs.com/zhengqing/test:dev
 
 # 删除旧容器
 docker ps -a | grep test | grep dev | awk '{print $1}' | xargs -i docker stop {} | xargs -I docker rm {}
