@@ -4,7 +4,10 @@ FROM openjdk:8-jdk-alpine
 ENV TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# 支持字体
+# 增加阿里的仓库源 --- 解决下载慢问题
+RUN sed -i "s/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g" /etc/apk/repositories
+
+# 安装中文字体 & 删除安装缓存包
 RUN apk add --update ttf-dejavu fontconfig && rm -rf /var/cache/apk/*
 
 # 添加中文字体
