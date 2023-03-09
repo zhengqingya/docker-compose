@@ -1,0 +1,14 @@
+# 参考 https://github.com/gogs/gogs/tree/main/docker
+version: '3'
+services:
+  grafana:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/gogs:latest  # 原镜像`gogs/gogs:latest`
+    container_name: gogs                                            # 容器名为'gogs'
+    restart: unless-stopped                                              # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
+    environment:
+      TZ: 'Asia/Shanghai'
+    volumes:                                                     # 数据卷挂载路径设置,将本机目录映射到容器目录
+      - "./gogs:/data" # 保存 Git 存储库和 Gogs 数据
+    ports:                              # 映射端口
+      - "10022:22"
+      - "10880:3000"
