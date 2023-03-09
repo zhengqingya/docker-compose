@@ -53,10 +53,11 @@ cd docker-compose/Linux
 2. [jenkins](./Linux/jenkins)
 3. [rancher](./Linux/rancher)
 4. [gitlab](./Linux/gitlab)
-5. [sonarqube](./Linux/sonarqube)
-6. [prometheus](./Linux/prometheus)
-7. [grafana](./Linux/grafana)
-8. [nginx](./Linux/nginx)
+5. [gogs](./Linux/gogs)
+6. [sonarqube](./Linux/sonarqube)
+7. [prometheus](./Linux/prometheus)
+8. [grafana](./Linux/grafana)
+9. [nginx](./Linux/nginx)
 
 #### 文件存储
 
@@ -82,7 +83,6 @@ cd docker-compose/Linux
 13. [yapi](./Linux/yapi)
 14. [zookeeper](./Linux/zookeeper)
 15. [jpom](./Linux/jpom)
-16. [gogs](./Linux/gogs)
 
 ---
 
