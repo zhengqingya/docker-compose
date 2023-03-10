@@ -6,7 +6,7 @@
 # 运行
 docker-compose -f docker-compose-elasticsearch.yml -p elasticsearch up -d
 # 运行后，给当前目录下所有文件赋予权限(读、写、执行)
-chmod -R 777 ./elasticsearch
+#chmod -R 777 ./elasticsearch
 ```
 
 1. ES访问地址：[`ip地址:9200`](http://www.zhengqingya.com:9200)

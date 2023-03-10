@@ -10,7 +10,7 @@
 # 运行
 docker-compose -f docker-compose.yml -p efk up -d
 # 当前目录下所有文件赋予权限(读、写、执行)  -- 解决es启动报错问题...
-chmod -R 777 ./app/elasticsearch
+#chmod -R 777 ./app/elasticsearch
 ```
 
 1. ES访问地址：[`ip地址:9200`](http://127.0.0.1:9200)
