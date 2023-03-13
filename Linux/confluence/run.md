@@ -17,6 +17,7 @@ docker-compose -f docker-compose.yml -p confluence up -d
 ![img_2.png](images/confluence-02.png)
 
 下一步填写授权码
+![img.png](images/confluence-07.png)
 
 ```
 AAABKw0ODAoPeJxtUG1LwzAQ/p5fEfBzxtogyiBgl0aYa9phW3Ufs3rTQJaOJC3u35u9MRC/3d1zz
@@ -30,7 +31,7 @@ vwRjjP7hw==X02f3
 
 ### 授权码问题
 
-> tips: 记录下授权码处理步骤，也可以直接使用上面处理好提供的。
+> tips: 记录下授权码处理步骤，也可以直接使用上面处理好提供的授权码，这里的操作就可以忽略了。
 
 ```shell
 # 拷贝出atlassian的jar包
@@ -45,6 +46,9 @@ docker cp confluence:/opt/atlassian/confluence/confluence/WEB-INF/lib/atlassian-
 
 再将jar包拷贝回容器后重启服务，然后填入`Confluence`授权码 下一步
 ![img.png](images/confluence-04.png)
+
+### 配置数据库
+
 ![img_3.png](images/confluence-05.png)
 
 配置数据库
