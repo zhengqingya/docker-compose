@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  confluence:
+    image: cptactionhank/atlassian-confluence:latest # https://github.com/cptactionhank/docker-atlassian-confluence
+    container_name: confluence
+    restart: always
+    ports:
+      - "8090:8090"
+      - "8091:8091"
+    depends_on:
+      - db
+    volumes:
+      - ./app/confluence/logs:/opt/atlassian/confluence/logs
+      - ./app/confluence/data:/var/atlassian/confluence
+      - ./app/confluence/atlassian-extras-2.4.jar:/opt/atlassian/confluence/confluence/WEB-INF/lib/atlassian-extras-decoder-v2-3.4.1.jar
+
+#  db:
+#    image: postgres:latest
+#    container_name: confluence-db
+#    restart: always
+#    ports:
+#      - "5432:5432"
+#    environment:
+#      - POSTGRES_PASSWORD=123456 # 数据库密码
+#    volumes:
+#      - ./app/postgresql/data:/var/lib/postgresql/data
