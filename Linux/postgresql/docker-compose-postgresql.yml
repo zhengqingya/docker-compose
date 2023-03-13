@@ -1,6 +1,6 @@
 version: '3'
 services:
-  redis:
+  postgresql:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/postgres:14.5                    # 镜像'postgres:14.5'
     container_name: postgresql                                                          # 容器名为'postgresql'
     restart: unless-stopped                                                             # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
