@@ -51,11 +51,18 @@ docker cp confluence:/opt/atlassian/confluence/confluence/WEB-INF/lib/atlassian-
 
 ![img_3.png](images/confluence-05.png)
 
-配置数据库
+#### postgresql
 
-> 1. `confluence`数据库的排序规则需要设置为`utf8mb4_bin`
+![img.png](images/confluence-08.png)
+
+#### MySQL
+
+> 1. `confluence`数据库的排序规则需要设置为`utf8_bin`  eg:建库sql `create database confluence default character set utf8 collate utf8_bin;`
 > 2. 修改事务默认隔离级别 `SET GLOBAL TRANSACTION ISOLATION LEVEL READ COMMITTED;`
-> 3. 数据库URL连接地址 `jdbc:mysql://192.168.101.88/confluence?useSSL=false&sessionVariables=tx_isolation='READ-COMMITTED'`
-
+> 3. 数据库URL连接地址 `jdbc:mysql://192.168.101.88/confluence?useSSL=false&sessionVariables=tx_isolation='READ-COMMITTED'&useUnicode=true&characterEncoding=utf8`
 
 ![img.png](images/confluence-06.png)
+
+---
+
+![img_1.png](images/confluence-09.png)

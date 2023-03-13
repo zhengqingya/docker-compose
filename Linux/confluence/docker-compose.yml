@@ -2,26 +2,34 @@ version: '3'
 
 services:
   confluence:
-    image: cptactionhank/atlassian-confluence:latest # https://github.com/cptactionhank/docker-atlassian-confluence
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/atlassian-confluence:latest  # 源镜像`cptactionhank/atlassian-confluence:latest` https://github.com/cptactionhank/docker-atlassian-confluence
     container_name: confluence
     restart: always
     ports:
       - "8090:8090"
       - "8091:8091"
-#    depends_on:
-#      - db
+    depends_on:
+      - db
     volumes:
       - ./app/confluence/logs:/opt/atlassian/confluence/logs
       - ./app/confluence/data:/var/atlassian/confluence
       - ./app/confluence/atlassian-extras-2.4.jar:/opt/atlassian/confluence/confluence/WEB-INF/lib/atlassian-extras-decoder-v2-3.4.1.jar
 
-#  db:
-#    image: postgres:latest
-#    container_name: confluence-db
-#    restart: always
-#    ports:
-#      - "5432:5432"
-#    environment:
-#      - POSTGRES_PASSWORD=123456 # 数据库密码
-#    volumes:
-#      - ./app/postgresql/data:/var/lib/postgresql/data
+  db:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/postgres:14.5                    # 镜像'postgres:14.5'
+    container_name: confluence-db                                                       # 容器名为'confluence-db'
+    restart: always
+    # 设置环境变量,相当于docker run命令中的-e
+    environment:
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+      POSTGRES_DB: confluence
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      ALLOW_IP_RANGE: 0.0.0.0/0 # 允许所有ip访问
+    # 数据卷挂载路径设置,将本机目录映射到容器目录
+    volumes:
+      - "./app/postgresql/data:/var/lib/postgresql/data"
+    # 映射端口
+    ports:
+      - "5432:5432"
