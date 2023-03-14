@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  jira:
+    # atlassian-jira-software:latest 对应版本 JIRA_VERSION=8.16.1
+    # cptactionhank/atlassian-jira-software:8.1.0
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/atlassian-jira-software:latest  # 源镜像`cptactionhank/atlassian-jira-software:latest` https://github.com/cptactionhank/docker-atlassian-jira-software
+    container_name: jira
+    restart: always
+    volumes:
+      - "./app/data:/var/atlassian/jira"
+      - "./app/atlassian-agent.jar:/opt/atlassian/jira/atlassian-agent.jar"
+#      - "./app/mysql-connector-java-5.1.47.jar:/opt/atlassian/jira/lib/mysql-connector-java-5.1.47.jar"
+#      - "./app/mysql-connector-java-5.1.47.jar:/opt/atlassian/jira/atlassian-jira/WEB-INF/lib/mysql-connector-java-5.1.47.jar"
+#      - "./app/dbconfig.xml:/var/atlassian/jira/dbconfig.xml" # 数据库配置文件
+    environment:
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+      CATALINA_OPTS: "-javaagent:/opt/atlassian/jira/atlassian-agent.jar"
+    ports:
+      - "18080:8080"

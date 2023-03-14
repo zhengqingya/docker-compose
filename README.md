@@ -84,6 +84,7 @@ cd docker-compose/Linux
 14. [zookeeper](./Linux/zookeeper)
 15. [jpom](./Linux/jpom)
 16. [confluence](./Linux/confluence)
+17. [jira](./Linux/jira)
 
 ---
 
