@@ -6,7 +6,8 @@
 # 运行
 docker-compose -f docker-compose.yml -p confluence up -d
 
-# 若运行之后，postgresql启动日志报相关权限问题，给新产生的文件赋予权限
+# 若运行之后，启动日志报相关权限问题，给新产生的文件赋予权限
+chmod -R 777 ./app/confluence/data
 chmod -R 777 ./app/postgresql/data
 ```
 
