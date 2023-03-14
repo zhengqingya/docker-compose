@@ -5,6 +5,9 @@
 ```shell
 # 运行
 docker-compose -f docker-compose.yml -p confluence up -d
+
+# 若运行之后，postgresql启动日志报相关权限问题，给新产生的文件赋予权限
+chmod -R 777 ./app/postgresql/data
 ```
 
 访问地址：[`http://ip地址:8090`](http://127.0.0.1:8090)
@@ -51,18 +54,19 @@ docker cp confluence:/opt/atlassian/confluence/confluence/WEB-INF/lib/atlassian-
 
 ![img_3.png](images/confluence-05.png)
 
-#### postgresql
+#### eg: PostgreSQL
 
 ![img.png](images/confluence-08.png)
 
-#### MySQL
+#### eg: MySQL
 
-> 1. `confluence`数据库的排序规则需要设置为`utf8_bin`  eg:建库sql `create database confluence default character set utf8 collate utf8_bin;`
-> 2. 修改事务默认隔离级别 `SET GLOBAL TRANSACTION ISOLATION LEVEL READ COMMITTED;`
-> 3. 数据库URL连接地址 `jdbc:mysql://192.168.101.88/confluence?useSSL=false&sessionVariables=tx_isolation='READ-COMMITTED'&useUnicode=true&characterEncoding=utf8`
+> 1. 创建`confluence`数据库  eg: 建库sql `create database confluence default character set utf8mb4 collate utf8mb4_bin;`
+> 2. 数据库URL连接地址 eg: `jdbc:mysql://192.168.101.88/confluence?sessionVariables=tx_isolation='READ-COMMITTED'&useUnicode=true&characterEncoding=UTF-8&useSSL=false`
 
 ![img.png](images/confluence-06.png)
 
----
+### 其它配置
 
+![img.png](images/confluence-10.png)
+![img_1.png](images/confluence-11.png)
 ![img_1.png](images/confluence-09.png)
