@@ -13,8 +13,8 @@ services:
       POSTGRES_PASSWORD: 123456
       ALLOW_IP_RANGE: 0.0.0.0/0 # 允许所有ip访问
     # 数据卷挂载路径设置,将本机目录映射到容器目录
-    #    volumes:
-    #      - "./postgres/data:/var/lib/postgresql/data"
+    volumes:
+      - "./postgresql/data:/var/lib/postgresql/data"
     # 映射端口
     ports:
       - "5432:5432"

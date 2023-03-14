@@ -1,11 +1,14 @@
-### PostgreSQL
+# PostgreSQL
 
-运行
+关系型数据库
 
-> tips: 未做数据持久化配置！
+### 运行
 
 ```shell
-docker-compose -f docker-compose-postgresql.yml -p postgresql up -d
+docker-compose -f docker-compose.yml -p postgresql up -d
+
+# 若运行之后，postgresql启动日志报相关权限问题，给新产生的文件赋予权限
+chmod -R 777 ./postgresql/data
 ```
 
 连接
