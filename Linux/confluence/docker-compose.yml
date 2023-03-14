@@ -5,15 +5,18 @@ services:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/atlassian-confluence:latest  # 源镜像`cptactionhank/atlassian-confluence:latest` https://github.com/cptactionhank/docker-atlassian-confluence
     container_name: confluence
     restart: always
+    volumes:
+      - ./app/confluence/logs:/opt/atlassian/confluence/logs
+      - ./app/confluence/data:/var/atlassian/confluence
+      - ./app/confluence/atlassian-extras-2.4.jar:/opt/atlassian/confluence/confluence/WEB-INF/lib/atlassian-extras-decoder-v2-3.4.1.jar
+    environment:
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
     ports:
       - "8090:8090"
       - "8091:8091"
     depends_on:
       - db
-    volumes:
-      - ./app/confluence/logs:/opt/atlassian/confluence/logs
-      - ./app/confluence/data:/var/atlassian/confluence
-      - ./app/confluence/atlassian-extras-2.4.jar:/opt/atlassian/confluence/confluence/WEB-INF/lib/atlassian-extras-decoder-v2-3.4.1.jar
 
   db:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/postgres:14.5                    # 镜像'postgres:14.5'
