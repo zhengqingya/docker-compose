@@ -2,7 +2,7 @@ version: '3'
 
 services:
   confluence:
-    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/atlassian-confluence:latest  # 源镜像`cptactionhank/atlassian-confluence:latest` https://github.com/cptactionhank/docker-atlassian-confluence
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/atlassian-confluence:7.9.3  # 源镜像`cptactionhank/atlassian-confluence:7.9.3` https://github.com/cptactionhank/docker-atlassian-confluence
     container_name: confluence
     restart: always
     volumes:
