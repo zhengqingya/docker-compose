@@ -44,7 +44,7 @@ CREATE DATABASE jira CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
 许可证
 
 ```shell
-# 生成激活码 eg:
+# 生成激活码 （仅用于学习！） eg:
 java -jar ./app/atlassian-agent.jar -d -m test@test.com -n BAT -p jira -o http://127.0.0.1 -s B6DG-XW0K-2TZX-QJUX
 ```
 
