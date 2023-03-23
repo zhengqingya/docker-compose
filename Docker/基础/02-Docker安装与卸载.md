@@ -5,6 +5,9 @@
 > tips: 基于 CentOS Linux release 7.6.1810 (Core)
 
 ```shell
+# 查看CentOS系统版本
+cat /etc/redhat-release
+
 # 配置yum源
 sudo yum install -y yum-utils
 sudo yum-config-manager \
