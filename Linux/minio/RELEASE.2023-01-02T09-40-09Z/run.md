@@ -6,5 +6,7 @@ https://min.io
 docker-compose -f docker-compose-minio.yml -p minio up -d
 ```
 
-访问地址：[`ip地址:9090/minio`](http://127.0.0.1:9090/minio)
+> tips: 不要用`127.0.0.1`访问，用ip或localhost
+
+访问地址：[`ip地址:9090/minio`](http://localhost:9090/minio)
 登录账号密码：`admin/password`
