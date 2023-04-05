@@ -56,5 +56,5 @@ services:
     # 构建镜像
     build:
       context: ./test # Dockerfile上下文路径
-      dockerfile: Dockerfile # 指定 Dockerfile 文件的路径
+      dockerfile: Dockerfile # 指定 Dockerfile 文件的路径 -- tips: Dockerfile中的路径(eg:jar路径) 基于上面配置的`context`路径
     image: docker-compose-test:latest # 如果这个时候指定镜像会去直接拉取镜像，而不会先通过上面的build构建镜像 （ 可以先通过 `docker-compose up --build` 先构建出镜像 再 `docker-compose up -d`运行 ）
