@@ -80,6 +80,10 @@ docker inspect 容器ID/容器名
 docker inspect 容器ID/容器名 | grep IPAddress
 # 查看日志文件路径
 docker inspect --format='{{.LogPath}}' 容器ID/容器名
+# 查看容器在 `/var/lib/docker/overlay2/` 下的数据目录
+docker inspect -f '{{ .GraphDriver.Data.MergedDir }}' 容器ID/容器名
+# 查看容器映射的数据存放目录 -- 主要是看Mounts节点信息
+docker inspect -f '{{ .Mounts }}' 容器ID/容器名
 ```
 
 ### 运维常用
