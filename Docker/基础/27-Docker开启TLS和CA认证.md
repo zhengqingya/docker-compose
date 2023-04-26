@@ -2,6 +2,8 @@
 
 > https://docs.docker.com/engine/security/protect-access/#create-a-ca-server-and-client-keys-with-openssl
 
+由于开启2375远程访问不安全，所以需要配置docker的ca证书。
+
 ### 一、生成证书
 
 ```shell
