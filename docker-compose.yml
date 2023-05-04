@@ -51,6 +51,10 @@ services:
       options:
         max-size: "100m"    # 单个日志文件大小为100m
         max-file: "3"       # 最多3个日志文件
+    # 容器添加自定义hosts -- 往容器内的`/etc/hosts`文件中添加记录
+    extra_hosts:
+      - "test-mysql:192.168.101.91"
+      - "test-redis:192.168.101.92"
 
   zq4:
     # 构建镜像
