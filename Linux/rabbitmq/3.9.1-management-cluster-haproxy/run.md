@@ -36,9 +36,10 @@ rabbitmqctl list_policies -p my_vhost
 
 ![img.png](images/haproxy-web.png)
 
-> 用同一地址去访问连接mq
-> mq-web管理端：[`ip地址:15682`](http://127.0.0.1:15682)
-> java程序：`-Dspring.rabbitmq.host=127.0.0.1 -Dspring.rabbitmq.port=5682`
+用同一地址去访问连接mq
+
+- mq-web管理端：[`http://127.0.0.1:15682`](http://127.0.0.1:15682)
+- java程序：`-Dspring.rabbitmq.host=127.0.0.1 -Dspring.rabbitmq.port=5682`
 
 ### 使用 `Keepalived` 给 `HAProxy` 做主备
 
