@@ -1,7 +1,7 @@
 ### 安装Docker可视化界面工具`Portainer`
 
 > 挂载宿主机目录的时候可能会出现如下问题，点击`Share it`即可
-> ![docker-compose-windows安装环境问题.png](./../../image/docker-compose-windows安装环境问题.png)
+> ![docker-compose-windows安装环境问题.png](images/docker-compose-windows安装环境问题.png)
 
 ```shell
 docker-compose -f docker-compose-portainer.yml -p portainer up -d

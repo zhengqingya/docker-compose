@@ -40,7 +40,7 @@ docker swarm join-token manager
 docker swarm join-token worker
 ```
 
-![docker-swarm-init.png](../../image/docker-swarm-init.png)
+![docker-swarm-init.png](images/docker-swarm-init.png)
 
 #### 添加集群节点
 
@@ -65,7 +65,7 @@ docker node ls
 docker node inspect 节点名称|节点ID
 ```
 
-![docker-swarm-cluster-nodes.png](../../image/docker-swarm-cluster-nodes.png)
+![docker-swarm-cluster-nodes.png](images/docker-swarm-cluster-nodes.png)
 
 #### 删除节点
 
@@ -120,11 +120,11 @@ docker service ps mynginx
 docker rm -f 容器ID/容器名
 ```
 
-![docker-swarm-service-nginx.png](../../image/docker-swarm-service-nginx.png)
+![docker-swarm-service-nginx.png](images/docker-swarm-service-nginx.png)
 
 访问 `集群任意IP:80`
 
-![docker-swarm-service-nginx-run.png](../../image/docker-swarm-service-nginx-run.png)
+![docker-swarm-service-nginx-run.png](images/docker-swarm-service-nginx-run.png)
 
 #### 弹性服务（动态扩缩容）
 
@@ -142,7 +142,7 @@ docker service update --replicas 3 mynginx
 docker service ps mynginx
 ```
 
-![docker-swarm-service-nginx-replicas.png](../../image/docker-swarm-service-nginx-replicas.png)
+![docker-swarm-service-nginx-replicas.png](images/docker-swarm-service-nginx-replicas.png)
 
 #### 删除服务
 
@@ -176,7 +176,7 @@ docker service create --replicas 5 --name redis \
 docker service ps redis
 ```
 
-![docker-swarm-service-redis.png](../../image/docker-swarm-service-redis.png)
+![docker-swarm-service-redis.png](images/docker-swarm-service-redis.png)
 
 滚动更新
 

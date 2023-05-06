@@ -29,4 +29,4 @@ docker exec -it elasticsearch /bin/bash
 elasticsearch-setup-passwords interactive
 ```
 
-![elk_elasticsearch_set_password](./../../image/elk_elasticsearch_set_password.png)
+![elk_elasticsearch_set_password](images/elk_elasticsearch_set_password.png)

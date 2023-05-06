@@ -13,7 +13,7 @@ chmod -R 777 ./postgresql/data
 
 连接
 
-![postgresql-navicat-connection.png](../../image/postgresql-navicat-connection.png)
+![postgresql-navicat-connection.png](images/postgresql-navicat-connection.png)
 
 ```shell
 # 进入容器

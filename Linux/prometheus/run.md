@@ -15,9 +15,9 @@ docker logs -fn10 prometheus-grafana
 2. prometheus访问地址: [`http://ip地址:9090`](http://www.zhengqingya.com:9090)
 3. exporter访问地址: [`http://ip地址:9100/metrics`](http://www.zhengqingya.com:9100/metrics)
 
-![prometheus-targets.png](./../../image/prometheus-targets.png)
+![prometheus-targets.png](images/prometheus-targets.png)
 
-![prometheus-grafana-jvm.png](./../../image/prometheus-grafana-jvm.png)
+![prometheus-grafana-jvm.png](images/prometheus-grafana-jvm.png)
 
 #### 其它
 

@@ -17,4 +17,4 @@ docker run --name nginx -d -p 8080:80 nginx
 
 访问 [http://127.0.0.1:8080](http://127.0.0.1:8080)
 
-![docker-nginx-run.png](../../image/docker-nginx-run.png)
+![docker-nginx-run.png](images/docker-nginx-run.png)

@@ -14,11 +14,11 @@ docker-compose -f docker-compose-nps.yml -p nps up -d
 
 新增客户端
 
-![nps-客户端配置.png](./../../image/nps-客户端配置.png)
+![nps-客户端配置.png](images/nps-客户端配置.png)
 
 新增TCP隧道
 
-![nps-tcp隧道配置.png](./../../image/nps-tcp隧道配置.png)
+![nps-tcp隧道配置.png](images/nps-tcp隧道配置.png)
 
 #### 客户端
 

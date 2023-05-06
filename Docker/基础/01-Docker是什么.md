@@ -20,4 +20,4 @@ Docker 使用客户端-服务器 (C/S) 架构模式，使用远程API来管理�
 
 ### 架构
 
-![docker-架构.png](../../image/docker-架构.png)
+![docker-架构.png](images/docker-架构.png)

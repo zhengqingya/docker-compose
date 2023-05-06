@@ -19,7 +19,7 @@ Navicat可视化工具连接参数
 | 用户名         | root                |
 | 密码           | root                |
 
-![mycat-connect.png](./../../image/mycat-connect.png)
+![mycat-connect.png](images/mycat-connect.png)
 
 ### Mycat-web
 

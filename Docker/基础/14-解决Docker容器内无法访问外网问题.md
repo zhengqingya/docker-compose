@@ -150,7 +150,7 @@ tcpdump -i docker0 icmp
 # 发现有request包，表明本机到baidu的包，baidu是接收到的，可能是百度没响应（可能性不大）或者被公司防火墙阻断了
 ```
 
-![tcpdump抓包docker0.png](../../image/tcpdump抓包docker0.png)
+![tcpdump抓包docker0.png](images/tcpdump抓包docker0.png)
 
 #### 法九：宿主机防火墙开启伪装IP功能
 

@@ -10,8 +10,8 @@ Docker安装教程：[https://zhengqing.blog.csdn.net/article/details/103441358]
 
 ```shell script
 # 创建文件夹
-mkdir -p E:/IT_zhengqing/soft/soft-dev/Docker
-cd E:/IT_zhengqing/soft/soft-dev/Docker
+mkdir -p D:/zhengqingya/soft/soft-dev/Docker
+cd D:/zhengqingya/soft/soft-dev/Docker
 
 git clone https://gitee.com/zhengqingya/docker-compose.git
 cd docker-compose/Windows

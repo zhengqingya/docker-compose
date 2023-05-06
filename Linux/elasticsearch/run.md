@@ -31,9 +31,9 @@ elasticsearch-setup-passwords interactive
 curl 127.0.0.1:9200 -u elastic:123456
 ```
 
-![elasticsearch_set_auto_password.png](./../../image/elasticsearch_set_auto_password.png)
-![elasticsearch_set_password.png](./../../image/elasticsearch_set_password.png)
-![elasticsearch_curl.png](./../../image/elasticsearch_curl.png)
+![elasticsearch_set_auto_password.png](images/elasticsearch_set_auto_password.png)
+![elasticsearch_set_password.png](images/elasticsearch_set_password.png)
+![elasticsearch_curl.png](images/elasticsearch_curl.png)
 
 #### 修改ES密码
 
