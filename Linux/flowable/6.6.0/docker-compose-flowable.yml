@@ -1,0 +1,55 @@
+# 可参考: https://flowable.com/open-source/docs/bpmn/ch14-Applications/
+# mysql驱动下载: https://dev.mysql.com/downloads/connector/j/
+# 注：mysql需使用8.0.22版本，否则会出现第一次启动服务正常，第二次却无法启动问题，此问题可查看 => https://bugs.mysql.com/bug.php?id=102435
+version: '3'
+
+networks:
+  flowable:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.26.0.0/24"
+
+services:
+  flowable-ui:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/flowable-ui:6.6.0  # 原镜像`flowable/flowable-ui:6.6.0`
+    container_name: flowable-ui
+    restart: unless-stopped
+    volumes:
+      - "./flowable/mysql-connector-java-8.0.22.jar:/app/WEB-INF/lib/mysql-connector-java-8.0.22.jar"
+    environment:
+      - spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver # mysql8驱动
+      - spring.datasource.url=jdbc:mysql://172.26.0.12:3306/flowable?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF8&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull&useSSL=false&nullCatalogMeansCurrent=true
+      - spring.datasource.username=root        # 数据库账号
+      - spring.datasource.password=root        # 数据库密码
+      - flowable.async-executor-activate=false # 关闭定时任务JOB
+      - flowable.database-schema-update=true   # 当Flowable发现库与数据库表结构不一致时，会自动将数据库表结构升级至新版本
+    depends_on:
+      - mysql
+    networks:
+      flowable:
+        ipv4_address: 172.26.0.11
+    ports:
+      - "9004:8080"
+
+  mysql:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/mysql:8.0  # 原镜像`mysql:8.0`
+    container_name: mysql8                                    # 容器名为'mysql8'
+    restart: unless-stopped                                               # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
+    volumes:                                                      # 数据卷挂载路径设置,将本机目录映射到容器目录
+      - "./mysql/my.cnf:/etc/mysql/my.cnf"
+      - "./mysql/data:/var/lib/mysql"
+      #      - "./mysql/conf.d:/etc/mysql/conf.d"
+      - "./mysql/mysql-files:/var/lib/mysql-files"
+    environment:                        # 设置环境变量,相当于docker run命令中的-e
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+      MYSQL_ROOT_PASSWORD: root         # 设置root用户密码
+      MYSQL_DATABASE: flowable          # 初始化的数据库名称
+    privileged: true
+    user: root
+    networks:
+      flowable:
+        ipv4_address: 172.26.0.12
+    ports:                              # 映射端口
+      - "3308:3306"
