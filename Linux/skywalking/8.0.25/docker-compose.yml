@@ -19,13 +19,12 @@ services:
       TZ: Asia/Shanghai
 #      JAVA_OPTS: "-Xmx1G -Xms1G"
 #      SW_STORAGE: mysql
-#      # 需等待自动创建476张表...
 #      SW_JDBC_URL: "jdbc:mysql://172.24.0.83:3306/skywalking?rewriteBatchedStatements=true&allowMultiQueries=true&useSSL=false"
 #      SW_DATA_SOURCE_USER: root
 #      SW_DATA_SOURCE_PASSWORD: root
     volumes:
       # 驱动获取 https://mvnrepository.com/artifact/mysql/mysql-connector-java/8.0.28
-      - /skywalking/mysql-connector-java-8.0.28.jar:/skywalking/ext-libs/mysql-connector-java-8.0.28.jar
+      - /skywalking/mysql-connector-java-8.0.28.jar:/skywalking/oap-libs/mysql-connector-java-8.0.28.jar
     ports:
       - "11800:11800" # agent 上报数据的端口，这是 gRPC 端口
       - "12800:12800" # ui 读取数据的端口， 这是 http 端口
