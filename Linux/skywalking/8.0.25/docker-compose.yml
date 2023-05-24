@@ -1,3 +1,4 @@
+# 可参考 https://github.com/apache/skywalking/blob/master/docker/docker-compose.yml
 version: '3'
 
 # 网桥 -> 方便相互通讯
@@ -9,19 +10,22 @@ networks:
         - subnet: "172.24.0.0/24"
 
 services:
-  # 应用性能分析
+  # 应用性能分析 -- 不使用docker的话可下载 https://dlcdn.apache.org/skywalking/9.4.0/apache-skywalking-apm-9.4.0.tar.gz 进行测试
   oap:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/skywalking-oap-server:8.9.0 # 原镜像`apache/skywalking-oap-server:8.9.0`
     container_name: oap
     restart: unless-stopped
     environment:
       TZ: Asia/Shanghai
+#      JAVA_OPTS: "-Xmx1G -Xms1G"
 #      SW_STORAGE: mysql
-#      SW_JDBC_URL: "jdbc:mysql://172.24.0.83:3306/skywalking?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF8&zeroDateTimeBehavior=convertToNull&useSSL=false"
+#      # 需等待自动创建476张表...
+#      SW_JDBC_URL: "jdbc:mysql://172.24.0.83:3306/skywalking?rewriteBatchedStatements=true&allowMultiQueries=true&useSSL=false"
 #      SW_DATA_SOURCE_USER: root
 #      SW_DATA_SOURCE_PASSWORD: root
     volumes:
-      - /skywalking/mysql-connector-java-8.0.25.jar:/skywalking/oap-libs/mysql-connector-java-8.0.25.jar
+      # 驱动获取 https://mvnrepository.com/artifact/mysql/mysql-connector-java/8.0.28
+      - /skywalking/mysql-connector-java-8.0.28.jar:/skywalking/ext-libs/mysql-connector-java-8.0.28.jar
     ports:
       - "11800:11800" # agent 上报数据的端口，这是 gRPC 端口
       - "12800:12800" # ui 读取数据的端口， 这是 http 端口
@@ -56,7 +60,7 @@ services:
 #    restart: unless-stopped
 #    volumes:                                                      # 数据卷挂载路径设置,将本机目录映射到容器目录
 #      - "./skywalking/mysql/my.cnf:/etc/mysql/my.cnf"
-#      - "./skywalking/mysql/data:/var/lib/mysql"
+##      - "./skywalking/mysql/data:/var/lib/mysql"
 #      #      - "./skywalking/mysql/conf.d:/etc/mysql/conf.d"
 #      - "./skywalking/mysql/log/mysql/error.log:/var/log/mysql/error.log"
 #      - "./skywalking/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d" # 可执行初始化sql脚本的目录 -- tips:`/var/lib/mysql`目录下无数据的时候才会执行(即第一次启动的时候才会执行)
@@ -66,7 +70,7 @@ services:
 #      MYSQL_ROOT_PASSWORD: root         # 设置root用户密码
 #      MYSQL_DATABASE: skywalking        # 初始化的数据库名称
 #    ports:                              # 映射端口
-#      - "3366:3306"
+#      - "3308:3306"
 #    networks:
 #      skywalking:
 #        ipv4_address: 172.24.0.83
