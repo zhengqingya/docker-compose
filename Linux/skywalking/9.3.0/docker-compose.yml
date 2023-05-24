@@ -61,7 +61,7 @@ services:
     restart: unless-stopped
     volumes:                                                      # 数据卷挂载路径设置,将本机目录映射到容器目录
       - "./skywalking/mysql/my.cnf:/etc/mysql/my.cnf"
-#      - "./skywalking/mysql/data:/var/lib/mysql"
+      - "./skywalking/mysql/data:/var/lib/mysql"
       #      - "./skywalking/mysql/conf.d:/etc/mysql/conf.d"
       - "./skywalking/mysql/log/mysql/error.log:/var/log/mysql/error.log"
       - "./skywalking/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d" # 可执行初始化sql脚本的目录 -- tips:`/var/lib/mysql`目录下无数据的时候才会执行(即第一次启动的时候才会执行)
