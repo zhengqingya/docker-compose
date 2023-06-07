@@ -1,7 +1,7 @@
 version: '3'
 services:
   zookepper:
-    image: wurstmeister/zookeeper                    # 原镜像`wurstmeister/zookeeper`
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/zookeeper                    # 原镜像`wurstmeister/zookeeper`
     container_name: zookeeper                        # 容器名为'zookeeper'
     restart: unless-stopped                                  # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
     volumes:                                         # 数据卷挂载路径设置,将本机目录映射到容器目录
@@ -10,7 +10,7 @@ services:
       - "2181:2181"
 
   kafka:
-    image: wurstmeister/kafka                                # 原镜像`wurstmeister/kafka`
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/kafka:2.13-2.8.1                                # 原镜像`wurstmeister/kafka:2.13-2.8.1`
     container_name: kafka                                    # 容器名为'kafka'
     restart: unless-stopped                                          # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
     volumes:                                                 # 数据卷挂载路径设置,将本机目录映射到容器目录
@@ -28,8 +28,9 @@ services:
     depends_on:                         # 解决容器依赖启动先后问题
       - zookepper
 
+  # kafka集群管理工具
   kafka-manager:
-    image: sheepkiller/kafka-manager                         # 原镜像`sheepkiller/kafka-manager`
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/kafka-manager                         # 原镜像`sheepkiller/kafka-manager`
     container_name: kafka-manager                            # 容器名为'kafka-manager'
     restart: unless-stopped                                          # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
     environment:                        # 设置环境变量,相当于docker run命令中的-e
@@ -39,6 +40,6 @@ services:
       KAFKA_MANAGER_USERNAME: admin       # 登陆账户
       KAFKA_MANAGER_PASSWORD: 123456      # 登陆密码
     ports:                              # 映射端口
-      - "9000:9000"
+      - "9006:9000"
     depends_on:                         # 解决容器依赖启动先后问题
       - kafka
