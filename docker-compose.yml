@@ -1,5 +1,12 @@
 version: '3'
 
+# 定义通用配置
+x-common-config: &common-config
+  restart: unless-stopped
+  environment:
+    TZ: Asia/Shanghai
+    LANG: en_US.UTF-8
+
 # 网桥xx -> 方便相互通讯
 networks:
   xx:
@@ -12,6 +19,7 @@ services:
   # tips:不要使用带下划线的名称 ex:zq_1   原因：在某些程序里，解析不了此数据
   zq-1:
     image: xx
+    <<: *common-config
 
   zq2:
     image: xx

@@ -4,7 +4,7 @@
 
 eg: 
 
-```shell
+```yml
 version: '3'
 
 services:
