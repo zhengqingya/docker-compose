@@ -13,7 +13,7 @@ cd docker-compose/Linux
 ### 二、运行服务
 
 > 环境部署见每个服务下的`run.md`；
-> ex: `Linux/portainer/run.md`
+> eg: `Linux/portainer/run.md`
 
 #### 数据库
 
