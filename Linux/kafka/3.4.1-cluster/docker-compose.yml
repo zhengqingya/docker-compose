@@ -33,6 +33,7 @@ services:
     restart: unless-stopped                                               # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
     volumes:                                         # 数据卷挂载路径设置,将本机目录映射到容器目录
       - "/etc/localtime:/etc/localtime"
+      - "./kafka/zookeeper:/bitnami/zookeeper"
     environment:
       ALLOW_ANONYMOUS_LOGIN: yes
     ports:                                           # 映射端口
