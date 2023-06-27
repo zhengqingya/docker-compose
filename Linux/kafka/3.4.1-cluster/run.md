@@ -26,9 +26,22 @@ https://github.com/dushixiang/kafka-map
 
 ### java客户端连接
 
-```shell
+```yml
 spring:
   kafka:
     bootstrap-servers: 127.0.0.1:9093,127.0.0.1:9094 # 指定kafka server地址，集群（多个逗号分隔）
 ```
+
+### 测试消费
+
+```shell
+# 创建主题
+docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-topics.sh --create --bootstrap-server kafka-1:9092 --topic my-topic --partitions 3 --replication-factor 2
+# 控制台生产者
+docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-console-producer.sh --bootstrap-server kafka-1:9092 --topic my-topic
+# 控制台消费者
+docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-console-consumer.sh --bootstrap-server kafka-1:9092 --topic my-topic
+```
+
+![img.png](images/kafka-console-producer-consumer.png)
 
