@@ -15,7 +15,7 @@ x-kafka-common-env: &kafka-common-env
   KAFKA_ENABLE_KRAFT: no # 是否启用Kafka Raft（KRaft）模式。默认值：是
   ALLOW_PLAINTEXT_LISTENER: yes # 允许使用 PLAINTEXT 监听器。默认值：否。
   KAFKA_CFG_ZOOKEEPER_CONNECT: zookepper:2181    # zookeeper连接地址
-  KAFKA_CFG_INTER_BROKER_LISTENER_NAME: INTERNAL   # #用于配置broker之间通信使用的监听器名称
+  KAFKA_CFG_INTER_BROKER_LISTENER_NAME: INTERNAL   # 用于配置broker之间通信使用的监听器名称
   KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT # 监听的协议集合多个。（这里INTERNAL指的是内部，EXTERNAL是外部，之后就不能够使用PLAINTEXT作为协议名了，只能够使用定义的INTERNAL、EXTERNAL）
 
 # 网桥 -> 方便相互通讯
@@ -89,8 +89,10 @@ services:
       - "9006:8080"
     depends_on:                         # 解决容器依赖启动先后问题
       - kafka-1
+      - kafka-2
     links:                              # 配置容器互相连接
       - kafka-1
+      - kafka-2
     networks:
       kafka:
         ipv4_address: 172.22.6.30

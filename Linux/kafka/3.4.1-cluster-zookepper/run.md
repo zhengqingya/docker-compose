@@ -19,7 +19,7 @@ https://github.com/dushixiang/kafka-map
 
 ![img.png](images/kafka-map-01.png)
 
-添加集群
+添加集群 eg: 172.22.6.21:9092,172.22.6.22:9092
 ![img.png](images/kafka-map-02.png)
 
 ![img.png](images/kafka-map-03.png)
