@@ -1,0 +1,59 @@
+version: '3'
+
+networks:
+  rocketmq:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.23.0.0/24"
+
+services:
+  rocketmq_server:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/rocketmq:5.1.3  # 源镜像`apache/rocketmq:5.1.3`
+    container_name: rocketmq_server
+    ports:
+      - 9876:9876
+    volumes:
+      - ./rocketmq/rocketmq_server/logs:/home/rocketmq/logs
+    environment:
+      JAVA_OPT_EXT: "-Duser.home=/home/rocketmq -Xms256M -Xmx256M -Xmn128m"
+    command: ["sh","mqnamesrv"]
+    networks:
+      rocketmq:
+        ipv4_address: 172.23.0.11
+
+  rocketmq_broker:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/rocketmq:5.1.3  # 源镜像`apache/rocketmq:5.1.3`
+    container_name: rocketmq_broker
+    ports:
+      - 10909:10909
+      - 10911:10911
+    volumes:
+      - ./rocketmq/rocketmq_broker/logs:/home/logs
+      - ./rocketmq/rocketmq_broker/store:/home/store
+      # `broker.conf`配置参考 https://github.com/apache/rocketmq/blob/master/distribution/conf/broker.conf
+      - ./rocketmq/rocketmq_broker/conf/broker.conf:/home/rocketmq/broker.conf
+    environment:
+      NAMESRV_ADDR: "rocketmq_server:9876"
+      JAVA_OPT_EXT: "-Duser.home=/home/rocketmq -server -Xms128m -Xmx128m -Xmn128m"
+    command: ["sh","mqbroker","-c","/home/rocketmq/broker.conf","autoCreateTopicEnable=true"]
+    depends_on:
+      - rocketmq_server
+    networks:
+      rocketmq:
+        ipv4_address: 172.23.0.21
+
+  # mq可视化控制台
+  rocketmq_dashboard:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/rocketmq-dashboard:1.0.0   # 源镜像`apacherocketmq/rocketmq-dashboard:1.0.0`
+    container_name: rocketmq_dashboard
+    ports:
+      - 9002:8080
+    environment:
+      JAVA_OPTS: "-Drocketmq.namesrv.addr=rocketmq_server:9876 -Dcom.rocketmq.sendMessageWithVIPChannel=false"
+    depends_on:
+      - rocketmq_server
+    networks:
+      rocketmq:
+        ipv4_address: 172.23.0.31
+
