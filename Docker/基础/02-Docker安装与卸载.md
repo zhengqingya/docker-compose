@@ -2,7 +2,10 @@
 
 > 可参考 https://docs.docker.com/engine/install/centos
 >
-> tips: 基于 CentOS Linux release 7.6.1810 (Core)
+> tips: 已测可行环境 
+> - CentOS Linux release 7.6.1810 (Core)
+> - CentOS Linux release 8.4.2105 (Core)
+
 
 ```shell
 # 查看CentOS系统版本
