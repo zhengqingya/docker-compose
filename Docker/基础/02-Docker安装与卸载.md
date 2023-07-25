@@ -5,6 +5,7 @@
 > tips: 已测可行环境 
 > - CentOS Linux release 7.6.1810 (Core)
 > - CentOS Linux release 8.4.2105 (Core)
+> - TencentOS Server release 3.1 (Final) 上会有警告 `/usr/local/lib/python3.6/site-packages/paramiko/transport.py:32: CryptographyDeprecationWarning: Python 3.6 is no longer supported by the Python core team. Therefore, support for it is deprecated in cryptography. The next release of cryptography will remove support for Python 3.6. from cryptography.hazmat.backends import default_backend`
 
 
 ```shell
@@ -24,16 +25,16 @@ sudo yum-config-manager \
 sudo yum install -y docker-ce-20.10.7 docker-ce-cli-20.10.7 containerd.io-1.4.6
 
 # 启动docker
-sudo systemctl start docker
+# sudo systemctl start docker
 # 重启docker 
-sudo systemctl restart docker
+# sudo systemctl restart docker
 # 开机自启
-sudo systemctl enable docker
+# sudo systemctl enable docker
 # 设置开机自启 & 现在启动
 sudo systemctl enable --now docker
 
 # 查看运行情况
-sudo systemctl status docker
+# sudo systemctl status docker
 
 # 测试
 docker run --rm alpine ping -c 5 baidu.com
