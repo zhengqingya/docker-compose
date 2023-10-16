@@ -1,4 +1,6 @@
-### Docker安装
+### 一、安装
+
+#### 1、Docker安装
 
 > 可参考 https://docs.docker.com/engine/install/centos
 >
@@ -40,19 +42,7 @@ sudo systemctl enable --now docker
 docker run --rm alpine ping -c 5 baidu.com
 ```
 
-### Docker卸载
-
-```shell
-# 查看yum安装的docker软件包
-yum list installed |grep docker
-# 删除相关软件包
-yum -y remove docker* containerd.io
-# 删除关联数据
-rm -rf /var/lib/docker
-rm -rf /var/lib/containerd
-```
-
-### 配置镜像加速器
+##### 配置镜像加速器
 
 ```shell
 # 修改daemon配置文件`/etc/docker/daemon.json`
@@ -68,9 +58,7 @@ sudo systemctl restart docker
 docker info
 ```
 
----
-
-### `docker-compose`安装
+#### 2、`docker-compose`安装
 
 ```shell
 # 安装EPEL软件包
@@ -89,13 +77,7 @@ docker-compose --version
 # curl -L https://raw.githubusercontent.com/docker/compose/1.25.0/contrib/completion/bash/docker-compose > /etc/bash_completion.d/docker-compose
 ```
 
-### `docker-compose`卸载
-
-```shell
-pip3 uninstall docker-compose
-```
-
-### `docker-compose`相关命令
+##### `docker-compose`相关命令
 
 ```shell
 # 构建镜像
@@ -118,7 +100,7 @@ docker-compose images
 docker-compose pull 镜像名
 ```
 
-### 常用shell组合
+### 二、常用shell组合
 
 ```shell
 # 删除所有容器
@@ -131,4 +113,26 @@ docker inspect 容器名或ID | grep "IPAddress"
 docker network create mynet
 docker run -d --net mynet --name container1 my_image
 docker run -it --net mynet --name container1 another_image
+```
+
+---
+
+### 三、卸载
+
+#### 1、Docker卸载
+
+```shell
+# 查看yum安装的docker软件包
+yum list installed |grep docker
+# 删除相关软件包
+yum -y remove docker* containerd.io
+# 删除关联数据
+rm -rf /var/lib/docker
+rm -rf /var/lib/containerd
+```
+
+#### 2、`docker-compose`卸载
+
+```shell
+pip3 uninstall docker-compose
 ```
