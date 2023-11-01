@@ -8,6 +8,7 @@
 > - CentOS Linux release 7.6.1810 (Core)
 > - CentOS Linux release 8.4.2105 (Core)
 > - TencentOS Server release 3.1 (Final) 上会有警告 `/usr/local/lib/python3.6/site-packages/paramiko/transport.py:32: CryptographyDeprecationWarning: Python 3.6 is no longer supported by the Python core team. Therefore, support for it is deprecated in cryptography. The next release of cryptography will remove support for Python 3.6. from cryptography.hazmat.backends import default_backend`
+> - CentOS Stream release 8
 
 
 ```shell
