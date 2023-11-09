@@ -22,3 +22,6 @@ cd docker-compose/Windows
 > 环境部署见每个服务下的`run.md`
 > ex: `Windows/portainer/run.md`
 
+## tips
+
+windows环境下如果需要映射绝对路径，eg: `/d/test` 等同于 `D:\test`
