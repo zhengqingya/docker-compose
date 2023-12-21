@@ -17,8 +17,8 @@ services:
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
     ports:
-      - "8080:8080"           # web_port
-      - "8024:8024"           # bridge_port
+      - "30080:30080"           # web_port
+      - "30024:30024"           # bridge_port
       - "8100-8200:8100-8200" # 预留端口
 #    network_mode: host # 容器使用宿主机网络
     networks:

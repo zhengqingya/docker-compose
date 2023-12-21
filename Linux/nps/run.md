@@ -10,7 +10,7 @@
 docker-compose -f docker-compose-nps.yml -p nps up -d
 ```
 
-访问地址：[`http://ip地址:8080`](http://www.zhengqingya.com:8080)
+访问地址：[`http://ip地址:30080`](http://www.zhengqingya.com:30080)
 默认登录账号密码：`admin/123`
 
 #### 服务端配置
@@ -26,11 +26,11 @@ docker-compose -f docker-compose-nps.yml -p nps up -d
 #### 客户端
 
 ```shell
-docker run -d --name npc --net=host ffdfgdfg/npc:v0.26.10 -server=服务端ip地址:8024 -vkey=唯一验证密钥 -type=tcp
+docker run -d --name npc --net=host ffdfgdfg/npc:v0.26.10 -server=服务端ip地址:30024 -vkey=唯一验证密钥 -type=tcp
 ```
 
 windows
 
 ```shell
-npc.exe -server=服务端ip地址:8024 -vkey=唯一验证密钥 -type=tcp
+npc.exe -server=服务端ip地址:30024 -vkey=唯一验证密钥 -type=tcp
 ```
