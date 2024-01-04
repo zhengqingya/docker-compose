@@ -1,0 +1,78 @@
+# 可参考 https://github.com/apache/skywalking/blob/master/docker/docker-compose.yml
+version: '3'
+
+# 网桥 -> 方便相互通讯
+networks:
+  skywalking:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.24.0.0/24"
+
+services:
+  # 应用性能分析 -- 不使用docker的话可下载 https://dlcdn.apache.org/skywalking/9.7.0/apache-skywalking-apm-9.7.0.tar.gz 进行测试
+  oap:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/skywalking-oap-server:9.7.0 # 原镜像`apache/skywalking-oap-server:9.7.0`
+    container_name: oap
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Shanghai
+      JAVA_OPTS: "-Xmx2048M -Xms2048M"
+      SW_STORAGE: mysql
+      # 需等待自动创建476张表...
+      SW_JDBC_URL: "jdbc:mysql://172.24.0.83:3306/skywalking?rewriteBatchedStatements=true&allowMultiQueries=true&useSSL=false"
+      SW_DATA_SOURCE_USER: root
+      SW_DATA_SOURCE_PASSWORD: root
+    volumes:
+      # 驱动获取 https://mvnrepository.com/artifact/mysql/mysql-connector-java/8.0.28
+#      - "./skywalking/mysql-connector-java-8.0.28.jar:/skywalking/oap-libs/mysql-connector-java-8.0.28.jar"
+      - "./skywalking/mysql-connector-java-8.0.28.jar:/skywalking/ext-libs/mysql-connector-java-8.0.28.jar"
+    ports:
+      - "11800:11800" # agent 上报数据的端口，这是 gRPC 端口
+      - "12800:12800" # ui 读取数据的端口， 这是 http 端口
+    depends_on:
+      - mysql
+    networks:
+      skywalking:
+        ipv4_address: 172.24.0.81
+
+  # 可视化界面
+  oap-ui:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/skywalking-ui:9.7.0 # 原镜像`apache/skywalking-ui:9.7.0`
+    container_name: oap-ui
+    restart: unless-stopped
+    depends_on:
+      - oap
+    links:
+      - oap
+    ports:
+      - "18080:8080"
+    environment:
+      TZ: Asia/Shanghai
+      SW_SERVER_PORT: 8080                     # 设置SkyWalking UI的监听端口
+      SW_OAP_ADDRESS: http://172.24.0.81:12800 # SkyWalking OAP服务器的地址和端口
+    networks:
+      skywalking:
+        ipv4_address: 172.24.0.82
+
+  # mysql存储
+  mysql:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/mysql:5.7  # 原镜像`mysql:5.7`
+    container_name: oap-mysql                                    # 容器名为'oap-mysql'
+    restart: unless-stopped
+    volumes:                                                      # 数据卷挂载路径设置,将本机目录映射到容器目录
+      - "./skywalking/mysql/my.cnf:/etc/mysql/my.cnf"
+      - "./skywalking/mysql/data:/var/lib/mysql"
+      #      - "./skywalking/mysql/conf.d:/etc/mysql/conf.d"
+      - "./skywalking/mysql/log/mysql/error.log:/var/log/mysql/error.log"
+      - "./skywalking/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d" # 可执行初始化sql脚本的目录 -- tips:`/var/lib/mysql`目录下无数据的时候才会执行(即第一次启动的时候才会执行)
+    environment:                        # 设置环境变量,相当于docker run命令中的-e
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+      MYSQL_ROOT_PASSWORD: root         # 设置root用户密码
+      MYSQL_DATABASE: skywalking        # 初始化的数据库名称
+    ports:                              # 映射端口
+      - "13306:3306"
+    networks:
+      skywalking:
+        ipv4_address: 172.24.0.83
