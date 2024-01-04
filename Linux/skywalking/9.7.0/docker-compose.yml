@@ -19,7 +19,7 @@ services:
       TZ: Asia/Shanghai
       JAVA_OPTS: "-Xmx2048M -Xms2048M"
       SW_STORAGE: mysql
-      # 需等待自动创建476张表...
+      # TODO 修改成自己的数据库配置 tips: 需等待自动创建60张表...
       SW_JDBC_URL: "jdbc:mysql://192.168.101.88:3306/skywalking?rewriteBatchedStatements=true&allowMultiQueries=true&useSSL=false"
       SW_DATA_SOURCE_USER: root
       SW_DATA_SOURCE_PASSWORD: root
