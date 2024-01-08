@@ -34,6 +34,7 @@ cd docker-compose/Linux
 2. [kafka](./Linux/kafka)
 3. [rabbitmq](./Linux/rabbitmq)
 4. [rocketmq](./Linux/rocketmq)
+5. [pulsar](./Linux/pulsar)
 
 #### 日志系统
 

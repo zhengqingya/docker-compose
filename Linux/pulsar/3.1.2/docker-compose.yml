@@ -1,0 +1,69 @@
+# docker run -it -p 6650:6650 -p 8080:8080 --mount source=pulsardata,target=/pulsar/data --mount source=pulsarconf,target=/pulsar/conf apachepulsar/pulsar:3.1.2 bin/pulsar standalone
+
+version: "3"
+
+# 网桥 -> 方便相互通讯
+networks:
+  pulsar:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.31.0.0/24"
+
+services:
+  pulsar:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/pulsar:3.1.2  # 原镜像`apachepulsar/pulsar:3.1.2`
+    container_name: pulsar
+    restart: unless-stopped
+#    volumes:
+#      - "./pulsar/data:/pulsar/data"
+#      - "./pulsar/conf:/pulsar/conf"
+    environment: # 设置环境变量,相当于docker run命令中的-e
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+      BOOKIE_MEM: -Xms512m -Xmx512m -XX:MaxDirectMemorySize=256m
+    hostname: pulsar-standalone
+    # TODO --advertised-address 如果客户端和服务端不在同一个网络，需要填写客户端能够外网访问的地址（eg:172.16.20.188），如果在同一网络情况下可以为hostname值`pulsar-standalone`
+    command: >
+      /bin/bash -c 
+      "bin/apply-config-from-env.py conf/standalone.conf && exec bin/pulsar standalone --advertised-address 172.16.20.188"
+    ports:
+      - "6650:6650"
+      - "8080:8080"
+    networks:
+      pulsar:
+        ipv4_address: 172.31.0.11
+
+  dashboard:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/pulsar-dashboard # 原镜像`apachepulsar/pulsar-dashboard`
+    container_name: pulsar-dashboard
+    restart: unless-stopped
+    depends_on:
+      - pulsar
+    links:
+      - pulsar
+    ports:
+      - "81:80"
+    environment:
+      - SERVICE_URL=http://pulsar-standalone:8080
+    networks:
+      pulsar:
+        ipv4_address: 172.31.0.22
+
+  # web可视化管理界面
+  pulsar-manager:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/pulsar-manager:v0.2.0 # 原镜像`apachepulsar/pulsar-manager:v0.2.0`
+    container_name: pulsar-manager
+    restart: unless-stopped
+    ports:
+      - "9527:9527"
+      - "7750:7750"
+    depends_on:
+      - pulsar
+    links:
+      - pulsar
+    environment:
+      SPRING_CONFIGURATION_FILE: /pulsar-manager/pulsar-manager/application.properties
+    networks:
+      pulsar:
+        ipv4_address: 172.31.0.33
