@@ -19,7 +19,7 @@ services:
       TZ: Asia/Shanghai
       JAVA_OPTS: "-Xmx2048M -Xms2048M"
       # 配置见 https://github.com/apache/skywalking/blob/master/oap-server/server-starter/src/main/resources/application.yml
-      SW_STORAGE: elasticsearch # 指定es7版本存储
+      SW_STORAGE: elasticsearch # 指定es存储
       SW_STORAGE_ES_CLUSTER_NODES: elasticsearch:9200
       SW_ES_USER: elastic
       SW_ES_PASSWORD: elastic123456 # tips: 密码不能为纯数字，启动会出问题
