@@ -34,3 +34,5 @@ docker-compose -f docker-compose.yml -p skywalking up -d
 ```
 
 项目跑起来之后调用下接口，就可以去SkyWalking中查看拓扑图，追踪等信息了...
+
+![](./images/run-1704796415865.png)
