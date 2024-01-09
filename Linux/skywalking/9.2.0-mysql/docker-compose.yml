@@ -1,0 +1,58 @@
+# 可参考 https://github.com/apache/skywalking/blob/master/docker/docker-compose.yml
+version: '3.8'
+
+# 网桥 -> 方便相互通讯
+networks:
+  skywalking:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.24.0.0/24"
+
+services:
+  # 应用性能分析 -- 不使用docker的话可下载 https://dlcdn.apache.org/skywalking/9.2.0/apache-skywalking-apm-9.2.0.tar.gz 进行测试
+  # 交互式运行容器测试能够正常启动 docker run --privileged --name oap -i -t  -p 12800:12800 -p 11800:11800 registry.cn-hangzhou.aliyuncs.com/zhengqing/skywalking-oap-server:9.2.0 /bin/bash
+  oap:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/skywalking-oap-server:9.2.0 # 原镜像`apache/skywalking-oap-server:9.2.0`
+    container_name: oap
+    restart: unless-stopped
+    privileged: true                    # 获取宿主机root权限
+    environment:
+      TZ: Asia/Shanghai
+      JAVA_OPTS: "-Xmx2048M -Xms2048M"
+      # 配置见 https://github.com/apache/skywalking/blob/master/oap-server/server-starter/src/main/resources/application.yml
+      SW_STORAGE: mysql
+      # TODO 修改成自己的数据库配置 tips: 需等待自动创建334张表...
+      SW_JDBC_URL: "jdbc:mysql://172.16.20.80:3306/skywalking-test?rewriteBatchedStatements=true&allowMultiQueries=true&useSSL=false"
+      SW_DATA_SOURCE_USER: root
+      SW_DATA_SOURCE_PASSWORD: root
+    volumes:
+      # 驱动获取 https://mvnrepository.com/artifact/mysql/mysql-connector-java/8.0.28
+      #      - "./skywalking/mysql-connector-java-8.0.28.jar:/skywalking/oap-libs/mysql-connector-java-8.0.28.jar"
+      - "./skywalking/mysql-connector-java-8.0.28.jar:/skywalking/ext-libs/mysql-connector-java-8.0.28.jar"
+    ports:
+      - "11800:11800" # agent 上报数据的端口，这是 gRPC 端口
+      - "12800:12800" # ui 读取数据的端口， 这是 http 端口
+    networks:
+      skywalking:
+        ipv4_address: 172.24.0.81
+
+  # 可视化界面
+  oap-ui:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/skywalking-ui:9.2.0 # 原镜像`apache/skywalking-ui:9.2.0`
+    container_name: oap-ui
+    restart: unless-stopped
+    privileged: true                    # 获取宿主机root权限
+    depends_on:
+      - oap
+    links:
+      - oap
+    ports:
+      - "18080:8080"
+    environment:
+      SW_OAP_ADDRESS: http://172.24.0.81:12800
+      TZ: Asia/Shanghai
+    networks:
+      skywalking:
+        ipv4_address: 172.24.0.82
+
