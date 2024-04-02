@@ -57,6 +57,9 @@ docker rmi 镜像id/镜像名
 
 # 进入容器
 docker exec -it 容器ID/容器名 /bin/bash
+# 退出容器
+exit
+
 # 以交互模式启动一个容器,在容器内执行/bin/bash命令
 docker run -i -t 容器ID/容器名 /bin/bash
 
