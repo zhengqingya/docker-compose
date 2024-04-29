@@ -1,4 +1,5 @@
-> Docker学习视频教程(抖音或学浪上购买观看) https://student-api.iyincaishijiao.com/t/iYSrdxk3
+> Docker学习视频教程（抖音上搜索"程序员郑清"，进入专栏购买课程观看） 
+> https://student-api.iyincaishijiao.com/t/iYSrdxk3
 
 # docker-compose-linux
 
