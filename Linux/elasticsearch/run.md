@@ -46,6 +46,14 @@ curl -H "Content-Type:application/json" -XPOST -u elastic 'http://127.0.0.1:9200
 
 下载地址 https://github.com/medcl/elasticsearch-analysis-ik/releases
 
-#### 谷歌ES插件`Multi Elasticsearch Head`
+#### 谷歌ES插件
+
+##### Multi Elasticsearch Head
 
 https://chrome.google.com/webstore/detail/multi-elasticsearch-head/cpmmilfkofbeimbmgiclohpodggeheim?hl=zh-CN
+
+##### es-client
+
+> tips: 不太好用
+
+https://chromewebstore.google.com/detail/es-client/pkhmgepniefdigphghbolofjgbnhnhfd
