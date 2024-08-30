@@ -10,6 +10,8 @@ docker-compose -f docker-compose-zookeeper.yml -p zookeeper up -d
 
 #### PrettyZoo
 
+> 免费
+
 https://github.com/vran-dev/PrettyZoo
 
 ![](./images/run-1725007084503.png)
@@ -17,6 +19,9 @@ https://github.com/vran-dev/PrettyZoo
 
 #### ZooKeeper Assistant
 
+> 收费
+
 http://www.redisant.cn/za
 
 ![](./images/run-1725007059531.png)
+
