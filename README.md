@@ -90,6 +90,7 @@ cd docker-compose/Linux
 16. [confluence](./Linux/confluence)
 17. [jira](./Linux/jira)
 18. [skywalking](./Linux/skywalking)
+19. [dubbo-admin](./Linux/dubbo-admin)
 
 ---
 
