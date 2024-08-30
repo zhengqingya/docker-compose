@@ -1,7 +1,7 @@
 version: '3'
 services:
   zookeeper:
-    image: zookeeper:3.7.0
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/zookeeper:3.7.0    # 原镜像`zookeeper:3.7.0`
     container_name: zookeeper
     restart: unless-stopped
     volumes:
@@ -12,7 +12,7 @@ services:
 
   # 可视化界面
   zookeeper-webui:
-    image: tobilg/zookeeper-webui
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/zookeeper-webui     # 原镜像`tobilg/zookeeper-webui`
     container_name: zookeeper-webui
     restart: unless-stopped
     environment:
