@@ -1,4 +1,6 @@
-### Zookeeper
+### Dubbo Admin
+
+https://github.com/apache/dubbo-admin
 
 ```shell
 docker-compose -f docker-compose.yml -p dubbo up -d

@@ -22,7 +22,7 @@ services:
         ipv4_address: 172.26.0.11
 
   dubbo-admin:
-    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/dubbo-admin     # 原镜像`apache/dubbo-admin:latest`
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/dubbo-admin:0.6.0     # 原镜像`apache/dubbo-admin:0.6.0`
     container_name: dubbo-admin
     restart: unless-stopped
     volumes:
