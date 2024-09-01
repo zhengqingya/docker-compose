@@ -54,7 +54,7 @@ services:
     depends_on:                         # 解决容器依赖启动先后问题
       - zq1
       - zq2
-    network_mode: host # 容器使用宿主机网络 ( tips:此配置和`ports`/`links`不可结合使用 )
+    network_mode: host # 容器使用宿主机网络 ( tips: 1.此配置和`ports`/`links`不可结合使用  2.window安装Docker Desktop无法使用host网络模式 )
     # 日志
     logging:
       driver: "json-file"   # 默认的文件日志驱动
