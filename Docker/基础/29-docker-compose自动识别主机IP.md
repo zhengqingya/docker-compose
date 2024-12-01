@@ -18,3 +18,18 @@ services:
     ports: 
       - "9092:9092"
 ```
+
+---
+
+在java程序中如果报错：`connect to host.docker.internal:10911 failed`
+![](./images/29-docker-compose自动识别主机IP-1733052599222.png)
+
+
+可以在hosts文件中配置
+![](./images/29-docker-compose自动识别主机IP-1733053075901.png)
+
+
+```shell
+# 用于在Docker容器内部解析为宿主机的内部IP地址，主要用于容器内部访问宿主机上的服务
+127.0.0.1 host.docker.internal
+```
