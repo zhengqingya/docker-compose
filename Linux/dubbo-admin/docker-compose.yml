@@ -1,0 +1,46 @@
+version: '3'
+
+networks:
+  dubbozk:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.26.0.0/24"
+
+services:
+  zookeeper:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/zookeeper:3.7.0    # 原镜像`zookeeper:3.7.0`
+    container_name: zookeeper
+    restart: unless-stopped
+    volumes:
+      - "./zookeeper/data:/data"
+      - "./zookeeper/datalog:/datalog"
+    ports:
+      - "2181:2181"
+    networks:
+      dubbozk:
+        ipv4_address: 172.26.0.11
+
+  dubbo-admin:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/dubbo-admin:0.6.0     # 原镜像`apache/dubbo-admin:0.6.0`
+    container_name: dubbo-admin
+    restart: unless-stopped
+    volumes:
+      # application.properties配置文件可参考：https://github.com/apache/dubbo-admin/blob/develop/docker/latest/application.properties
+      - "./dubbo-admin/properties:/config"
+    environment:
+      "admin.registry.address": zookeeper://172.26.0.11:2181
+      "admin.config-center": zookeeper://172.26.0.11:2181
+      "admin.metadata-report.address": zookeeper://172.26.0.11:2181
+      "admin.root.user.name": root
+      "admin.root.user.password": root
+      "JAVA_OPTS": "-Xmx100M -Xms100M -XX:+UseG1GC"
+    depends_on:
+      - zookeeper
+    links:
+      - zookeeper
+    ports:
+      - "38080:38080"
+    networks:
+      dubbozk:
+        ipv4_address: 172.26.0.21

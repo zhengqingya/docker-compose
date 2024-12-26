@@ -1,5 +1,4 @@
-> Docker学习视频教程（抖音上搜索"程序员郑清"，进入专栏购买课程观看） 
-> https://student-api.iyincaishijiao.com/t/iYSrdxk3
+> https://gitee.com/zhengqingya/docker-compose
 
 # docker-compose-linux
 
@@ -90,12 +89,14 @@ cd docker-compose/Linux
 16. [confluence](./Linux/confluence)
 17. [jira](./Linux/jira)
 18. [skywalking](./Linux/skywalking)
+19. [dubbo-admin](./Linux/dubbo-admin)
 
 ---
 
-### windows 使用 docker-compose 安装开发环境系列
+### 其它
 
-> 见[windows 使用 docker-compose 安装开发环境系列.md](./windows使用docker-compose安装开发环境系列.md)
+> 1. [Docker 基础学习](./Docker/基础)
+> 2. [windows 使用 docker-compose 安装开发环境系列](./windows使用docker-compose安装开发环境系列.md)
 
 ---
 
