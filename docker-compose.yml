@@ -65,8 +65,9 @@ services:
     extra_hosts:
       - "test-mysql:192.168.101.91"
       - "test-redis:192.168.101.92"
-    env_file:
-      - xx.env          # 加载`xx.env`配置文件中的环境变量
+    env_file:           # 加载环境变量，配置文件内容格式：key=value （一行一个环境变量，类似java中的xx.properties）
+      - .env            # 加载`.env`配置文件中的环境变量，对所有服务都是可用的。 -- 注：文件名需固定为`.env`才有效
+      - .env.zq3        # 指定环境变量仅对 zq3 服务生效
     deploy:             # 定义部署配置
       replicas: 2       # 创建2个副本
       resources:        # 定义容器占用的资源
