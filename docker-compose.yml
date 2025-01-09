@@ -69,7 +69,7 @@ services:
       - .env            # 加载`.env`配置文件中的环境变量，对所有服务都是可用的。 -- 注：文件名需固定为`.env`才有效
       - .env.zq3        # 指定环境变量仅对 zq3 服务生效
     deploy:             # 定义部署配置
-      replicas: 2       # 创建2个副本
+      replicas: 2       # 创建2个副本 -- 副本>1的时候不要声明 container_name ，默认容器名为`${SERVICE_NAME}-${REPLICA_NUMBER}`
       resources:        # 定义容器占用的资源
         limits:         # 设置资源上限
           cpus: "2.00"
