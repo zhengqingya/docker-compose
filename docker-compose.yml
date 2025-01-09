@@ -65,6 +65,21 @@ services:
     extra_hosts:
       - "test-mysql:192.168.101.91"
       - "test-redis:192.168.101.92"
+    env_file:
+      - xx.env          # 加载`xx.env`配置文件中的环境变量
+    deploy:             # 定义部署配置
+      replicas: 2       # 创建2个副本
+      resources:        # 定义容器占用的资源
+        limits:         # 设置资源上限
+          cpus: "2.00"
+          memory: 1G
+        reservations:   # 设置资源预留
+          memory: 200M
+    healthcheck:  # 健康检查
+      test: ["CMD", "curl", "-f", "http://localhost/actuator/health"] # 测试命令 -- 会发送一个HTTP GET请求到 http://localhost/actuator/health 端点，并期望返回200状态码表示服务健康。
+      interval: 10s # 间隔时间：每10秒执行一次健康检查。
+      timeout: 10s  # 超时时间：每次健康检查的超时时间为10秒。
+      retries: 3    # 重试次数：如果检查失败，最多重试3次。
 
   zq4:
     # 构建镜像
