@@ -5,7 +5,7 @@
 
 Azkaban 是一个开源的批处理工作流调度系统，用于管理和调度Hadoop生态系统中的任务和作业。
 
-> tips：部署未成功
+> tips：web部署未成功
 
 ```shell
 # 拿到sql文件
