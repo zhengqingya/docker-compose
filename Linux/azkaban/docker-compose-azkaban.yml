@@ -2,7 +2,7 @@
 
 version: '3'
 
-# 网桥canal -> 方便相互通讯
+# 网桥 -> 方便相互通讯
 networks:
   azkaban-network:
 
