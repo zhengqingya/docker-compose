@@ -1,0 +1,59 @@
+# Azkaban 编排可参考：https://blog.csdn.net/qq_35745940/article/details/131136337
+
+version: '3'
+
+# 网桥 -> 方便相互通讯
+networks:
+  azkaban-network:
+
+services:
+  # web服务器：提供用户界面和API接口，用于管理作业和监控执行状态。
+  azkaban-web:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/azkaban:3.91.0-313 # 源镜像 registry.cn-hangzhou.aliyuncs.com/bigdata_cloudnative/azkaban:3.91.0-313
+    container_name: azkaban-web
+    restart: unless-stopped                   # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
+    #    user: "hadoop:hadoop"                     # 指定运行任务或命令的用户和用户组信息
+    privileged: true                          # 获取宿主机root权限
+    hostname: azkaban-web
+    depends_on:
+      - azkaban-exec
+    env_file:
+      - .env # 加载环境变量
+    volumes:
+      - ./conf/web/azkaban.properties:${AZKABAN_HOME}/azkaban-web-server/conf/azkaban.properties
+    ports:
+      - "${AZKABAN_WEB_PORT}:${AZKABAN_WEB_PORT}"
+    command: [ "sh","-c","/opt/apache/bootstrap.sh web azkaban-azkaban-exec-1 ${AZKABAN_EXEC_PORT}" ]
+    networks:
+      - azkaban-network
+    healthcheck:
+      test: [ "CMD-SHELL", "netstat -tnlp|grep :${AZKABAN_WEB_PORT} || exit 1" ]
+      interval: 10s
+      timeout: 20s
+      retries: 3
+
+  # 执行器：负责实际执行任务和作业。
+  azkaban-exec:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/azkaban:3.91.0-313 # 源镜像 registry.cn-hangzhou.aliyuncs.com/bigdata_cloudnative/azkaban:3.91.0-313
+    #    container_name: azkaban-exec
+    restart: unless-stopped                   # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
+    #    user: "hadoop:hadoop"                     # 指定运行任务或命令的用户和用户组信息
+    privileged: true                          # 获取宿主机root权限
+    hostname: azkaban-exec
+    deploy:
+      replicas: ${AZKABAN_EXEC_REPLICAS}
+    env_file:
+      - .env # 加载环境变量
+    volumes:
+      - ./conf/exec/azkaban.properties:${AZKABAN_HOME}/azkaban-exec-server/conf/azkaban.properties
+    #    ports:
+    #      - "${AZKABAN_EXEC_PORT}:${AZKABAN_EXEC_PORT}"
+    command: [ "sh","-c","/opt/apache/bootstrap.sh exec" ]
+    networks:
+      - azkaban-network
+    healthcheck:
+      test: [ "CMD-SHELL", "netstat -tnlp|grep :${AZKABAN_EXEC_PORT} || exit 1" ]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+
