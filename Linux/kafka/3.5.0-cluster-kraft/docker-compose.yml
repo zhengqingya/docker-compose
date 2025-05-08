@@ -17,6 +17,7 @@ x-kafka-common-env: &kafka-common-env
   KAFKA_CFG_INTER_BROKER_LISTENER_NAME: BROKER   # 用于配置broker之间通信使用的监听器名称
   KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: BROKER:PLAINTEXT,CONTROLLER:PLAINTEXT # 监听的协议集合多个。（这里BROKER指的是内部，CONTROLLER是外部，之后就不能够使用PLAINTEXT作为协议名了，只能够使用定义的BROKER、CONTROLLER）
   KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@kafka-1:9091,2@kafka-2:9091,3@kafka-3:9091
+#  KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false" # 禁用自动创建主题
 
 
 # 网桥 -> 方便相互通讯
