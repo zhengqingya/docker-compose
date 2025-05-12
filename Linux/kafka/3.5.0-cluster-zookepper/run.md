@@ -49,10 +49,13 @@ docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-console-consumer.sh --boots
 # 手动创建主题
 # docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-topics.sh --create --topic simple-local --bootstrap-server kafka-1:9092
 
+
+# 给脚本添加执行权限 -- linux环境
+chmod +x create-consumer-group.sh
 # 使用脚本创建和授权消费者组 -- 在Windows中可能需要使用Git Bash或WSL运行，脚本执行后，只有被授权的消费者组才能消费指定的主题，未授权的消费者组将被拒绝访问。
 # my-consumer-group是您要创建的消费者组名称
 # simple-local是主题名称
-./create-consumer-group.sh my-consumer-group simple-local
+sh ./create-consumer-group.sh my-consumer-group simple-local
 ```
 
 ![img.png](images/kafka-console-producer-consumer.png)
