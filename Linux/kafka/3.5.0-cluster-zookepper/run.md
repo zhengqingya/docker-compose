@@ -7,6 +7,9 @@ Kafka中将消息存储在可配置数量的分区中，以便实现横向扩展
 ### 运行
 
 ```shell
+# 停止
+docker-compose -f docker-compose.yml -p kafka down
+# 启动
 docker-compose -f docker-compose.yml -p kafka up -d
 ```
 
@@ -19,7 +22,7 @@ https://github.com/dushixiang/kafka-map
 
 ![img.png](images/kafka-map-01.png)
 
-添加集群 eg: 172.22.6.21:9093,172.22.6.22:9094
+添加集群 eg: 172.12.6.21:9092,172.12.6.22:9092
 ![img.png](images/kafka-map-02.png)
 
 ![img.png](images/kafka-map-03.png)
@@ -43,8 +46,13 @@ docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-console-producer.sh --boots
 docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-console-consumer.sh --bootstrap-server kafka-1:9092 --topic my-topic
 
 
-# 创建消费者组 TODO 
-docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-topics.sh --create --topic simple-local --bootstrap-server kafka-1:9092
+# 手动创建主题
+# docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-topics.sh --create --topic simple-local --bootstrap-server kafka-1:9092
+
+# 使用脚本创建和授权消费者组 -- 在Windows中可能需要使用Git Bash或WSL运行，脚本执行后，只有被授权的消费者组才能消费指定的主题，未授权的消费者组将被拒绝访问。
+# my-consumer-group是您要创建的消费者组名称
+# simple-local是主题名称
+./create-consumer-group.sh my-consumer-group simple-local
 ```
 
 ![img.png](images/kafka-console-producer-consumer.png)
