@@ -32,6 +32,9 @@ docker exec kafka-1 /bin/bash -c "/opt/bitnami/kafka/bin/kafka-acls.sh --bootstr
 # 添加消费者组对主题的读取权限
 docker exec kafka-1 /bin/bash -c "/opt/bitnami/kafka/bin/kafka-acls.sh --bootstrap-server kafka-1:9092 --add --allow-principal User:ANONYMOUS --topic $TOPIC_NAME --operation Read"
 
+# 初始化消费者组
+docker exec kafka-1 /bin/bash -c "/opt/bitnami/kafka/bin/kafka-console-consumer.sh --bootstrap-server kafka-1:9092 --topic $TOPIC_NAME --group $GROUP_NAME --max-messages 1 -timeout-ms 5000"
+
 # 重置消费者组偏移量，实际创建消费者组
 docker exec kafka-1 /bin/bash -c "/opt/bitnami/kafka/bin/kafka-consumer-groups.sh --bootstrap-server kafka-1:9092 --group $GROUP_NAME --topic $TOPIC_NAME --reset-offsets --to-earliest --execute"
 
