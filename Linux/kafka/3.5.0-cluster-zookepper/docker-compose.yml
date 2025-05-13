@@ -11,10 +11,16 @@ x-kafka-common-env: &kafka-common-env
   KAFKA_HEAP_OPTS: -Xmx512m -Xms512m # 亲测128m会出现oom
   KAFKA_ENABLE_KRAFT: "no" # 是否启用Kafka Raft（KRaft）模式。默认值：是
   KAFKA_CFG_PROCESS_ROLES: "" # 清空角色配置
-  ALLOW_PLAINTEXT_LISTENER: yes # 允许使用 PLAINTEXT 监听器。默认值：否。
+  ALLOW_PLAINTEXT_LISTENER: yes # 允许使用 PLAINTEXT 监听器（开发环境允许）
   KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181 # zookeeper连接地址
-  KAFKA_CFG_INTER_BROKER_LISTENER_NAME: INTERNAL # 用于配置broker之间通信使用的监听器名称
-  KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT # 监听的协议集合多个。（这里INTERNAL指的是内部，EXTERNAL是外部，之后就不能够使用PLAINTEXT作为协议名了，只能够使用定义的INTERNAL、EXTERNAL）
+  KAFKA_ZOOKEEPER_PROTOCOL: SASL # 设置Zookeeper协议为SASL
+  KAFKA_ZOOKEEPER_USER: admin # Zookeeper SASL用户名
+  KAFKA_ZOOKEEPER_PASSWORD: admin-secret # Zookeeper SASL密码
+  # 简化监听器配置，先使用PLAINTEXT协议让集群先正常启动
+  KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:SASL_PLAINTEXT
+  KAFKA_CFG_INTER_BROKER_LISTENER_NAME: INTERNAL
+  # 允许所有用户执行集群操作
+  KAFKA_CFG_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
   # 禁止自动创建主题
   KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "false"
   # 消费者组元数据主题配置
@@ -23,10 +29,21 @@ x-kafka-common-env: &kafka-common-env
   KAFKA_CFG_ALLOW_AUTO_CREATE_TOPICS: "false"
   # 开启组协调器的授权检查
   KAFKA_CFG_GROUP_INITIAL_REBALANCE_DELAY_MS: 5000
-  # 启用ACL认证但允许所有人访问
+  # 启用ACL认证
   KAFKA_CFG_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer
-  KAFKA_CFG_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
-  KAFKA_CFG_SUPER_USERS: "User:ANONYMOUS"
+  # 超级用户 - 为ANONYMOUS添加超级用户权限以支持PLAINTEXT内部通信
+  # KAFKA_CFG_SUPER_USERS: "User:admin;User:ANONYMOUS"
+  KAFKA_CFG_SUPER_USERS: "User:admin"
+  # SASL配置 - 仅用于外部监听器
+  KAFKA_CFG_SASL_ENABLED_MECHANISMS: SCRAM-SHA-256
+  KAFKA_CLIENT_USERS: admin
+  KAFKA_CLIENT_PASSWORDS: admin-secret
+  # 只对外部监听器启用SASL
+  KAFKA_CFG_LISTENER_NAME_EXTERNAL_SASL_ENABLED_MECHANISMS: SCRAM-SHA-256
+  KAFKA_CFG_LISTENER_NAME_INTERNAL_SASL_ENABLED_MECHANISMS: ""
+  # 由于内部使用PLAINTEXT，删除此配置
+  # KAFKA_CFG_SASL_MECHANISM_INTER_BROKER_PROTOCOL: SCRAM-SHA-256
+  KAFKA_OPTS: "-Djava.security.auth.login.config=/opt/bitnami/kafka/config/kafka_jaas.conf"
 
 # 网桥 -> 方便相互通讯
 networks:
@@ -34,7 +51,7 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: "172.22.6.0/24"
+        - subnet: "172.12.6.0/24"
 
 services:
   zookeeper:
@@ -43,20 +60,30 @@ services:
     restart: unless-stopped # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
     volumes: # 数据卷挂载路径设置,将本机目录映射到容器目录
       - "/etc/localtime:/etc/localtime"
+      - "./config/zookeeper_jaas.conf:/opt/bitnami/zookeeper/conf/zookeeper_jaas.conf"
     #      - "./kafka/zookeeper:/bitnami/zookeeper"
     environment:
-      ALLOW_ANONYMOUS_LOGIN: yes
+      ALLOW_ANONYMOUS_LOGIN: no
+      # 启用JAAS认证配置
+      ZOO_SERVER_USERS: admin
+      ZOO_SERVER_PASSWORDS: admin-secret
+      ZOO_ENABLE_AUTH: "yes"
+      ZOO_AUTH_PROVIDER_1: org.apache.zookeeper.server.auth.SASLAuthenticationProvider
+      JVMFLAGS: "-Djava.security.auth.login.config=/opt/bitnami/zookeeper/conf/zookeeper_jaas.conf -Dzookeeper.authProvider.1=org.apache.zookeeper.server.auth.SASLAuthenticationProvider"
     ports: # 映射端口
       - "2181:2181"
     networks:
       kafka:
-        ipv4_address: 172.22.6.11
+        ipv4_address: 172.12.6.11
 
   kafka-1:
     container_name: kafka-1
     <<: *kafka-common
     volumes:
       - "/etc/localtime:/etc/localtime"
+      - "./config/kafka_jaas.conf:/opt/bitnami/kafka/config/kafka_jaas.conf"
+      - "./config/producer.properties:/opt/bitnami/kafka/config/producer.properties"
+      - "./config/consumer.properties:/opt/bitnami/kafka/config/consumer.properties"
     #      - "./kafka/kafka-1:/bitnami/kafka"
     environment:
       <<: *kafka-common-env
@@ -69,12 +96,15 @@ services:
       - zookeeper
     networks:
       kafka:
-        ipv4_address: 172.22.6.21
+        ipv4_address: 172.12.6.21
   kafka-2:
     container_name: kafka-2
     <<: *kafka-common
     volumes:
       - "/etc/localtime:/etc/localtime"
+      - "./config/kafka_jaas.conf:/opt/bitnami/kafka/config/kafka_jaas.conf"
+      - "./config/producer.properties:/opt/bitnami/kafka/config/producer.properties"
+      - "./config/consumer.properties:/opt/bitnami/kafka/config/consumer.properties"
     #      - "./kafka/kafka-2:/bitnami/kafka"
     environment:
       <<: *kafka-common-env
@@ -87,15 +117,16 @@ services:
       - zookeeper
     networks:
       kafka:
-        ipv4_address: 172.22.6.22
+        ipv4_address: 172.12.6.22
 
-  # kafka-map图形化管理工具
+  # kafka-map图形化管理工具 配置参考：https://github.com/dushixiang/kafka-map
   kafka-map:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/kafka-map # 原镜像`dushixiang/kafka-map:latest`
     container_name: kafka-map # 容器名为'kafka-map'
     restart: unless-stopped # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
-    #    volumes:
-    #      - "./kafka/kafka-map/data:/usr/local/kafka-map/data"
+    volumes:
+      - "./config/kafka_client.properties:/kafka_client.properties"
+      - "./kafka/kafka-map/data:/usr/local/kafka-map/data"
     environment:
       DEFAULT_USERNAME: admin
       DEFAULT_PASSWORD: 123456
@@ -109,4 +140,4 @@ services:
       - kafka-2
     networks:
       kafka:
-        ipv4_address: 172.22.6.30
+        ipv4_address: 172.12.6.30
