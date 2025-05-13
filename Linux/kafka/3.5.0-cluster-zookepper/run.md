@@ -11,6 +11,14 @@ Kafka中将消息存储在可配置数量的分区中，以便实现横向扩展
 docker-compose -f docker-compose.yml -p kafka down
 # 启动
 docker-compose -f docker-compose.yml -p kafka up -d
+
+
+# 给脚本添加执行权限 -- linux环境
+chmod +x create-consumer-group.sh
+# 使用脚本创建和授权消费者组 -- 在Windows中可能需要使用Git Bash或WSL运行，脚本执行后，只有被授权的消费者组才能消费指定的主题，未授权的消费者组将被拒绝访问。
+# my-consumer-group是您要创建的消费者组名称
+# simple-local是主题名称
+sh ./create-consumer-group.sh my-consumer-group simple-local
 ```
 
 ### kafka-map可视化工具
@@ -22,10 +30,10 @@ https://github.com/dushixiang/kafka-map
 
 ![img.png](images/kafka-map-01.png)
 
-添加集群 eg: 172.12.6.21:9092,172.12.6.22:9092
-![img.png](images/kafka-map-02.png)
+添加集群 eg: kafka-1:9092,kafka-2:9092
+![](./images/run-1747100327361.png)
+![](./images/run-1747100365534.png)
 
-![img.png](images/kafka-map-03.png)
 
 ### java客户端连接
 
@@ -38,25 +46,29 @@ spring:
 ### 测试消费
 
 ```shell
-# 创建主题
-docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-topics.sh --create --bootstrap-server kafka-1:9092 --topic my-topic --partitions 3 --replication-factor 2
-# 控制台生产者
-docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-console-producer.sh --bootstrap-server kafka-1:9092 --topic my-topic
-# 控制台消费者
-docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-console-consumer.sh --bootstrap-server kafka-1:9092 --topic my-topic
+# 1、创建主题(如果不存在)
+docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-topics.sh --bootstrap-server kafka-1:9092 --create --if-not-exists --topic topic1 --partitions 3 --replication-factor 2
 
+# 2、为消费者组添加ACL权限（手动配置消费者组权限）
+docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-acls.sh --bootstrap-server kafka-1:9092 --add --allow-principal User:ANONYMOUS --operation Read --operation Describe --group group1
 
-# 手动创建主题
-# docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-topics.sh --create --topic simple-local --bootstrap-server kafka-1:9092
+# 3、为主题添加生产和消费的ACL权限
+docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-acls.sh --bootstrap-server kafka-1:9092 --add --allow-principal User:ANONYMOUS --operation Write --operation Describe --operation Read --topic topic1
 
+# 4、查看设置的ACL权限
+docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-acls.sh --bootstrap-server kafka-1:9092 --list
 
-# 给脚本添加执行权限 -- linux环境
-chmod +x create-consumer-group.sh
-# 使用脚本创建和授权消费者组 -- 在Windows中可能需要使用Git Bash或WSL运行，脚本执行后，只有被授权的消费者组才能消费指定的主题，未授权的消费者组将被拒绝访问。
-# my-consumer-group是您要创建的消费者组名称
-# simple-local是主题名称
-sh ./create-consumer-group.sh my-consumer-group simple-local
+# 5、控制台生产者 -- 测试生产消息
+docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-console-producer.sh --bootstrap-server kafka-1:9092 --topic topic1
+# 6、控制台消费者 -- 使用指定的消费者组消费消息
+docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-console-consumer.sh --bootstrap-server kafka-1:9092 --topic topic1 --group group1 --from-beginning
+
+# 7、验证消费者组是否正确创建和工作 -- 会显示消费者组信息、分区分配和偏移量等详情。
+docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-consumer-groups.sh --bootstrap-server kafka-1:9092 --describe --group group1
+
+# 8、重置消费者组（如需测试，先停止消费者组）
+docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-consumer-groups.sh --bootstrap-server kafka-1:9092 --group group1 --reset-offsets --to-earliest --execute --topic topic1
 ```
 
-![img.png](images/kafka-console-producer-consumer.png)
+![](./images/run-1747115612554.png)
 

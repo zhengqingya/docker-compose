@@ -18,15 +18,15 @@ x-kafka-common-env: &kafka-common-env
   # 禁止自动创建主题
   KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "false"
   # 消费者组元数据主题配置
-  KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+  KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
   # 禁止自动创建消费者组
   KAFKA_CFG_ALLOW_AUTO_CREATE_TOPICS: "false"
   # 开启组协调器的授权检查
   KAFKA_CFG_GROUP_INITIAL_REBALANCE_DELAY_MS: 5000
-  # 启用ACL认证
+  # 启用ACL认证但允许所有人访问
   KAFKA_CFG_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer
-  KAFKA_CFG_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "false"
-  KAFKA_CFG_SUPER_USERS: User:ANONYMOUS
+  KAFKA_CFG_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
+  KAFKA_CFG_SUPER_USERS: "User:ANONYMOUS"
 
 # 网桥 -> 方便相互通讯
 networks:
@@ -34,7 +34,7 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: "172.12.6.0/24"
+        - subnet: "172.22.6.0/24"
 
 services:
   zookeeper:
@@ -50,7 +50,7 @@ services:
       - "2181:2181"
     networks:
       kafka:
-        ipv4_address: 172.12.6.11
+        ipv4_address: 172.22.6.11
 
   kafka-1:
     container_name: kafka-1
@@ -69,7 +69,7 @@ services:
       - zookeeper
     networks:
       kafka:
-        ipv4_address: 172.12.6.21
+        ipv4_address: 172.22.6.21
   kafka-2:
     container_name: kafka-2
     <<: *kafka-common
@@ -87,7 +87,7 @@ services:
       - zookeeper
     networks:
       kafka:
-        ipv4_address: 172.12.6.22
+        ipv4_address: 172.22.6.22
 
   # kafka-map图形化管理工具
   kafka-map:
@@ -109,4 +109,4 @@ services:
       - kafka-2
     networks:
       kafka:
-        ipv4_address: 172.12.6.30
+        ipv4_address: 172.22.6.30
