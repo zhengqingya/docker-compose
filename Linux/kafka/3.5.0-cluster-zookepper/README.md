@@ -16,7 +16,7 @@
 chmod +x *.sh
 
 # 启动集群并初始化
-./setup-kafka.sh
+sh ./setup-kafka.sh
 ```
 
 初始化过程会：
@@ -51,14 +51,14 @@ Kafka-Map 图形化管理界面：
 
 1. 基本配置：
 
-   - 集群名称：自定义，例如 `kafka-cluster-sasl`
-   - Bootstrap Servers：`kafka-1:9092,kafka-2:9092`
+  - 集群名称：自定义，例如 `kafka-cluster-sasl`
+  - Bootstrap Servers：`kafka-1:9092,kafka-2:9092`
 
 2. SASL 配置（必须选择）：
-   - 安全协议: SASL_PLAINTEXT
-   - SASL 机制: SCRAM-SHA-256
-   - SASL 用户名: admin
-   - SASL 密码: admin-secret
+  - 安全协议: SASL_PLAINTEXT
+  - SASL 机制: SCRAM-SHA-256
+  - SASL 用户名: admin
+  - SASL 密码: admin-secret
 
 系统已经通过挂载 `/kafka_client.properties` 到 Kafka-Map 容器中自动配置了 SASL 认证，因此能够正确连接到启用了 SASL 认证的 Kafka 集群。
 
@@ -131,16 +131,16 @@ Kafka-Map 图形化管理界面：
 
 1. **INTERNAL 监听器** (端口 9092)
 
-   - 协议: PLAINTEXT
-   - 认证: 无 (使用 ANONYMOUS 用户)
-   - 用途: 仅供 Kafka 节点之间内部通信使用
-   - SASL 机制: 无 (通过 `KAFKA_CFG_LISTENER_NAME_INTERNAL_SASL_ENABLED_MECHANISMS: ""` 禁用)
+  - 协议: PLAINTEXT
+  - 认证: 无 (使用 ANONYMOUS 用户)
+  - 用途: 仅供 Kafka 节点之间内部通信使用
+  - SASL 机制: 无 (通过 `KAFKA_CFG_LISTENER_NAME_INTERNAL_SASL_ENABLED_MECHANISMS: ""` 禁用)
 
 2. **EXTERNAL 监听器** (端口 9093/9094)
-   - 协议: SASL_PLAINTEXT
-   - 认证: SCRAM-SHA-256
-   - 用途: 供外部客户端连接使用
-   - SASL 机制: SCRAM-SHA-256 (通过 `KAFKA_CFG_LISTENER_NAME_EXTERNAL_SASL_ENABLED_MECHANISMS: SCRAM-SHA-256` 启用)
+  - 协议: SASL_PLAINTEXT
+  - 认证: SCRAM-SHA-256
+  - 用途: 供外部客户端连接使用
+  - SASL 机制: SCRAM-SHA-256 (通过 `KAFKA_CFG_LISTENER_NAME_EXTERNAL_SASL_ENABLED_MECHANISMS: SCRAM-SHA-256` 启用)
 
 ## 注意事项
 

@@ -24,8 +24,12 @@ PASSWORD=$2
 echo "正在创建用户 $USERNAME..."
 
 # 创建临时配置文件，指定admin用户身份
+# docker exec kafka-1 /bin/bash -c "/opt/bitnami/kafka/bin/kafka-acls.sh --bootstrap-server 192.168.101.2:9093 --command-config /opt/bitnami/kafka/config/consumer-admin.properties --add --allow-principal User:admin --operation All --cluster"
+
 docker exec -i kafka-1 bash -c "cat > /tmp/admin_command.properties << EOF
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username=\"admin\" password=\"admin-secret\";
+security.protocol=SASL_PLAINTEXT
+sasl.mechanism=SCRAM-SHA-256
+sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username=\"admin\" password=\"admin-secret\";
 EOF
 
 # 为admin添加超级用户权限（如果未添加）
@@ -40,13 +44,12 @@ EOF
 # 创建SCRAM凭证
 /opt/bitnami/kafka/bin/kafka-configs.sh \
     --bootstrap-server kafka-1:9092 \
-    --command-config /tmp/admin_command.properties \
     --alter \
     --add-config \"SCRAM-SHA-256=[password=$PASSWORD]\" \
     --entity-type users \
     --entity-name $USERNAME"
 
-# 为新创建的用户添加必要的权限
+echo '为新创建的用户添加必要的权限'
 docker exec -i kafka-1 bash -c "
 # 允许用户读写消息
 /opt/bitnami/kafka/bin/kafka-acls.sh \
