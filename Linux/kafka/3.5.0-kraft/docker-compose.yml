@@ -1,0 +1,68 @@
+# https://hub.docker.com/r/bitnami/kafka
+# https://github.com/bitnami/containers/blob/main/bitnami/kafka/docker-compose-cluster.yml
+
+version: "3"
+
+# 网桥 -> 方便相互通讯
+networks:
+  kafka:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.12.6.0/24"
+
+name: kafka
+services:
+  kafka:
+    container_name: kafka
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/kafka:3.5.0 # 原镜像`bitnami/kafka:3.5.0`
+    restart: unless-stopped # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      # - "./kafka/data:/bitnami/kafka"
+    environment:
+      KAFKA_HEAP_OPTS: -Xmx1g -Xms1g # Apache Kafka 的 Java 堆大小。默认值：-Xmx1024m -Xms1024m。
+      KAFKA_ENABLE_KRAFT: yes # 是否启用Kafka Raft（KRaft）模式。默认值：是
+
+      # 自动创建集群ID
+      KAFKA_CFG_NODE_ID: 1
+      KAFKA_CFG_PROCESS_ROLES: "broker,controller"
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: "1@kafka:9093"
+      # 监听器安全协议映射 - 简化为PLAINTEXT
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: "CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT"
+
+      # 监听地址
+      KAFKA_CFG_LISTENERS: "CONTROLLER://:9093,EXTERNAL://0.0.0.0:9092"
+      KAFKA_CFG_ADVERTISED_LISTENERS: "EXTERNAL://host.docker.internal:9092"
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: "EXTERNAL"
+
+      # 允许使用PLAINTEXT
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+
+      # 自动创建主题
+      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "true"
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    networks:
+      kafka:
+        ipv4_address: 172.12.6.21
+
+  # kafka-console-ui图形化管理工具 配置参考：https://github.com/xxd763795151/kafka-console-ui
+  kafka-console-ui:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/kafka-console-ui # 原镜像`wdkang/kafka-console-ui`
+    container_name: kafka-console-ui # 容器名
+    restart: unless-stopped # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
+    volumes:
+      - "./kafka-console-ui/data:/app/data"
+    #      - "./kafka-console-ui/log:/app/log"
+    ports: # 映射端口
+      - "7766:7766"
+    depends_on: # 解决容器依赖启动先后问题
+      - kafka
+    links: # 配置容器互相连接
+      - kafka
+    networks:
+      kafka:
+        ipv4_address: 172.12.6.50
