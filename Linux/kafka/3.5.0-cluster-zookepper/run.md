@@ -86,6 +86,8 @@ spring:
 
 ### 测试消费
 
+> tips: 使用容器内部通信方式可不用用户认证，外部访问时需要认证。
+
 ```shell
 # 1、创建主题(如果不存在)
 docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-topics.sh --bootstrap-server kafka-1:9092 --create --if-not-exists --topic topic1 --partitions 3 --replication-factor 2
@@ -103,17 +105,18 @@ docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-acls.sh --bootstrap-server 
 docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-acls.sh --bootstrap-server kafka-1:9092 --list
 
 # 6、控制台生产者 -- 测试生产消息
-docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-console-producer.sh --bootstrap-server kafka-1:9092 --topic topic1
+# docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-console-producer.sh --bootstrap-server kafka-1:9092 --topic topic1  # 容器内部通信方式可不用认证
+docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-console-producer.sh --bootstrap-server 192.168.176.1:9093 --topic topic1 --producer.config /opt/bitnami/kafka/config/producer-admin.properties
 
 # 7、控制台消费者 -- 使用指定的消费者组消费消息
-docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-console-consumer.sh --bootstrap-server kafka-1:9092 --topic topic1 --group group1 --from-beginning
+# docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-console-consumer.sh --bootstrap-server kafka-1:9092 --topic topic1 --group group1 --from-beginning
+# 测试不同账号的授权 admin:成功  test:失败
+docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-console-consumer.sh --bootstrap-server 192.168.176.1:9093 --topic topic1 --group group1 --consumer.config /opt/bitnami/kafka/config/consumer-admin.properties
+docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-console-consumer.sh --bootstrap-server 192.168.176.1:9093 --topic topic1 --group group1 --consumer.config /opt/bitnami/kafka/config/consumer-test.properties
 
 # 8、验证消费者组是否正确创建和工作 -- 会显示消费者组信息、分区分配和偏移量等详情。
-docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-consumer-groups.sh --bootstrap-server kafka-1:9092 --describe --group group1
+# docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-consumer-groups.sh --bootstrap-server kafka-1:9092 --describe --group group1
 
 # 9、重置消费者组（如需测试，先停止消费者组）
-docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-consumer-groups.sh --bootstrap-server kafka-1:9092 --group group1 --reset-offsets --to-earliest --execute --topic topic1
-
-# 10、测试未授权的消费者组（应该被拒绝）
-docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-console-consumer.sh --bootstrap-server kafka-1:9092 --topic topic1 --group group2 --from-beginning
+# docker exec -it kafka-1 /opt/bitnami/kafka/bin/kafka-consumer-groups.sh --bootstrap-server kafka-1:9092 --group group1 --reset-offsets --to-earliest --execute --topic topic1
 ```

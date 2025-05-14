@@ -82,8 +82,9 @@ services:
     volumes:
       - "/etc/localtime:/etc/localtime"
       - "./config/kafka_jaas.conf:/opt/bitnami/kafka/config/kafka_jaas.conf"
-      - "./config/producer.properties:/opt/bitnami/kafka/config/producer.properties"
-      - "./config/consumer.properties:/opt/bitnami/kafka/config/consumer.properties"
+      - "./config/producer-admin.properties:/opt/bitnami/kafka/config/producer-admin.properties"
+      - "./config/consumer-admin.properties:/opt/bitnami/kafka/config/consumer-admin.properties"
+      - "./config/consumer-test.properties:/opt/bitnami/kafka/config/consumer-test.properties"
     #      - "./kafka/kafka-1:/bitnami/kafka"
     environment:
       <<: *kafka-common-env
@@ -103,8 +104,9 @@ services:
     volumes:
       - "/etc/localtime:/etc/localtime"
       - "./config/kafka_jaas.conf:/opt/bitnami/kafka/config/kafka_jaas.conf"
-      - "./config/producer.properties:/opt/bitnami/kafka/config/producer.properties"
-      - "./config/consumer.properties:/opt/bitnami/kafka/config/consumer.properties"
+      - "./config/producer-admin.properties:/opt/bitnami/kafka/config/producer-admin.properties"
+      - "./config/consumer-admin.properties:/opt/bitnami/kafka/config/consumer-admin.properties"
+      - "./config/consumer-test.properties:/opt/bitnami/kafka/config/consumer-test.properties"
     #      - "./kafka/kafka-2:/bitnami/kafka"
     environment:
       <<: *kafka-common-env
