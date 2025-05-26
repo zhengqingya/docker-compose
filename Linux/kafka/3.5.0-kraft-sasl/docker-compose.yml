@@ -1,0 +1,87 @@
+# https://hub.docker.com/r/bitnami/kafka
+# https://github.com/bitnami/containers/blob/main/bitnami/kafka/docker-compose-cluster.yml
+
+version: "3"
+
+# 网桥 -> 方便相互通讯
+networks:
+  kafka:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.12.6.0/24"
+
+name: kafka
+services:
+  kafka:
+    container_name: kafka-1
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/kafka:3.5.0 # 原镜像`bitnami/kafka:3.5.0`
+    restart: unless-stopped # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "./kafka/config/kafka_jaas.conf:/opt/bitnami/kafka/config/kafka_jaas.conf"
+      - "./kafka/config/admin.properties:/opt/bitnami/kafka/config/admin.properties"
+      - "./kafka/config/producer.properties:/opt/bitnami/kafka/config/producer.properties"
+      - "./kafka/config/consumer.properties:/opt/bitnami/kafka/config/consumer.properties"
+      # - "./kafka/data:/bitnami/kafka"
+#      - ./kafka-data:/bitnami
+    environment:
+      - KAFKA_HEAP_OPTS=-Xmx1g -Xms1g # Apache Kafka 的 Java 堆大小。默认值：-Xmx1024m -Xms1024m。
+      - KAFKA_ENABLE_KRAFT=yes # 是否启用Kafka Raft（KRaft）模式。默认值：是
+
+      # KRaft 模式配置
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
+
+      # 监听配置
+      - KAFKA_CFG_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=INTERNAL://kafka:9092,EXTERNAL://host.docker.internal:9093
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:SASL_PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+
+      # 集群ID
+      - KAFKA_KRAFT_CLUSTER_ID=abcdefghijklmnopqrstuv
+
+      # 客户端用户配置,密码自定义
+      - KAFKA_CLIENT_USERS=admin,test
+      - KAFKA_CLIENT_PASSWORDS=admin-secret,test123456
+
+      # controller 用户配置
+      - KAFKA_CFG_SASL_MECHANISM_CONTROLLER_PROTOCOL=PLAIN
+      - KAFKA_CONTROLLER_USER=admin
+      - KAFKA_CONTROLLER_PASSWORD=admin-secret
+
+      # broker间通信用户配置
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=SASL_PLAINTEXT
+      - KAFKA_CFG_SASL_MECHANISM_INTER_BROKER_PROTOCOL=PLAIN
+      - KAFKA_INTER_BROKER_USER=admin
+      - KAFKA_INTER_BROKER_PASSWORD=admin-secret
+
+      # 其他配置
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    networks:
+      kafka:
+        ipv4_address: 172.12.6.21
+
+  # kafka-console-ui图形化管理工具 配置参考：https://github.com/xxd763795151/kafka-console-ui
+  kafka-console-ui:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/kafka-console-ui # 原镜像`wdkang/kafka-console-ui`
+    container_name: kafka-console-ui # 容器名
+    restart: unless-stopped # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
+    volumes:
+      - "./kafka-console-ui/data:/app/data"
+    #      - "./kafka-console-ui/log:/app/log"
+    ports: # 映射端口
+      - "7766:7766"
+    depends_on: # 解决容器依赖启动先后问题
+      - kafka
+    links: # 配置容器互相连接
+      - kafka
+    networks:
+      kafka:
+        ipv4_address: 172.12.6.50
