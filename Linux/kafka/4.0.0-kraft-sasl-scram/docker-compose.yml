@@ -30,7 +30,7 @@ services:
       # KRaft 模式配置
       KAFKA_ENABLE_KRAFT: yes
       KAFKA_CFG_NODE_ID: 0
-      KAFKA_CFG_PROCESS_ROLES: controller,broker
+      KAFKA_CFG_PROCESS_ROLES: broker,controller
       KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafka:9093 # 集群地址
       KAFKA_KRAFT_CLUSTER_ID: abcdefghijklmnopqrstuv # 集群ID
 
@@ -65,7 +65,8 @@ services:
       KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "true" # 自动创建主题
 
       # ----------------------- 启用ACL认证 -----------------------
-      #      KAFKA_CFG_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer
+      # KAFKA_CFG_SECURITY_AUTHORIZATION_ENABLE: true # 启用 ACL 支持 todo
+      #      KAFKA_CFG_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer todo
       # 访问控制配置 -- 强制ACL校验
       KAFKA_CFG_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "false"
       KAFKA_CFG_SUPER_USERS: User:admin # 超级用户
