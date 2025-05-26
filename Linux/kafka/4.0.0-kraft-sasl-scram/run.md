@@ -38,3 +38,8 @@ spring:
 ### 四、ACL授权 -- 待办
 
 ![](./images/run_1748289201000.png)
+
+```shell
+# 消费者权限管理
+org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: xxx
+```
