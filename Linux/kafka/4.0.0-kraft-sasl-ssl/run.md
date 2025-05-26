@@ -1,19 +1,19 @@
 # Kafka 单机 & SASL & SSL -- 未完成版本...
 
-## 一、运行
+### 一、运行
 
 ```shell
 docker-compose -f docker-compose.yml up -d
 ```
 
-## 二、ACL授权
+### 二、ACL授权
 
 ```shell
 # 配置ACL授权 -- 不配置的情况下，java客户端会提示：org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: xxx
 docker exec -it kafka /opt/bitnami/kafka/bin/kafka-acls.sh --bootstrap-server kafka:9092 --command-config /opt/bitnami/kafka/config/admin.properties --add --allow-principal User:test --operation ALL --topic '*' --group 'test-group'
 ```
 
-## 三、图形化工具访问
+### 三、图形化工具访问
 
 访问地址：http://localhost:7766
 
