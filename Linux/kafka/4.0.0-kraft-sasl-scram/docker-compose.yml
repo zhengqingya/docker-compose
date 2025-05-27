@@ -1,5 +1,6 @@
 # https://hub.docker.com/r/bitnami/kafka
 # https://github.com/bitnami/containers/blob/main/bitnami/kafka/docker-compose-cluster.yml
+# 配置见：https://kafka.apache.org/documentation/#docker
 
 version: "3"
 
@@ -37,7 +38,7 @@ services:
       # 监听配置
       KAFKA_CFG_LISTENERS: SASL_PLAINTEXT://:9092,CONTROLLER://:9093              # 服务端socket监听
       KAFKA_CFG_ADVERTISED_LISTENERS: SASL_PLAINTEXT://host.docker.internal:9092  # TODO 外网访问地址
-      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,SASL_PLAINTEXT:SASL_PLAINTEXT # 安全协议
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:SASL_PLAINTEXT,SASL_PLAINTEXT:SASL_PLAINTEXT # 安全协议
       KAFKA_CFG_SASL_ENABLED_MECHANISMS: SCRAM-SHA-256
 
       # 控制器安全认证
@@ -65,7 +66,7 @@ services:
       KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "true" # 自动创建主题
 
       # ----------------------- 启用ACL认证 -----------------------
-      # KAFKA_CFG_AUTHORIZER_CLASS_NAME: org.apache.kafka.metadata.authorizer.StandardAuthorizer # todo
+      KAFKA_CFG_AUTHORIZER_CLASS_NAME: org.apache.kafka.metadata.authorizer.StandardAuthorizer
       # 访问控制配置 -- 强制ACL校验
       KAFKA_CFG_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "false"
       KAFKA_CFG_SUPER_USERS: User:admin # 超级用户
