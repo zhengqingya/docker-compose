@@ -65,8 +65,7 @@ services:
       KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "true" # 自动创建主题
 
       # ----------------------- 启用ACL认证 -----------------------
-      # KAFKA_CFG_SECURITY_AUTHORIZATION_ENABLE: true # 启用 ACL 支持 todo
-      #      KAFKA_CFG_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer todo
+      # KAFKA_CFG_AUTHORIZER_CLASS_NAME: org.apache.kafka.metadata.authorizer.StandardAuthorizer # todo
       # 访问控制配置 -- 强制ACL校验
       KAFKA_CFG_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "false"
       KAFKA_CFG_SUPER_USERS: User:admin # 超级用户
