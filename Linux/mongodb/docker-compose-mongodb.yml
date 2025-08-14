@@ -25,7 +25,7 @@ services:
 
   # 可视化图形工具
   adminmongo:
-    image: mrvautin/adminmongo
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/adminmongo # 原镜像`mrvautin/adminmongo`
     restart: unless-stopped
     container_name: adminmongo
     environment:
