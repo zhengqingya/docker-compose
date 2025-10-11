@@ -38,4 +38,4 @@ docker-compose -f docker-compose-zipkin.yml -p zipkin up -d
 2021-08-30 16:33:27.414  INFO [/] 1 --- [oss-http-*:9411] c.l.a.s.Server                           : Serving HTTP at /[0:0:0:0:0:0:0:0%0]:9411 - http://127.0.0.1:9411/
 ```
 
-可视化界面访问地址：[`http://ip地址:9411/zipkin`](http://www.zhengqingya.com:9411/zipkin)
+可视化界面访问地址：[`http://ip地址:9411/zipkin`](http://127.0.0.1:9411/zipkin)
