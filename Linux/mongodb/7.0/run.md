@@ -4,4 +4,6 @@
 docker compose -f docker-compose-mongodb.yml -p mongodb up -d
 ```
 
+Connection string：`mongodb://admin:123456@ip地址:27017`
+
 ![](./images/run-1766570263893.png)
