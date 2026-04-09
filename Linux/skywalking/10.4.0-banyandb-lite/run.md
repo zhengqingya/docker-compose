@@ -43,7 +43,7 @@ docker compose -f docker-compose.yml -p skywalking down
 - `Java Agent` 采用独立版本线，官网当前最新稳定版是 `9.6.0`
 - 也就是说，这里不是下载 `10.4.0` 的 agent 包，而是下载与当前官方发行对应的 `9.6.0` Java Agent
 
-示例 JVM 参数：
+在java项目运行启动的时候，添加如下运行参数：
 
 ```shell
 -javaagent:/data/skywalking-agent/skywalking-agent.jar
