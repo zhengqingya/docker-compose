@@ -1,0 +1,83 @@
+# 可参考 https://github.com/apache/skywalking/blob/master/docker/docker-compose.yml
+# 说明：
+# 1. 这是 SkyWalking 10.4.0 的轻量单机部署方案。
+# 2. 存储使用 BanyanDB，不依赖 Elasticsearch/MySQL，整体更省内存。
+# 3. 适合本地测试、PoC、小流量环境；如果是生产环境，建议按实际流量重新评估资源参数。
+
+# 网桥 -> 方便相互通讯
+networks:
+  skywalking:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.24.0.0/24"
+
+services:
+  # BanyanDB:
+  # SkyWalking 10.x 推荐存储之一。
+  # 这里用 standalone 单机模式启动，适合本地或单节点轻量部署。
+  banyandb:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/skywalking-banyandb:0.10.1 # 原镜像`apache/skywalking-banyandb:0.10.1`
+    container_name: sw-banyandb # 容器名
+    restart: unless-stopped     # 容器异常退出后自动拉起
+    # 配置见 https://skywalking.apache.org/docs/skywalking-banyandb/v0.10.1/operation/configuration/
+    command:
+      - standalone                                 # 单机模式
+#      - --stream-root-path=/var/lib/banyandb/stream   # stream 数据目录
+#      - --measure-root-path=/var/lib/banyandb/measure # measure 数据目录
+#      - --property-root-path=/var/lib/banyandb/property # 元数据/属性目录
+    environment:
+      TZ: Asia/Shanghai         # 时区
+#    volumes:
+#      - "./banyandb/data:/var/lib/banyandb" # 数据持久化目录
+    ports:
+      - "17912:17912" # OAP 连接 BanyanDB 的主要端口
+      - "17913:17913" # HTTP/诊断相关端口
+    networks:
+      skywalking:
+        ipv4_address: 172.24.0.83
+
+  # OAP:
+  # SkyWalking 后端分析服务，负责接收 Agent 数据并写入 BanyanDB。
+  # 这里把 JVM 和存储并发参数压低，优先减少单机内存占用。
+  oap:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/skywalking-oap-server:10.4.0 # 原镜像`apache/skywalking-oap-server:10.4.0`
+    container_name: sw-oap # 容器名
+    restart: unless-stopped
+    depends_on:
+      - banyandb # 先启动存储，再启动 OAP
+    environment:
+      TZ: Asia/Shanghai                             # 时区
+      SW_STORAGE: banyandb                          # 使用 BanyanDB 作为 SkyWalking 存储
+      SW_STORAGE_BANYANDB_TARGETS: 172.24.0.83:17912 # BanyanDB 服务地址
+      JAVA_OPTS: "-Xms512m -Xmx512m"               # JVM 堆大小，轻量场景可先压到 512m
+      SW_STORAGE_BANYANDB_MAX_BULK_SIZE: 2000      # 单批写入条数，调低可减少瞬时内存占用
+      SW_STORAGE_BANYANDB_FLUSH_INTERVAL: 15       # 批量刷写间隔(秒)
+      SW_STORAGE_BANYANDB_METRICS_SHARDS_NUMBER: 1 # metrics 分片数，单机低流量场景尽量小
+      SW_STORAGE_BANYANDB_RECORD_SHARDS_NUMBER: 1  # record 分片数，单机低流量场景尽量小
+      SW_STORAGE_BANYANDB_CONCURRENT_WRITE_THREADS: 4 # 并发写线程数，适度降低以节省资源
+    ports:
+      - "11800:11800" # agent 上报数据的端口，这是 gRPC 端口
+      - "12800:12800" # ui 读取数据的端口，这是 http 端口
+    networks:
+      skywalking:
+        ipv4_address: 172.24.0.81
+
+  # UI:
+  # SkyWalking Web 控制台。
+  # 如果机器内存很紧张，可以先注释掉该服务，只保留 OAP + BanyanDB。
+  ui:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/skywalking-ui:10.4.0 # 原镜像`apache/skywalking-ui:10.4.0`
+    container_name: sw-ui # 容器名
+    restart: unless-stopped
+    depends_on:
+      - oap # 依赖 OAP 提供查询接口
+    environment:
+      TZ: Asia/Shanghai
+      SW_SERVER_PORT: 8080                        # 设置SkyWalking UI的监听端口
+      SW_OAP_ADDRESS: http://172.24.0.81:12800    # SkyWalking OAP服务器的地址和端口
+    ports:
+      - "18080:8080" # 本地访问入口 http://127.0.0.1:18080
+    networks:
+      skywalking:
+        ipv4_address: 172.24.0.82
