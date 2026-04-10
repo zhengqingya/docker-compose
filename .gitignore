@@ -1,2 +1,5 @@
 ### IntelliJ IDEA ###
 .idea
+
+# 本地环境运行
+run-local
