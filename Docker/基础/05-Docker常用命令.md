@@ -125,10 +125,20 @@ docker image prune --force --all
 docker image prune -f -a
 
 
-# 查看容器运行内存信息  【参数`mem_limit: 300m` # 最大使用内存】
+# 查看指定容器运行内存信息 -- 实时显示  【参数`mem_limit: 300m` # 最大使用内存】
 docker stats nginx
 # CONTAINER ID   NAME      CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O     PIDS
 # 385a15a9724d   nginx     0.00%     1.961MiB / 100MiB   1.96%     656B / 0B   0B / 8.19kB   3
+
+# 查看指定容器运行内存信息 -- 只显示1次，不持续刷新
+docker stats --no-stream nginx
+
+# 查看容器运行内存信息 -- 格式化
+docker stats --no-stream --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.MemPerc}}"
+# NAME         CPU %     MEM USAGE / LIMIT     MEM %
+# sw-banyandb  1.25%     220MiB / 7.7GiB       2.79%
+# sw-oap       8.10%     860MiB / 7.7GiB       10.9%
+# sw-ui        0.30%     120MiB / 7.7GiB       1.52%
 ```
 
 
