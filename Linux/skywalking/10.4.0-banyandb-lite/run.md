@@ -27,11 +27,20 @@ docker compose -f docker-compose.yml -p skywalking up -d
 docker compose -f docker-compose.yml -p skywalking stop
 # 停止 & 删除容器 & 删除网络
 docker compose -f docker-compose.yml -p skywalking down
+
+# 查看容器内存占用
+docker stats --no-stream sw-banyandb sw-oap sw-ui
+# CONTAINER ID   NAME          CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O     PIDS
+# 82d9d38268df   sw-banyandb   0.00%     864.4MiB / 7.653GiB   11.03%    14.2MB / 62.6MB   0B / 280MB    20
+# b466a3f553a6   sw-oap        9.27%     1.152GiB / 7.653GiB   15.05%    65.5MB / 17.6MB   0B / 17.3MB   80
+# 7adfc6deba62   sw-ui         0.23%     266.8MiB / 7.653GiB   3.40%     3.75MB / 10.4MB   0B / 11.2MB   46
 ```
 
 访问 [http://127.0.0.1:18080](http://127.0.0.1:18080)
 
 ### Java 项目配置
+
+> 参考 https://skywalking.apache.org/docs/skywalking-java/next/en/setup/service-agent/java-agent/readme/
 
 下载 `Java Agent` https://skywalking.apache.org/downloads/
 
