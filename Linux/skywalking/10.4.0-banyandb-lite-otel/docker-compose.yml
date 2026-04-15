@@ -1,0 +1,88 @@
+# 可参考 https://github.com/apache/skywalking/blob/master/docker/docker-compose.yml
+# 说明：
+# 1. 这是 SkyWalking 10.4.0 + BanyanDB + OTel Collector 的标准 OTLP 接入方案。
+# 2. 推荐链路：Java/Python/Go/PHP App -> OTel Collector(4317/4318) -> SkyWalking OAP -> BanyanDB -> SkyWalking UI。
+# 3. 第一版同时打通 OTel traces / metrics / logs，并启用 SkyWalking vm metrics rules，优先保证“可读可展示”。
+# 4. 如果是生产环境，建议按实际流量重新评估资源参数，并单独设计高可用方案。
+
+services:
+  # BanyanDB:
+  # SkyWalking 10.x 推荐存储之一。
+  # 这里用 standalone 单机模式启动，适合本地或单节点轻量部署。
+  banyandb:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/skywalking-banyandb:0.10.1 # 原镜像`apache/skywalking-banyandb:0.10.1`
+    container_name: sw-banyandb # 容器名
+    restart: unless-stopped          # 容器异常退出后自动拉起
+    command:
+      - standalone                   # 单机模式
+    environment:
+      TZ: Asia/Shanghai              # 时区
+    ports:
+      - "17912:17912"                # OAP 连接 BanyanDB 的主要端口
+
+  # OAP:
+  # SkyWalking 后端分析服务，负责接收 Collector 转发的 OTel traces / metrics / logs 并写入 BanyanDB。
+  # 这里打开 OTel 全链路接收能力，并启用 vm metrics rules 作为第一版可读展示规则。
+  oap:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/skywalking-oap-server:10.4.0 # 原镜像`apache/skywalking-oap-server:10.4.0`
+    container_name: sw-oap      # 容器名
+    restart: unless-stopped
+    depends_on:
+      - banyandb                     # 先启动存储，再启动 OAP
+    environment:
+      TZ: Asia/Shanghai              # 时区
+      SW_STORAGE: banyandb           # 使用 BanyanDB 作为 SkyWalking 存储
+      SW_STORAGE_BANYANDB_TARGETS: banyandb:17912 # BanyanDB 服务地址
+      SW_OTEL_RECEIVER: default      # 打开 OTel 接收器
+      SW_OTEL_RECEIVER_ENABLED_HANDLERS: otlp-metrics,otlp-traces,otlp-logs # 接收 OTLP metrics / traces / logs
+      SW_OTEL_RECEIVER_ENABLED_OTEL_METRICS_RULES: vm # 先启用 vm 规则，保证 JVM / runtime 指标更容易在 UI 中展示
+      SW_RECEIVER_ZIPKIN: default      # 保留 Zipkin receiver，兼容 OAP 内部 trace 转换与查询链路
+      SW_QUERY_ZIPKIN: default         # 保留 Zipkin query 兼容能力，避免查询链路缺模块
+      JAVA_OPTS: "-Xms512m -Xmx512m" # JVM 堆大小，轻量场景先压到 512m
+    ports:
+      - "11800:11800"                # OAP gRPC 端口，供 OTel Collector 转发数据到 SkyWalking
+      - "12800:12800"                # UI 查询 / HealthCheck 的 HTTP 端口
+      - "9411:9411"                  # Zipkin HTTP 接收端口，兼容 Zipkin exporter 或旧链路验证
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/12800'"] # 检查 OAP HTTP 端口是否 ready
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  # OTel Collector:
+  # 标准 OTLP 入口，应用统一发往 4317/4318，再由 Collector 批量转发到 SkyWalking OAP。
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.117.0 # 官方镜像当前可直接拉取，避免镜像站标签缺失
+    container_name: sw-otel-collector
+    restart: unless-stopped
+    depends_on:
+      oap:
+        condition: service_healthy
+    command:
+      - --config=/etc/otelcol-contrib/config.yaml
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./otel-collector/config.yaml:/etc/otelcol-contrib/config.yaml:ro
+    ports:
+      - "4317:4317"                  # OTLP gRPC 标准入口
+      - "4318:4318"                  # OTLP HTTP 标准入口
+
+  # UI:
+  # SkyWalking Web 控制台。
+  # 这里通过服务名 `oap` 访问后端，避免绑定固定 IP；同时等待 OAP healthcheck 通过后再启动。
+  ui:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/skywalking-ui:10.4.0 # 原镜像`apache/skywalking-ui:10.4.0`
+    container_name: sw-ui       # 容器名
+    restart: unless-stopped
+    depends_on:
+      oap:
+        condition: service_healthy   # 等 OAP ready 后再启动 UI，避免首次 connection refused
+    environment:
+      TZ: Asia/Shanghai              # 时区
+      SW_SERVER_PORT: 8080           # SkyWalking UI 监听端口
+      SW_OAP_ADDRESS: http://oap:12800 # 通过服务名访问 OAP HTTP 查询地址
+      SW_ZIPKIN_ADDRESS: http://oap:9412 # 让内置 Zipkin Lens UI 查询 OTel traces 转换后的 Zipkin traces
+    ports:
+      - "18080:8080"                # 本地访问入口 http://127.0.0.1:18080
