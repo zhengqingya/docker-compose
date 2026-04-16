@@ -1,5 +1,8 @@
 auth_enabled: false
 
+common:
+  path_prefix: /tmp/loki
+
 server:
   http_listen_port: 3100
 
@@ -32,12 +35,9 @@ storage_config:
     directory: /tmp/loki/chunks
 
 limits_config:
-  enforce_metric_name: false
+  allow_structured_metadata: false
   reject_old_samples: true
   reject_old_samples_max_age: 168h
-
-chunk_store_config:
-  max_look_back_period: 0
 
 table_manager:
   chunk_tables_provisioning:
