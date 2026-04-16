@@ -56,3 +56,15 @@ JVM 参数：
 - 在 SkyWalking 中，OTel traces 会转换为 Zipkin trace 模型，因此正确查看入口是 UI 的 `/zipkin` 或 Zipkin Trace 相关菜单，而不是 `General-Service -> Trace` 原生页。
 - SkyWalking 原生 UI 中的 `General-Service -> Trace` 更适合 SkyWalking 原生 agent / trace 模型；如果你的目标是直接在原生 Trace 页查看链路，应改用 SkyWalking 原生 agent 探针方式接入。
 - 日志与指标仍然通过 SkyWalking 自身的 Log / Metrics 页面查看，不受 Zipkin Trace UI 入口影响。
+
+---
+
+结论：
+- SkyWalking 原生 agent 更适合在 SkyWalking 原生页面看链路
+- OTel 也能看链路，但在 SkyWalking 里通常走的是 Zipkin/Lens 这套查询入口。https://skywalking.apache.org/docs/main/v10.4.0/en/setup/backend/otlp-trace/
+
+即分为2步查看数据
+- 看链路：http://127.0.0.1:18080/zipkin
+- 看日志：SkyWalking 原来的 Log 页面
+
+![](./images/run-1776329793561.png)
