@@ -1,0 +1,18 @@
+apiVersion: 1
+
+# Grafana 数据源自动配置。
+# 该文件会在 Grafana 启动时自动创建 Prometheus 数据源，
+# 免去首次登录后手动添加 datasource。
+datasources:
+  # 数据源显示名称，Dashboard 查询时会使用这个名称。
+  - name: Prometheus
+    # 数据源类型。
+    type: prometheus
+    # proxy 表示由 Grafana 后端访问 Prometheus，浏览器不需要直接访问 Prometheus 容器地址。
+    access: proxy
+    # Prometheus 在 docker-compose monitor 网络中的服务地址。
+    url: http://prometheus:9090
+    # 设置为默认数据源，导入 Dashboard 时通常会自动选中。
+    isDefault: true
+    # true 表示允许在 Grafana UI 中调整该数据源配置。
+    editable: true

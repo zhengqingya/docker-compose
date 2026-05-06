@@ -1,0 +1,53 @@
+networks:
+  # 监控组件内部通信网络。
+  # Grafana 通过服务名 prometheus 访问同一网络内的 Prometheus。
+  monitor:
+    driver: bridge
+
+services:
+  # Prometheus：指标采集与时序存储组件。
+  # 它会按 prometheus/prometheus.yml 中的 scrape_configs 定时拉取
+  # Java 服务、Prometheus 自身暴露的指标。
+  prometheus:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/prometheus:v3.11.2             # 原镜像`prom/prometheus:v3.11.2`
+    container_name: monitor-prometheus
+    restart: unless-stopped
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.enable-lifecycle"
+    volumes:
+      # Prometheus 主配置文件，定义要采集的 targets。
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      # 可选：开启后会把 Prometheus 历史指标数据持久化到本地目录。
+      # - ./prometheus/data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - monitor
+
+  # Grafana：指标可视化与告警配置组件。
+  # 默认通过 provisioning 自动接入 Prometheus 数据源，
+  # 登录后可导入 JVM、Spring Boot 等 Dashboard。
+  grafana:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/grafana:13.0                  # 原镜像`grafana/grafana:13.0`
+    container_name: monitor-grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_USERS_DEFAULT_LANGUAGE: zh-Hans  # 默认中文界面
+    volumes:
+      # 可选：开启后会把 Grafana 用户、数据源、面板等运行数据持久化到本地目录。
+      # - ./grafana/data:/var/lib/grafana
+      # Grafana 自动配置目录，启动时自动创建 Prometheus 数据源和 Dashboard Provider。
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      # Grafana 本地 Dashboard JSON 存放目录，配合 provisioning 自动加载。
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - monitor
