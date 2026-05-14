@@ -43,6 +43,7 @@ services:
       - "11800:11800"                # OAP gRPC 端口，供 OTel Collector 转发数据到 SkyWalking
       - "12800:12800"                # UI 查询 / HealthCheck 的 HTTP 端口
       - "9411:9411"                  # Zipkin HTTP 接收端口，兼容 Zipkin exporter 或旧链路验证
+      - "9090:9090"                  # PromQL 端口，供 Grafana 以 Prometheus 数据源方式读取 SkyWalking 指标
     healthcheck:
       test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/12800'"] # 检查 OAP HTTP 端口是否 ready
       interval: 10s
@@ -68,6 +69,7 @@ services:
     ports:
       - "4317:4317"                  # OTLP gRPC 标准入口
       - "4318:4318"                  # OTLP HTTP 标准入口
+      - "13133:13133"                # Collector health_check 扩展端口，便于本地排障
 
   # UI:
   # SkyWalking Web 控制台。
