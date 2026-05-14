@@ -59,6 +59,7 @@ services:
     ports:
       - "11800:11800" # agent 上报数据的端口，这是 gRPC 端口
       - "12800:12800" # ui 读取数据的端口，这是 http 端口
+      - "9090:9090"   # PromQL 端口，供 Grafana 以 Prometheus 数据源方式读取 SkyWalking 指标
     networks:
       skywalking:
         ipv4_address: 172.24.0.81

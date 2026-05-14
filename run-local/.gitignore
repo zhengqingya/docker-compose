@@ -6,3 +6,9 @@ nginx1.27.0_886/nginx/file
 nginx1.27.0_886/nginx/log
 
 redis7.0.5/redis/data
+
+grafana
+
+skywalking-10.4.0-banyandb-lite
+
+

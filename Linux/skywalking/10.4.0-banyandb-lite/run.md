@@ -67,3 +67,15 @@ docker stats --no-stream sw-banyandb sw-oap sw-ui
 
 ![](./images/run-1775732342517.png)
 
+### Grafana 查看 SkyWalking 已经采集到的 JVM / 服务指标
+
+> tips: 此方式是让 Grafana 直接读取 SkyWalking OAP 提供的 PromQL 兼容查询接口
+
+1、查看暴露了哪些指标 http://127.0.0.1:9090/api/v1/label/__name__/values
+
+2、在 `Grafana` 中新增一个 `Prometheus` 类型数据源 `host.docker.internal:9090`
+![](./images/run-1778751308087.png)
+
+亲测查询无数据，兼容性不强~
+![](./images/run-1778752593401.png)
+
