@@ -112,7 +112,7 @@ JVM 参数：
 skywalking中无法展示相关服务指标
 ![](./images/run-1778843250179.png)
 
-可以通过 Grafana+Prometheus 去查看指标
+可以通过 [Grafana+Prometheus](../../prometheus/v3.11.2-prometheus-grafana-otel) 去查看指标
 ![](./images/run-1778843284228.png)
 
 可在 Grafana 以下 Dashboard ID 查看数据
