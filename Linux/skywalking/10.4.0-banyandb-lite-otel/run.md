@@ -56,6 +56,8 @@ eg: https://github.com/open-telemetry/opentelemetry-java-instrumentation/release
 
 JVM 参数：
 
+###### otel方式
+
 ```shell
 -javaagent:/data/opentelemetry-javaagent.jar
 -Dotel.service.name=demo-skywalking-otel
@@ -72,6 +74,22 @@ JVM 参数：
 
 - `JVM runtime metrics` 例如 CPU、内存、GC、线程，`opentelemetry-javaagent.jar` 默认就会采集，不需要额外增加 `otel.jmx.target.system`。
 - `otel.jmx.target.system` / `otel.jmx.config` 只用于采集 Tomcat、Jetty 或自定义 MBean 这类 JMX 指标。
+
+###### otel+prometheus 收集指标
+
+```shell
+-javaagent:/data/opentelemetry-javaagent.jar
+-Dotel.service.name=demo-skywalking-otel
+-Dotel.resource.attributes=deployment.environment=dev,service.namespace=default
+-Dotel.traces.exporter=otlp
+-Dotel.logs.exporter=otlp
+-Dotel.metrics.exporter=prometheus
+-Dotel.exporter.otlp.protocol=grpc
+-Dotel.exporter.otlp.endpoint=http://127.0.0.1:4317
+-Dotel.exporter.prometheus.host=0.0.0.0
+-Dotel.exporter.prometheus.port=9464
+-Dotel.metric.export.interval=10000
+```
 
 ## 验证
 
