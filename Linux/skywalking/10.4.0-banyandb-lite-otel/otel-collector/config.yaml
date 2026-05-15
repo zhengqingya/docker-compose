@@ -1,5 +1,13 @@
+# OTel Collector 最小化配置：
+# 1. 接收应用通过 OTLP(gRPC/HTTP) 上报的 traces / metrics / logs
+# 2. 做最基础的内存保护、批处理与资源属性补充
+# 3. 再统一转发到 SkyWalking OAP
+
 receivers:
   otlp:
+    # 应用统一接入入口：
+    # - 4317: OTLP gRPC
+    # - 4318: OTLP HTTP
     protocols:
       grpc:
         endpoint: 0.0.0.0:4317
@@ -8,17 +16,21 @@ receivers:
 
 extensions:
   health_check:
+    # Collector 自身健康检查端口，便于本地排障与存活探测
     endpoint: 0.0.0.0:13133
 
 processors:
   memory_limiter:
+    # 防止 Collector 因瞬时流量过高导致内存失控
     check_interval: 1s
     limit_mib: 256
     spike_limit_mib: 64
   batch:
+    # 批量发送，减少频繁网络调用带来的额外开销
     send_batch_size: 1024
     timeout: 5s
   resource:
+    # 给所有信号统一补充资源属性，方便后端按环境维度聚合
     attributes:
       - key: deployment.environment
         action: upsert
@@ -26,22 +38,28 @@ processors:
 
 exporters:
   otlp/skywalking:
+    # 通过 OTLP gRPC 转发给 SkyWalking OAP
     endpoint: oap:11800
     tls:
+      # 本地 docker-compose 网络内直连，不启用 TLS 校验
       insecure: true
 
 service:
+  # 先启用 health_check 扩展，再启动 traces / metrics / logs 三条 pipeline
   extensions: [health_check]
   pipelines:
     traces:
+      # Trace 链路：OTLP -> processors -> SkyWalking OAP
       receivers: [otlp]
       processors: [memory_limiter, resource, batch]
       exporters: [otlp/skywalking]
     metrics:
+      # Metrics 链路：OTLP -> processors -> SkyWalking OAP
       receivers: [otlp]
       processors: [memory_limiter, resource, batch]
       exporters: [otlp/skywalking]
     logs:
+      # Logs 链路：OTLP -> processors -> SkyWalking OAP
       receivers: [otlp]
       processors: [memory_limiter, resource, batch]
       exporters: [otlp/skywalking]

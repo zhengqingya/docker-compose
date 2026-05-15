@@ -2,7 +2,7 @@
 # 说明：
 # 1. 这是 SkyWalking 10.4.0 + BanyanDB + OTel Collector 的标准 OTLP 接入方案。
 # 2. 推荐链路：Java/Python/Go/PHP App -> OTel Collector(4317/4318) -> SkyWalking OAP -> BanyanDB -> SkyWalking UI。
-# 3. 第一版同时打通 OTel traces / metrics / logs，并启用 SkyWalking vm metrics rules，优先保证“可读可展示”。
+# 3. 第一版同时打通 OTel traces / metrics / logs，OAP 侧尽量保持官方默认 OTel metrics rules。
 # 4. 如果是生产环境，建议按实际流量重新评估资源参数，并单独设计高可用方案。
 
 services:
@@ -22,7 +22,7 @@ services:
 
   # OAP:
   # SkyWalking 后端分析服务，负责接收 Collector 转发的 OTel traces / metrics / logs 并写入 BanyanDB。
-  # 这里打开 OTel 全链路接收能力，并启用 vm metrics rules 作为第一版可读展示规则。
+  # 这里打开 OTel 全链路接收能力，并尽量保持 OAP 内置的默认 OTel metrics rules。
   oap:
     image: registry.cn-hangzhou.aliyuncs.com/zhengqing/skywalking-oap-server:10.4.0 # 原镜像`apache/skywalking-oap-server:10.4.0`
     container_name: sw-oap      # 容器名
@@ -35,7 +35,6 @@ services:
       SW_STORAGE_BANYANDB_TARGETS: banyandb:17912 # BanyanDB 服务地址
       SW_OTEL_RECEIVER: default      # 打开 OTel 接收器
       SW_OTEL_RECEIVER_ENABLED_HANDLERS: otlp-metrics,otlp-traces,otlp-logs # 接收 OTLP metrics / traces / logs
-      SW_OTEL_RECEIVER_ENABLED_OTEL_METRICS_RULES: vm # 先启用 vm 规则，保证 JVM / runtime 指标更容易在 UI 中展示
       SW_RECEIVER_ZIPKIN: default      # 保留 Zipkin receiver，兼容 OAP 内部 trace 转换与查询链路
       SW_QUERY_ZIPKIN: default         # 保留 Zipkin query 兼容能力，避免查询链路缺模块
       JAVA_OPTS: "-Xms512m -Xmx512m" # JVM 堆大小，轻量场景先压到 512m
@@ -43,7 +42,7 @@ services:
       - "11800:11800"                # OAP gRPC 端口，供 OTel Collector 转发数据到 SkyWalking
       - "12800:12800"                # UI 查询 / HealthCheck 的 HTTP 端口
       - "9411:9411"                  # Zipkin HTTP 接收端口，兼容 Zipkin exporter 或旧链路验证
-      - "9090:9090"                  # PromQL 端口，供 Grafana 以 Prometheus 数据源方式读取 SkyWalking 指标
+      # - "9090:9090"                # PromQL 端口，供 Grafana 以 Prometheus 数据源方式读取 SkyWalking 指标；当前先注释，避免与独立 Prometheus 的 9090 冲突
     healthcheck:
       test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/12800'"] # 检查 OAP HTTP 端口是否 ready
       interval: 10s
