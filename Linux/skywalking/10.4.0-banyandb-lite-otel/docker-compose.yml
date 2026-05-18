@@ -35,9 +35,13 @@ services:
       SW_STORAGE_BANYANDB_TARGETS: banyandb:17912 # BanyanDB 服务地址
       SW_OTEL_RECEIVER: default      # 打开 OTel 接收器
       SW_OTEL_RECEIVER_ENABLED_HANDLERS: otlp-metrics,otlp-traces,otlp-logs # 接收 OTLP metrics / traces / logs
+      SW_OTEL_RECEIVER_ENABLED_OTEL_METRICS_RULES: apisix,nginx/*,k8s/*,istio-controlplane,vm,mysql/*,postgresql/*,oap,aws-eks/*,windows,aws-s3/*,aws-dynamodb/*,aws-gateway/*,redis/*,elasticsearch/*,rabbitmq/*,mongodb/*,kafka/*,pulsar/*,bookkeeper/*,rocketmq/*,clickhouse/*,activemq/*,kong/*,flink/*,banyandb/*,jvm-otel # 保留官方默认规则，并额外启用自定义 jvm-otel 规则
+      SW_ENABLE_UPDATE_UI_TEMPLATE: "true" # 允许通过 UI 创建和更新仪表盘模板；该开关由 OAP 后端控制
       SW_RECEIVER_ZIPKIN: default      # 保留 Zipkin receiver，兼容 OAP 内部 trace 转换与查询链路
       SW_QUERY_ZIPKIN: default         # 保留 Zipkin query 兼容能力，避免查询链路缺模块
       JAVA_OPTS: "-Xms512m -Xmx512m" # JVM 堆大小，轻量场景先压到 512m
+    volumes:
+      - ./otel-rules/jvm-otel.yaml:/skywalking/config/otel-rules/jvm-otel.yaml:ro # 仅挂载自定义规则文件，避免覆盖 OAP 内置的官方 otel-rules 目录
     ports:
       - "11800:11800"                # OAP gRPC 端口，供 OTel Collector 转发数据到 SkyWalking
       - "12800:12800"                # UI 查询 / HealthCheck 的 HTTP 端口
