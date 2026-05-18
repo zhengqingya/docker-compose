@@ -161,7 +161,7 @@ JMX Overview (OpenTelemetry): [`17582`](https://grafana.com/grafana/dashboards/1
 - 第一版规则当前先按 `service.name -> service` 维度映射，优先验证 OTel JVM 指标是否被 OAP 正常命中；不要先按 `Service Instance` 建仪表盘。
 - 修改规则后，需要重启 OAP 才会重新加载。
 
-#### 新建仪表盘 -- 验证指标是否可以正常查看
+#### 自定义仪表盘 -- 验证指标是否可以正常查看
 
 ##### 验证1 -- jvm内存占用指标
 
