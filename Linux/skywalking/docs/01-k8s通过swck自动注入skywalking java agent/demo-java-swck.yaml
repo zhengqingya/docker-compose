@@ -36,10 +36,9 @@ metadata:
 spec:
   selector:
     app: demo-java-swck
-  type: NodePort
+  type: LoadBalancer
   ports:
     - name: http
-      port: 8080
+      port: 30080
       targetPort: 666
-      nodePort: 30080
       protocol: TCP

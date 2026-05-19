@@ -108,18 +108,22 @@ kubectl get pods -n zq
 # NAME                              READY   STATUS    RESTARTS   AGE
 # demo-java-swck-79d969f4d5-pn87w   1/1     Running   0          36s
 kubectl get svc -n zq
-# NAME             TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
-# demo-java-swck   NodePort   10.96.37.137   <none>        8080:30080/TCP   70s
+# NAME             TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)           AGE
+# demo-java-swck   LoadBalancer   10.96.144.115   172.19.0.5    30080:32640/TCP   9m13s
 
 # 访问服务接口
 curl http://127.0.0.1:30080/hello
+# {"message":"hello, skywalking","service":"demo-java-agent"}
+
+
+# NodePort 方式在 mac上可能会出现如下情况。tips: 现在已经修改为LoadBalancer方式，本地能正常访问，下面部分不用管...
 # curl: (7) Failed to connect to 127.0.0.1 port 30080 after 0 ms: Couldn't connect to server
 # 如果访问不了，可通过如下端口转发方式
-kubectl port-forward -n zq svc/demo-java-swck 30081:8080
+# kubectl port-forward -n zq svc/demo-java-swck 30081:8080
 # Forwarding from 127.0.0.1:30081 -> 666
 # Forwarding from [::1]:30081 -> 666
 # Handling connection for 30081
-curl http://127.0.0.1:30081/hello
+# curl http://127.0.0.1:30081/hello
 # {"message":"hello, skywalking","service":"demo-java-agent"}
 ```
 
