@@ -12,10 +12,7 @@ spec:
     metadata:
       labels:
         app: demo-java-swck
-        swck-java-agent-injected: "true" # 开启当前 Pod 的自动注入
-      annotations:
-        agent.skywalking.apache.org/collector.backend_service: "host.docker.internal:11800"  # 指定 OAP 上报地址 todo 改成自己的宿主机ip
-        agent.skywalking.apache.org/agent.service_name: "demo-java-swck" # 指定 SkyWalking 中显示的服务名
+        swck-java-agent-injected: "true" # 开启当前 Pod 的自动注入，通用 agent 配置由 swagent.yaml 统一维护。
     spec:
       containers:
         - name: app
@@ -24,6 +21,10 @@ spec:
           env:
             - name: server.port
               value: "666"
+            - name: SW_AGENT_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['app'] # 从当前 Pod 的 app 标签动态生成 SkyWalking 服务名。
           ports:
             - name: http
               containerPort: 666

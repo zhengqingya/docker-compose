@@ -129,3 +129,146 @@ curl http://127.0.0.1:30080/hello
 
 ![](./images/run-k8s-1779173705111.png)
 
+### SwAgent 方式
+
+[`demo-java-swck.yaml`](./demo-java-swck.yaml) 是直接在业务 Deployment 中通过 annotations 配置 OAP 地址和服务名。
+
+如果不想在每份业务 Deployment 中重复维护 OAP 地址，可以使用 `SwAgent` 集中管理通用 agent 配置：
+
+- `swagent.yaml`：统一配置 SkyWalking Java Agent 镜像和 OAP 上报地址。
+- [`demo-java-swck-swagent.yaml`](./demo-java-swck-swagent.yaml)：业务 Deployment 只保留 `swck-java-agent-injected: "true"`，并通过 Downward API 从 `app` 标签动态生成 `SW_AGENT_NAME`。
+
+```shell
+# 部署 SwAgent 统一配置
+kubectl apply -f swagent.yaml
+
+# 部署使用 SwAgent 的业务服务
+kubectl apply -f demo-java-swck-swagent.yaml
+# kubectl delete -f demo-java-swck-swagent.yaml
+
+
+# 验证 Pod 环境变量中是否存在 SkyWalking agent 配置
+kubectl get po -n zq                                     
+# NAME                             READY   STATUS    RESTARTS   AGE
+# demo-java-swck-5f5c64f9cd-tzr6l   1/1     Running   0          96m
+kubectl describe pod -n zq <pod-name>
+# Name:             demo-java-swck-5f5c64f9cd-tzr6l
+# Namespace:        zq
+# Priority:         0
+# Service Account:  default
+# Node:             desktop-control-plane/172.19.0.4
+# Start Time:       Wed, 20 May 2026 13:42:20 +0800
+# Labels:           app=demo-java-swck
+#                   pod-template-hash=5f5c64f9cd
+#                   swck-java-agent-injected=true
+# Annotations:      sidecar.skywalking.apache.org/succeed: true
+#                   swck-java-agent-injected: true
+# Status:           Running
+# IP:               10.244.0.13
+# IPs:
+#   IP:           10.244.0.13
+# Controlled By:  ReplicaSet/demo-java-swck-5f5c64f9cd
+# Init Containers:
+#   inject-skywalking-agent:
+#     Container ID:  containerd://a881efe55120cb014e9137f35c4a013fe1936a30cb55d662b893f685a38e5df3
+#     Image:         apache/skywalking-java-agent:8.16.0-java8
+#     Image ID:      docker.io/apache/skywalking-java-agent@sha256:0ebed9ce9b989aaed10d12271b411cc550b58f596a391b1980dc07e77d2cd535
+#     Port:          <none>
+#     Host Port:     <none>
+#     Command:
+#       sh
+#     Args:
+#       -c
+#       mkdir -p /sky/agent && cp -r /skywalking/agent/* /sky/agent
+#     State:          Terminated
+#       Reason:       Completed
+#       Exit Code:    0
+#       Started:      Wed, 20 May 2026 13:42:20 +0800
+#       Finished:     Wed, 20 May 2026 13:42:20 +0800
+#     Ready:          True
+#     Restart Count:  0
+#     Environment:    <none>
+#     Mounts:
+#       /sky/agent from sky-agent (rw)
+#       /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-w52k9 (ro)
+# Containers:
+#   app:
+#     Container ID:   containerd://87711afd62f9a8067c41ceba1f72107594f8f6d8f47e7fe687ae434f76e79592
+#     Image:          registry.cn-hangzhou.aliyuncs.com/zhengqing/test:demo-java-swck
+#     Image ID:       registry.cn-hangzhou.aliyuncs.com/zhengqing/test@sha256:7f7a8478e9a5a65f83362df5c49211c3b86854d1d8faf3ed4fb5542db36d5571
+#     Port:           666/TCP (http)
+#     Host Port:      0/TCP (http)
+#     State:          Running
+#       Started:      Wed, 20 May 2026 13:42:21 +0800
+#     Ready:          True
+#     Restart Count:  0
+#     Environment:
+#       server.port:                          666
+#       SW_AGENT_NAME:                         (v1:metadata.labels['app'])
+#       JAVA_TOOL_OPTIONS:                    -javaagent:/sky/agent/skywalking-agent.jar
+#       SW_AGENT_COLLECTOR_BACKEND_SERVICES:  host.docker.internal:11800
+#     Mounts:
+#       /sky/agent from sky-agent (rw)
+#       /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-w52k9 (ro)
+# Conditions:
+#   Type                        Status
+#   PodReadyToStartContainers   True 
+#   Initialized                 True 
+#   Ready                       True 
+#   ContainersReady             True 
+#   PodScheduled                True 
+# Volumes:
+#   kube-api-access-w52k9:
+#     Type:                    Projected (a volume that contains injected data from multiple sources)
+#     TokenExpirationSeconds:  3607
+#     ConfigMapName:           kube-root-ca.crt
+#     Optional:                false
+#     DownwardAPI:             true
+#   sky-agent:
+#     Type:        EmptyDir (a temporary directory that shares a pod's lifetime)
+#     Medium:      
+#     SizeLimit:   <unset>
+# QoS Class:       BestEffort
+# Node-Selectors:  <none>
+# Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+#                  node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+# Events:
+#   Type    Reason     Age   From               Message
+#   ----    ------     ----  ----               -------
+#   Normal  Scheduled  14s   default-scheduler  Successfully assigned zq/demo-java-swck-5f5c64f9cd-tzr6l to desktop-control-plane
+#   Normal  Pulled     14s   kubelet            Container image "apache/skywalking-java-agent:8.16.0-java8" already present on machine and can be accessed by the pod
+#   Normal  Created    14s   kubelet            Container created
+#   Normal  Started    14s   kubelet            Container started
+#   Normal  Pulling    13s   kubelet            Pulling image "registry.cn-hangzhou.aliyuncs.com/zhengqing/test:demo-java-swck"
+#   Normal  Pulled     13s   kubelet            Successfully pulled image "registry.cn-hangzhou.aliyuncs.com/zhengqing/test:demo-java-swck" in 31ms (31ms including waiting). Image size: 114793543 bytes.
+#   Normal  Created    13s   kubelet            Container created
+#   Normal  Started    13s   kubelet            Container started
+
+
+# 访问服务接口
+curl http://127.0.0.1:30080/hello
+# {"message":"hello, skywalking","service":"demo-java-agent"}
+```
+
+SWCK + Java Agent Injector 生效判断
+![](./images/run-k8s-1779256136709.png)
+
+
+###### `demo-java-swck-swagent.yaml` 中的关键配置：
+
+```yaml
+labels:
+  app: demo-java-swck
+  swck-java-agent-injected: "true"
+```
+
+```yaml
+env:
+  - name: SW_AGENT_NAME
+    valueFrom:
+      fieldRef:
+        fieldPath: metadata.labels['app']
+```
+
+这样 SkyWalking 中显示的服务名会跟随 `app` 标签变化。比如 `app: demo-java-swck` 会生成 `SW_AGENT_NAME=demo-java-swck`。
+
