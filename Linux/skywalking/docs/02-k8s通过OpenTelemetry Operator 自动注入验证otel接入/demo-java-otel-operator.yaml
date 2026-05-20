@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-java-otel-operator
+  namespace: zq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-java-otel-operator
+  template:
+    metadata:
+      labels:
+        app: demo-java-otel-operator
+      annotations:
+        instrumentation.opentelemetry.io/inject-java: "java-otel-instrumentation" # 使用指定 Instrumentation 自动注入 OTel Java Agent。
+    spec:
+      containers:
+        - name: app
+          image: registry.cn-hangzhou.aliyuncs.com/zhengqing/test:demo-skywalking-java-otel
+          imagePullPolicy: Always
+          env:
+            - name: server.port
+              value: "666"
+          ports:
+            - name: http
+              containerPort: 666
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-java-otel-operator
+  namespace: zq
+spec:
+  selector:
+    app: demo-java-otel-operator
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 30082
+      targetPort: 666
+      protocol: TCP
