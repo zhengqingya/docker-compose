@@ -63,6 +63,7 @@ kubectl apply -f instrumentation-java-otel.yaml
 
 ```shell
 kubectl apply -f demo-java-otel-operator.yaml
+# kubectl delete -f demo-java-otel-operator.yaml
 ```
 
 ### 5、验证注入是否生效
