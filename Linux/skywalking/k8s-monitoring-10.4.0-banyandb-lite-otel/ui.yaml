@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: skywalking-ui
+  namespace: skywalking
+  labels:
+    app: skywalking-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: skywalking-ui
+  template:
+    metadata:
+      labels:
+        app: skywalking-ui
+    spec:
+      containers:
+        - name: ui
+          image: registry.cn-hangzhou.aliyuncs.com/zhengqing/skywalking-ui:10.4.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: TZ
+              value: Asia/Shanghai
+            - name: SW_SERVER_PORT
+              value: "8080"
+            - name: SW_OAP_ADDRESS
+              value: http://skywalking-oap:12800
+            - name: SW_ZIPKIN_ADDRESS
+              value: http://skywalking-oap-query:9412
+          ports:
+            - name: http
+              containerPort: 8080
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 768Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: skywalking-ui
+  namespace: skywalking
+  labels:
+    app: skywalking-ui
+spec:
+  type: LoadBalancer
+  selector:
+    app: skywalking-ui
+  ports:
+    - name: http
+      port: 18080
+      targetPort: http

@@ -1,0 +1,162 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: k8s-monitoring-collector
+  namespace: skywalking
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: k8s-monitoring-collector
+rules:
+  - apiGroups: [""]
+    resources:
+      - nodes
+      - nodes/proxy
+      - services
+      - endpoints
+      - pods
+      - namespaces
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources:
+      - deployments
+      - replicasets
+      - daemonsets
+      - statefulsets
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["batch"]
+    resources:
+      - jobs
+      - cronjobs
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: k8s-monitoring-collector
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: k8s-monitoring-collector
+subjects:
+  - kind: ServiceAccount
+    name: k8s-monitoring-collector
+    namespace: skywalking
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: k8s-monitoring-collector-config
+  namespace: skywalking
+data:
+  config.yaml: |
+    receivers:
+      prometheus:
+        config:
+          scrape_configs:
+            - job_name: kubernetes-cadvisor
+              scrape_interval: 30s
+              scheme: https
+              tls_config:
+                ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+                insecure_skip_verify: true
+              bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+              kubernetes_sd_configs:
+                - role: node
+              relabel_configs:
+                - action: labelmap
+                  regex: __meta_kubernetes_node_label_(.+)
+                - target_label: cluster
+                  replacement: local-k8s
+                - target_label: __address__
+                  replacement: kubernetes.default.svc:443
+                - source_labels: [__meta_kubernetes_node_name]
+                  regex: (.+)
+                  target_label: __metrics_path__
+                  replacement: /api/v1/nodes/$1/proxy/metrics/cadvisor
+                - source_labels: [__meta_kubernetes_node_name]
+                  target_label: node
+
+            - job_name: kube-state-metrics
+              scrape_interval: 30s
+              metrics_path: /metrics
+              kubernetes_sd_configs:
+                - role: endpoints
+              relabel_configs:
+                - source_labels: [__meta_kubernetes_service_label_app_kubernetes_io_name]
+                  regex: kube-state-metrics
+                  action: keep
+                - action: labelmap
+                  regex: __meta_kubernetes_service_label_(.+)
+                - target_label: cluster
+                  replacement: local-k8s
+
+    processors:
+      memory_limiter:
+        check_interval: 1s
+        limit_mib: 256
+        spike_limit_mib: 64
+      batch:
+      resource:
+        attributes:
+          - key: k8s.cluster.name
+            value: local-k8s
+            action: upsert
+
+    exporters:
+      otlp/skywalking:
+        endpoint: skywalking-oap:11800
+        tls:
+          insecure: true
+
+    service:
+      pipelines:
+        metrics:
+          receivers: [prometheus]
+          processors: [memory_limiter, resource, batch]
+          exporters: [otlp/skywalking]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-monitoring-collector
+  namespace: skywalking
+  labels:
+    app: k8s-monitoring-collector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-monitoring-collector
+  template:
+    metadata:
+      labels:
+        app: k8s-monitoring-collector
+    spec:
+      serviceAccountName: k8s-monitoring-collector
+      containers:
+        - name: otel-collector
+          image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.125.0
+          imagePullPolicy: IfNotPresent
+          args:
+            - --config=/etc/otelcol-contrib/config.yaml
+          ports:
+            - name: metrics
+              containerPort: 8888
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          volumeMounts:
+            - name: config
+              mountPath: /etc/otelcol-contrib/config.yaml
+              subPath: config.yaml
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: k8s-monitoring-collector-config

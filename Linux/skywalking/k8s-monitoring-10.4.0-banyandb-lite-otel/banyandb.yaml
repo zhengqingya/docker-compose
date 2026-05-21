@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: banyandb
+  namespace: skywalking
+  labels:
+    app: banyandb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: banyandb
+  template:
+    metadata:
+      labels:
+        app: banyandb
+    spec:
+      containers:
+        - name: banyandb
+          image: registry.cn-hangzhou.aliyuncs.com/zhengqing/skywalking-banyandb:0.10.1
+          imagePullPolicy: IfNotPresent
+          args:
+            - standalone
+          env:
+            - name: TZ
+              value: Asia/Shanghai
+          ports:
+            - name: grpc
+              containerPort: 17912
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: banyandb
+  namespace: skywalking
+  labels:
+    app: banyandb
+spec:
+  type: ClusterIP
+  selector:
+    app: banyandb
+  ports:
+    - name: grpc
+      port: 17912
+      targetPort: grpc

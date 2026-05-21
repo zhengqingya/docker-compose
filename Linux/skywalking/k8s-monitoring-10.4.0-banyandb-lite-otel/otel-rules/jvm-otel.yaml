@@ -1,0 +1,27 @@
+# 基于 OpenTelemetry Java Agent 暴露的 JVM runtime metrics，
+# 将常用 JVM 指标接入 SkyWalking OAP 的 meter system。
+#
+# 说明：
+# 1. 当前 OAP 加载 otel-rules 时，使用 MAL 规则文件的顶层结构：
+#    metricPrefix / expPrefix / expSuffix / filter / metricsRules。
+# 2. 这里先做一版“最小可落地”规则，优先打通 JVM 常用指标：
+#    - jvm_memory_used_bytes
+#    - jvm_thread_count
+#    - jvm_class_count
+#    - jvm_cpu_recent_utilization_ratio
+# 3. 第一版先按 service 维度接入，避免依赖 service.instance.id 在 OTel metrics 中的实际携带情况。
+#    等 service 维度验证通过后，再按需升级成 instance 维度。
+
+metricPrefix: jvm_otel
+metricsRules:
+  - name: memory_used_bytes
+    exp: jvm_memory_used_bytes.service(['service_name'], Layer.GENERAL).downsampling(LATEST)
+
+  - name: thread_count
+    exp: jvm_thread_count.service(['service_name'], Layer.GENERAL).downsampling(LATEST)
+
+  - name: class_count
+    exp: jvm_class_count.service(['service_name'], Layer.GENERAL).downsampling(LATEST)
+
+  - name: cpu_recent_utilization
+    exp: jvm_cpu_recent_utilization_ratio.service(['service_name'], Layer.GENERAL).downsampling(LATEST)

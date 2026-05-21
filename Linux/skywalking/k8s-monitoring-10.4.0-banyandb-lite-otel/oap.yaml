@@ -1,0 +1,191 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: skywalking-oap
+  namespace: skywalking
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: skywalking-oap
+rules:
+  - apiGroups: [""]
+    resources:
+      - nodes
+      - nodes/proxy
+      - services
+      - endpoints
+      - pods
+      - namespaces
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources:
+      - deployments
+      - replicasets
+      - daemonsets
+      - statefulsets
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["batch"]
+    resources:
+      - jobs
+      - cronjobs
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: skywalking-oap
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: skywalking-oap
+subjects:
+  - kind: ServiceAccount
+    name: skywalking-oap
+    namespace: skywalking
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: skywalking-oap-otel-rules
+  namespace: skywalking
+data:
+  jvm-otel.yaml: |
+    # 基于 OpenTelemetry Java Agent 暴露的 JVM runtime metrics，
+    # 将常用 JVM 指标接入 SkyWalking OAP 的 meter system。
+    metricPrefix: jvm_otel
+    metricsRules:
+      - name: memory_used_bytes
+        exp: jvm_memory_used_bytes.service(['service_name'], Layer.GENERAL).downsampling(LATEST)
+
+      - name: thread_count
+        exp: jvm_thread_count.service(['service_name'], Layer.GENERAL).downsampling(LATEST)
+
+      - name: class_count
+        exp: jvm_class_count.service(['service_name'], Layer.GENERAL).downsampling(LATEST)
+
+      - name: cpu_recent_utilization
+        exp: jvm_cpu_recent_utilization_ratio.service(['service_name'], Layer.GENERAL).downsampling(LATEST)
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: skywalking-oap
+  namespace: skywalking
+  labels:
+    app: skywalking-oap
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: skywalking-oap
+  template:
+    metadata:
+      labels:
+        app: skywalking-oap
+    spec:
+      serviceAccountName: skywalking-oap
+      containers:
+        - name: oap
+          image: registry.cn-hangzhou.aliyuncs.com/zhengqing/skywalking-oap-server:10.4.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: TZ
+              value: Asia/Shanghai
+            - name: SW_STORAGE
+              value: banyandb
+            - name: SW_STORAGE_BANYANDB_TARGETS
+              value: banyandb:17912
+            - name: SW_OTEL_RECEIVER
+              value: default
+            - name: SW_OTEL_RECEIVER_ENABLED_HANDLERS
+              value: otlp-metrics,otlp-traces,otlp-logs
+            - name: SW_OTEL_RECEIVER_ENABLED_OTEL_METRICS_RULES
+              value: apisix,nginx/*,k8s/*,istio-controlplane,vm,mysql/*,postgresql/*,oap,aws-eks/*,windows,aws-s3/*,aws-dynamodb/*,aws-gateway/*,redis/*,elasticsearch/*,rabbitmq/*,mongodb/*,kafka/*,pulsar/*,bookkeeper/*,rocketmq/*,clickhouse/*,activemq/*,kong/*,flink/*,banyandb/*,jvm-otel
+            - name: SW_ENABLE_UPDATE_UI_TEMPLATE
+              value: "true"
+            - name: SW_RECEIVER_ZIPKIN
+              value: default
+            - name: SW_QUERY_ZIPKIN
+              value: default
+            - name: JAVA_OPTS
+              value: -Xms512m -Xmx512m
+          ports:
+            - name: grpc
+              containerPort: 11800
+            - name: http
+              containerPort: 12800
+            - name: zipkin
+              containerPort: 9411
+            - name: zipkin-query
+              containerPort: 9412
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 12
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 6
+          resources:
+            requests:
+              cpu: 500m
+              memory: 768Mi
+            limits:
+              cpu: "2"
+              memory: 1536Mi
+          volumeMounts:
+            - name: otel-rules
+              mountPath: /skywalking/config/otel-rules/jvm-otel.yaml
+              subPath: jvm-otel.yaml
+              readOnly: true
+      volumes:
+        - name: otel-rules
+          configMap:
+            name: skywalking-oap-otel-rules
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: skywalking-oap
+  namespace: skywalking
+  labels:
+    app: skywalking-oap
+spec:
+  type: LoadBalancer
+  selector:
+    app: skywalking-oap
+  ports:
+    - name: grpc
+      port: 11800
+      targetPort: grpc
+    - name: http
+      port: 12800
+      targetPort: http
+    - name: zipkin
+      port: 9411
+      targetPort: zipkin
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: skywalking-oap-query
+  namespace: skywalking
+  labels:
+    app: skywalking-oap
+spec:
+  type: ClusterIP
+  selector:
+    app: skywalking-oap
+  ports:
+    - name: zipkin-query
+      port: 9412
+      targetPort: zipkin-query
