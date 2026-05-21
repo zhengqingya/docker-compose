@@ -3,6 +3,7 @@
 https://skywalking.apache.org/docs/main/next/en/setup/backend/backend-k8s-monitoring/
 
 > 注：docker部署的oap不要尝试，通过k8s部署oap后再尝试。
+> 新版见[k8s-monitoring-10.4.0-banyandb-lite-otel](../../k8s-monitoring-10.4.0-banyandb-lite-otel)
 
 本次要在 K8s 中部署 `kube-state-metrics` 和 `otel-collector`，在不修改业务 Pod 的前提下采集 K8s 基础资源指标，并通过现有 Docker 部署的 OTel Collector 上报到 SkyWalking。
 
