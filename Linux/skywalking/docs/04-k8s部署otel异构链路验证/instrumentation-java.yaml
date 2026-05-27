@@ -1,0 +1,30 @@
+apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+  name: java-instrumentation
+  namespace: k8s-otel
+spec:
+  exporter:
+    endpoint: http://host.docker.internal:4317 # OTel Collector 地址；正式环境建议改成集群内 Collector Service。
+  propagators:
+    - tracecontext
+    - baggage
+    - b3
+  sampler:
+    type: parentbased_traceidratio
+    argument: "1.0"
+  java:
+    image: ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-java:latest
+    env:
+      - name: OTEL_SERVICE_NAME
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.labels['app'] # 从当前 Pod 的 app 标签动态生成 OTel 服务名。
+      - name: OTEL_TRACES_EXPORTER
+        value: otlp
+      - name: OTEL_METRICS_EXPORTER
+        value: otlp
+      - name: OTEL_LOGS_EXPORTER
+        value: otlp
+      - name: OTEL_EXPORTER_OTLP_PROTOCOL
+        value: grpc
