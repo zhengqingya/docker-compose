@@ -1,11 +1,11 @@
 apiVersion: opentelemetry.io/v1alpha1
 kind: Instrumentation
 metadata:
-  name: java-instrumentation
+  name: python-instrumentation
   namespace: k8s-otel
 spec:
   exporter:
-    endpoint: http://host.docker.internal:4317 # OTel Collector 地址；正式环境建议改成集群内 Collector Service。
+    endpoint: http://host.docker.internal:4318 # Python OTel 自动注入使用 OTLP HTTP/protobuf；正式环境建议改成集群内 Collector Service。
   propagators:
     - tracecontext
     - baggage
@@ -13,8 +13,8 @@ spec:
   sampler:
     type: parentbased_traceidratio
     argument: "1.0"
-  java:
-    image: ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-java:latest
+  python:
+    image: ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-python:latest
     env:
       - name: OTEL_SERVICE_NAME
         valueFrom:
@@ -27,6 +27,6 @@ spec:
       - name: OTEL_LOGS_EXPORTER
         value: otlp
       - name: OTEL_EXPORTER_OTLP_PROTOCOL
-        value: grpc
-      - name: OTEL_INSTRUMENTATION_LOGBACK_MDC_ENABLED
-        value: "true"
+        value: http/protobuf
+      - name: OTEL_PYTHON_LOG_CORRELATION
+        value: "true" # 将 trace_id/span_id 注入 Python logging 的 LogRecord。
