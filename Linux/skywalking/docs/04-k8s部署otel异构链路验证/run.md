@@ -55,6 +55,30 @@ kubectl get mutatingwebhookconfigurations | grep -i opentelemetry
 
 ### 三、部署自动注入示例
 
+#### 0.1、一键部署
+
+```shell
+kubectl apply -f namespace.yaml
+kubectl apply -f instrumentation-java.yaml
+kubectl apply -f demo-k8s-otel-java.yaml
+kubectl apply -f instrumentation-python.yaml
+kubectl apply -f demo-k8s-otel-python.yaml
+kubectl apply -f demo-k8s-otel-go.yaml
+kubectl apply -f demo-k8s-otel-php.yaml
+```
+
+#### 0.2、一键删除
+
+```shell
+kubectl delete -f demo-k8s-otel-php.yaml
+kubectl delete -f demo-k8s-otel-go.yaml
+kubectl delete -f demo-k8s-otel-python.yaml
+kubectl delete -f instrumentation-python.yaml
+kubectl delete -f demo-k8s-otel-java.yaml
+kubectl delete -f instrumentation-java.yaml
+kubectl delete -f namespace.yaml
+```
+
 #### 1、创建命名空间
 
 ```shell

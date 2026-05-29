@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-agent-go
+  namespace: k8s-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-agent-go
+  template:
+    metadata:
+      labels:
+        app: demo-agent-go
+    spec:
+      containers:
+        - name: app
+          image: registry.cn-hangzhou.aliyuncs.com/zhengqingya/test:demo-agent-go
+          imagePullPolicy: Always
+          env:
+            - name: HTTP_ADDR
+              value: ":18082"
+            - name: SW_AGENT_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['app']
+            - name: SW_AGENT_REPORTER_GRPC_BACKEND_SERVICE
+              value: "skywalking-oap.skywalking.svc.cluster.local:11800"
+          ports:
+            - name: http
+              containerPort: 18082
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-agent-go
+  namespace: k8s-agent
+spec:
+  selector:
+    app: demo-agent-go
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 31084
+      targetPort: 18082
+      protocol: TCP
