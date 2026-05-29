@@ -309,7 +309,24 @@ kubectl logs -n k8s-otel deploy/demo-k8s-otel-php -c app --tail=20 -f
 [service=demo-k8s-otel-php trace_id=xxx span_id=xxx] info hello request, name=php
 ```
 
-### 四、SkyWalking 中查看
+### 四、验证 Java -> Python -> Go -> PHP -> Java 闭环链路
+
+```shell
+curl -s "http://127.0.0.1:30082/chain?targetName=python&targetUrl=http%3A%2F%2Fdemo-k8s-otel-python%3A30083%2Fchain%3FtargetName%3Dgo%26targetUrl%3Dhttp%253A%252F%252Fdemo-k8s-otel-go%253A30084%252Fchain%253FtargetName%253Dphp%2526targetUrl%253Dhttp%25253A%25252F%25252Fdemo-k8s-otel-php%25253A30085%25252Fchain%25253FtargetName%25253Djava%252526targetUrl%25253Dhttp%2525253A%2525252F%2525252Fdemo-k8s-otel-java%2525253A30082%2525252Fhello%2525253Fname%2525253Dfrom-php" | jq
+```
+
+链路方向：
+
+```text
+curl
+  -> demo-k8s-otel-java
+  -> demo-k8s-otel-python
+  -> demo-k8s-otel-go
+  -> demo-k8s-otel-php
+  -> demo-k8s-otel-java
+```
+
+### 五、SkyWalking 中查看
 
 OTel 方式接入后，优先查看：
 
@@ -320,5 +337,3 @@ OTel 方式接入后，优先查看：
 - SkyWalking 常规服务中的 `demo-k8s-otel-php`
 
 JVM / Runtime Metrics 建议继续使用 Prometheus + Grafana 查看。
-
-![](./images/run-k8s-1779263240453.png)
