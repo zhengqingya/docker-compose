@@ -5,7 +5,7 @@ metadata:
   namespace: k8s-otel
 spec:
   exporter:
-    endpoint: http://host.docker.internal:4318 # Python OTel 自动注入使用 OTLP HTTP/protobuf；正式环境建议改成集群内 Collector Service。
+    endpoint: http://otel-collector.skywalking.svc.cluster.local:4318 # Python OTel 自动注入使用 OTLP HTTP/protobuf。
   propagators:
     - tracecontext
     - baggage

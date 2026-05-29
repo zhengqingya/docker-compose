@@ -17,6 +17,13 @@ spec:
         - name: app
           image: registry.cn-hangzhou.aliyuncs.com/zhengqingya/test:demo-k8s-otel-php
           imagePullPolicy: Always
+          env:
+            - name: OTEL_SERVICE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['app']
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://otel-collector.skywalking.svc.cluster.local:4318"
           ports:
             - name: http
               containerPort: 18083

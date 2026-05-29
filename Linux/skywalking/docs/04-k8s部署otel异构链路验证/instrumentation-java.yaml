@@ -5,7 +5,7 @@ metadata:
   namespace: k8s-otel
 spec:
   exporter:
-    endpoint: http://host.docker.internal:4317 # OTel Collector 地址；正式环境建议改成集群内 Collector Service。
+    endpoint: http://otel-collector.skywalking.svc.cluster.local:4317 # OTel Collector 地址。
   propagators:
     - tracecontext
     - baggage

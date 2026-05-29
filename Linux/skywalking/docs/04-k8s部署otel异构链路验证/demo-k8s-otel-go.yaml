@@ -25,7 +25,11 @@ spec:
                 fieldRef:
                   fieldPath: metadata.labels['app']
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              value: "http://host.docker.internal:4318"
+              value: "http://otel-collector.skywalking.svc.cluster.local:4317"
+            - name: OTEL_EXPORTER_OTLP_PROTOCOL
+              value: "grpc"
+            - name: OTEL_METRIC_EXPORT_INTERVAL
+              value: "10000"
           ports:
             - name: http
               containerPort: 18082
