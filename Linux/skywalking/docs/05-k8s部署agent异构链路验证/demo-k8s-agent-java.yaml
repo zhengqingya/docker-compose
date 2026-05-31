@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: demo-agent-java
+  name: demo-k8s-agent-java
   namespace: k8s-agent
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: demo-agent-java
+      app: demo-k8s-agent-java
   template:
     metadata:
       labels:
-        app: demo-agent-java
+        app: demo-k8s-agent-java
         swck-java-agent-injected: "true"
     spec:
       containers:
@@ -30,11 +30,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: demo-agent-java
+  name: demo-k8s-agent-java
   namespace: k8s-agent
 spec:
   selector:
-    app: demo-agent-java
+    app: demo-k8s-agent-java
   type: LoadBalancer
   ports:
     - name: http

@@ -1,7 +1,7 @@
 apiVersion: operator.skywalking.apache.org/v1alpha1
 kind: SwAgent
 metadata:
-  name: demo-agent-java-swagent
+  name: demo-k8s-agent-java-swagent
   namespace: k8s-agent
 spec:
   selector:

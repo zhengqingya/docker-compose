@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: demo-agent-go
+  name: demo-k8s-agent-go
   namespace: k8s-agent
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: demo-agent-go
+      app: demo-k8s-agent-go
   template:
     metadata:
       labels:
-        app: demo-agent-go
+        app: demo-k8s-agent-go
     spec:
       containers:
         - name: app
@@ -33,11 +33,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: demo-agent-go
+  name: demo-k8s-agent-go
   namespace: k8s-agent
 spec:
   selector:
-    app: demo-agent-go
+    app: demo-k8s-agent-go
   type: LoadBalancer
   ports:
     - name: http

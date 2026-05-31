@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: demo-agent-python
+  name: demo-k8s-agent-python
   namespace: k8s-agent
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: demo-agent-python
+      app: demo-k8s-agent-python
   template:
     metadata:
       labels:
-        app: demo-agent-python
+        app: demo-k8s-agent-python
     spec:
       containers:
         - name: app
@@ -30,6 +30,14 @@ spec:
               value: "grpc"
             - name: SW_AGENT_COLLECTOR_BACKEND_SERVICES
               value: "skywalking-oap.skywalking.svc.cluster.local:11800"
+            - name: SW_AGENT_LOG_REPORTER_ACTIVE
+              value: "true"
+            - name: SW_AGENT_LOG_REPORTER_LEVEL
+              value: "INFO"
+            - name: SW_AGENT_LOG_REPORTER_FORMATTED
+              value: "true"
+            - name: SW_AGENT_LOG_REPORTER_LAYOUT
+              value: "%(asctime)s %(levelname)s [%(name)s] %(message)s"
           ports:
             - name: http
               containerPort: 18081
@@ -37,11 +45,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: demo-agent-python
+  name: demo-k8s-agent-python
   namespace: k8s-agent
 spec:
   selector:
-    app: demo-agent-python
+    app: demo-k8s-agent-python
   type: LoadBalancer
   ports:
     - name: http
