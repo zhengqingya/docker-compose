@@ -26,6 +26,14 @@ spec:
                   fieldPath: metadata.labels['app']
             - name: SW_AGENT_REPORTER_GRPC_BACKEND_SERVICE
               value: "skywalking-oap.skywalking.svc.cluster.local:11800"
+            - name: SW_LOG_TYPE
+              value: "zap"
+            - name: SW_AGENT_LOG_TRACING_ENABLE
+              value: "true"
+            - name: SW_AGENT_LOG_TRACING_KEY
+              value: "SW_CTX"
+            - name: SW_LOG_REPORTER_ENABLE
+              value: "true"
           ports:
             - name: http
               containerPort: 18082

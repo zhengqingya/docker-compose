@@ -27,6 +27,17 @@ demo-k8s-agent-php
 
 > Go 不是运行时挂载型 agent。当前 `demo-k8s-agent-go` 已去掉 OTel SDK，并在 Dockerfile 构建阶段执行 `go-agent -inject` 和 `-toolexec` 增强；后续更多 Go 项目可以把这段构建逻辑沉到统一 CI/CD 或基础构建模板里。
 
+### 日志上报边界
+
+本示例的日志关联验证以 SkyWalking 原生 Agent 日志上报为准：
+
+- Java 使用 `GRPCLogClientAppender` 上报日志。
+- Python 使用 `SW_AGENT_LOG_REPORTER_ACTIVE=true` 上报日志。
+- Go 使用 SkyWalking Go Agent 的 zap 日志插件和 `SW_LOG_REPORTER_ENABLE=true` 上报日志。
+- PHP 使用 `skywalking_agent.psr_logging_level=Info` hook PSR-3 LoggerInterface 上报日志。
+
+如果同时部署了 OTel filelog DaemonSet，它只能作为 stdout/stderr 兜底采集链路；SkyWalking UI 的追踪 ID 关联筛选以原生 Agent 上报的日志为准。
+
 ### 二、前置组件安装
 
 Java 服务依赖 SWCK 自动注入 SkyWalking Java Agent，部署本示例前需要先准备 SWCK 相关组件。

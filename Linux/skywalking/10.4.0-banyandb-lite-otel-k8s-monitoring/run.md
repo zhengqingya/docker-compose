@@ -17,6 +17,12 @@ Java / Python / Go / PHP App
   -> BanyanDB(17912)
   -> SkyWalking UI(18080)
 
+Java / Python / Go / PHP stdout/stderr logs
+  -> OTel Log Agent(filelog DaemonSet)
+  -> OTel Collector(4317)
+  -> SkyWalking OAP(11800)
+  -> SkyWalking UI Logs
+
 kube-state-metrics + kubelet cAdvisor
   -> K8s Monitoring Collector
   -> SkyWalking OAP(11800)
@@ -52,6 +58,8 @@ kubectl apply -f oap.yaml
 kubectl apply -f ui.yaml
 kubectl apply -f otel-collector.yaml
 kubectl apply -f k8s-monitoring-collector.yaml
+# 日志采集 OTel filelog DaemonSet -- 注：此方案只能保证日志进入 SkyWalking，但对 SkyWalking 原生 Agent trace id 来说，不能保证“真正按链路 ID 关联”。即：能上报日志，但UI中无法筛选链路日志。
+# kubectl apply -f otel-log-agent.yaml
 ```
 
 查看状态：
@@ -87,7 +95,21 @@ kubectl port-forward -n skywalking svc/skywalking-oap 11800:11800 12800:12800 94
 kubectl port-forward -n skywalking svc/otel-collector 4317:4317 4318:4318 13133:13133
 ```
 
-## 五、Java 服务接入
+## 六、应用日志接入
+
+`otel-log-agent.yaml` 使用 DaemonSet 在每个节点采集容器 stdout/stderr 日志，读取路径为 `/var/log/pods/*/*/*.log`，通过 OTLP gRPC 发送到集群内的 `otel-collector:4317`，再由现有 Collector 转发到 `skywalking-oap:11800`。
+
+日志归属服务名优先使用日志资源属性 `service.name`。如果应用日志没有显式携带 `service.name`，Log Agent 会尝试使用 Pod 的 `app` label 作为 `service.name`；仍然不存在时，回退到 Pod 名称。
+
+PHP / Go 服务推荐输出 JSON 日志，至少包含：
+
+```json
+{"service.name":"demo-k8s-agent-go","level":"INFO","message":"hello request","trace_id":"trace-id"}
+```
+
+如果暂时不改应用代码，保留 stdout/stderr 文本日志也可以先接入 SkyWalking，但 trace-log 关联效果取决于日志内容中是否包含 trace id。
+
+## 七、Java 服务接入
 
 ### SkyWalking 原生 Java Agent
 
@@ -119,7 +141,7 @@ K8s 集群内 Java Pod：
 -Dotel.exporter.otlp.endpoint=http://otel-collector.skywalking.svc.cluster.local:4317
 ```
 
-## 六、K8s Monitoring 验证
+## 八、K8s Monitoring 验证
 
 查看 K8s Monitoring Collector 日志：
 
@@ -176,6 +198,7 @@ kubectl logs -n skywalking deploy/skywalking-oap
 查看 Collector 日志：
 
 ```shell
+# kubectl logs -n skywalking ds/otel-log-agent --tail=100
 kubectl logs -n skywalking deploy/otel-collector
 kubectl logs -n skywalking deploy/k8s-monitoring-collector
 ```
@@ -186,10 +209,14 @@ kubectl logs -n skywalking deploy/k8s-monitoring-collector
 - `k8s-monitoring-collector` 是否能抓到 `kube-state-metrics` 和 kubelet cAdvisor。
 - `skywalking-oap` 的 ServiceAccount 是否拥有访问 Kubernetes API Server 的 RBAC。
 - OAP 是否已启用 `k8s/*` OTel metrics rules。
+- 应用日志是否写到 stdout/stderr。
+- `otel-log-agent` 是否能读取 `/var/log/pods/*/*/*.log`。
+- 日志资源属性或 Pod label 是否能提供 `service.name`。
 
-## 八、清理
+## 九、清理
 
 ```shell
+# kubectl delete -f otel-log-agent.yaml
 kubectl delete -f k8s-monitoring-collector.yaml
 kubectl delete -f otel-collector.yaml
 kubectl delete -f ui.yaml
