@@ -10,14 +10,23 @@ k8s 安装 SWCK 的标准顺序：
 4. 给 namespace 打 swck-injection=enabled
 5. 给 Deployment 打 swck-java-agent-injected: "true"
 
+本示例提供两种方式：
+
+- `Deployment annotations`：在业务 Deployment 中直接写 OAP 地址和服务名，适合单个服务快速验证。
+- `SwAgent`：用 `swagent.yaml` 统一维护 Agent 镜像和 OAP 地址，业务 Deployment 只保留注入标签和服务名，推荐多服务或长期维护时使用。
+
+### 一、前置组件安装
+
+#### 1、安装 cert-manager
+
 ```shell
-# 1、先确认目前环境是否有 cert-manager
+# 先确认目前环境是否有 cert-manager
 kubectl get pods -A | grep cert-manager
 # 删除旧版本
 # kubectl delete namespace cert-manager
 
 
-# 2、安装 cert-manager   https://cert-manager.io/docs/installation/
+# 安装 cert-manager   https://cert-manager.io/docs/installation/
 # 最新版本
 # kubectl apply -f https://github.com/cert-manager/cert-manager/releases/latest/download/cert-manager.yaml
 # 指定版本
@@ -29,10 +38,12 @@ kubectl get pods -n cert-manager
 # cert-manager-68756bcf6f-4r2h9             1/1     Running   0          31s
 # cert-manager-cainjector-c664cf9b8-xsflq   1/1     Running   0          31s
 # cert-manager-webhook-5749c6dc95-lkwvx     1/1     Running   0          31s
+```
 
+#### 2、安装 SWCK Operator
 
-
-# 3、安装 SWCK Operator   https://github.com/apache/skywalking-swck
+```shell
+# 安装 SWCK Operator   https://github.com/apache/skywalking-swck
 # 删除旧版本
 # kubectl delete namespace skywalking-swck-system
 # 最新版本
@@ -74,19 +85,24 @@ kubectl get pods -n skywalking-swck-system -w
 # skywalking-swck-controller-manager-6fd75884ff-kmz4v   0/2     ContainerCreating   0          13s
 # skywalking-swck-controller-manager-6fd75884ff-kmz4v   1/2     Running             0          17s
 # skywalking-swck-controller-manager-6fd75884ff-kmz4v   2/2     Running             0          17s
+```
 
+#### 3、开启命名空间注入
 
-
-# 4、开启命名空间注入
+```shell
+# 开启命名空间注入
 # 等 SWCK 装好后，给你的目标命名空间打标签（eg：zq）  -- 如果已经打过，会提示 not labeled 或 configured，都没问题
 kubectl label namespace zq swck-injection=enabled
 # 确认标签生效
 kubectl get namespace zq --show-labels
 # NAME   STATUS   AGE   LABELS
 # zq     Active   18h   kubernetes.io/metadata.name=zq,swck-injection=enabled
+```
 
+### 二、Deployment annotations 方式
 
-# 5、然后再给具体 Java Deployment 的 Pod 模板加标签
+```shell
+# 然后再给具体 Java Deployment 的 Pod 模板加标签
 spec:
   template:
     metadata:
@@ -97,7 +113,7 @@ spec:
         agent.skywalking.apache.org/agent.service_name: "demo-java-swck" # 指定 SkyWalking 中显示的服务名
 
 
-# 6、验证pod自动注入 & 上报oap
+# 验证 pod 自动注入 & 上报 OAP
 # 删除
 # kubectl delete -f demo-java-swck.yaml
 # 部署
@@ -129,7 +145,7 @@ curl http://127.0.0.1:30080/hello
 
 ![](./images/run-k8s-1779173705111.png)
 
-### SwAgent 方式
+### 三、SwAgent 方式
 
 [`demo-java-swck.yaml`](./demo-java-swck.yaml) 是直接在业务 Deployment 中通过 annotations 配置 OAP 地址和服务名。
 
@@ -151,7 +167,7 @@ kubectl apply -f demo-java-swck-swagent.yaml
 kubectl get po -n zq                                     
 # NAME                             READY   STATUS    RESTARTS   AGE
 # demo-java-swck-5f5c64f9cd-tzr6l   1/1     Running   0          96m
-kubectl describe pod -n zq <pod-name>
+kubectl describe pod -n zq -l app=demo-java-swck
 # Name:             demo-java-swck-5f5c64f9cd-tzr6l
 # Namespace:        zq
 # Priority:         0
@@ -271,4 +287,3 @@ env:
 ```
 
 这样 SkyWalking 中显示的服务名会跟随 `app` 标签变化。比如 `app: demo-java-swck` 会生成 `SW_AGENT_NAME=demo-java-swck`。
-

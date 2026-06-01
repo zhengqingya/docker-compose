@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: registry.cn-hangzhou.aliyuncs.com/zhengqingya/test:demo-agent-java
+          image: registry.cn-hangzhou.aliyuncs.com/zhengqingya/test:demo-k8s-agent-java
           imagePullPolicy: Always
           env:
             - name: SW_AGENT_NAME

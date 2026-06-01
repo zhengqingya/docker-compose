@@ -51,6 +51,8 @@ kubectl get svc -A | grep kube-state-metrics
 
 ## 三、部署
 
+### 1、部署
+
 ```shell
 kubectl apply -f namespace.yaml
 kubectl apply -f banyandb.yaml
@@ -62,6 +64,8 @@ kubectl apply -f k8s-monitoring-collector.yaml
 # kubectl apply -f otel-log-agent.yaml
 ```
 
+`otel-log-agent.yaml` 为日志采集可选组件，需要验证 stdout/stderr 日志进入 SkyWalking 时再启用。
+
 查看状态：
 
 ```shell
@@ -71,6 +75,24 @@ kubectl get svc -n skywalking
 
 Docker Desktop 的 `LoadBalancer` 通常会把 `EXTERNAL-IP` 显示为 `localhost`。
 如果你的环境显示为 `172.x.x.x`，访问时使用 `kubectl get svc -n skywalking` 里对应 Service 的 `EXTERNAL-IP`，端口仍保持下方列表一致。
+
+### 2、清理
+
+```shell
+# kubectl delete -f otel-log-agent.yaml
+kubectl delete -f k8s-monitoring-collector.yaml
+kubectl delete -f otel-collector.yaml
+kubectl delete -f ui.yaml
+kubectl delete -f oap.yaml
+kubectl delete -f banyandb.yaml
+kubectl delete -f namespace.yaml
+```
+
+如果 kube-state-metrics 是本次单独安装的，也可以清理：
+
+```shell
+kubectl delete -k https://github.com/kubernetes/kube-state-metrics/examples/standard
+```
 
 ## 四、访问地址
 
@@ -95,21 +117,9 @@ kubectl port-forward -n skywalking svc/skywalking-oap 11800:11800 12800:12800 94
 kubectl port-forward -n skywalking svc/otel-collector 4317:4317 4318:4318 13133:13133
 ```
 
-## 六、应用日志接入
+## 五、应用接入地址
 
-`otel-log-agent.yaml` 使用 DaemonSet 在每个节点采集容器 stdout/stderr 日志，读取路径为 `/var/log/pods/*/*/*.log`，通过 OTLP gRPC 发送到集群内的 `otel-collector:4317`，再由现有 Collector 转发到 `skywalking-oap:11800`。
-
-日志归属服务名优先使用日志资源属性 `service.name`。如果应用日志没有显式携带 `service.name`，Log Agent 会尝试使用 Pod 的 `app` label 作为 `service.name`；仍然不存在时，回退到 Pod 名称。
-
-PHP / Go 服务推荐输出 JSON 日志，至少包含：
-
-```json
-{"service.name":"demo-k8s-agent-go","level":"INFO","message":"hello request","trace_id":"trace-id"}
-```
-
-如果暂时不改应用代码，保留 stdout/stderr 文本日志也可以先接入 SkyWalking，但 trace-log 关联效果取决于日志内容中是否包含 trace id。
-
-## 七、Java 服务接入
+宿主机本地服务使用 `127.0.0.1`，K8s 集群内 Pod 使用集群内 Service 域名。
 
 ### SkyWalking 原生 Java Agent
 
@@ -141,7 +151,21 @@ K8s 集群内 Java Pod：
 -Dotel.exporter.otlp.endpoint=http://otel-collector.skywalking.svc.cluster.local:4317
 ```
 
-## 八、K8s Monitoring 验证
+## 六、应用日志接入（可选）
+
+`otel-log-agent.yaml` 使用 DaemonSet 在每个节点采集容器 stdout/stderr 日志，读取路径为 `/var/log/pods/*/*/*.log`，通过 OTLP gRPC 发送到集群内的 `otel-collector:4317`，再由现有 Collector 转发到 `skywalking-oap:11800`。
+
+日志归属服务名优先使用日志资源属性 `service.name`。如果应用日志没有显式携带 `service.name`，Log Agent 会尝试使用 Pod 的 `app` label 作为 `service.name`；仍然不存在时，回退到 Pod 名称。
+
+PHP / Go 服务推荐输出 JSON 日志，至少包含：
+
+```json
+{"service.name":"demo-k8s-agent-go","level":"INFO","message":"hello request","trace_id":"trace-id"}
+```
+
+如果暂时不改应用代码，保留 stdout/stderr 文本日志也可以先接入 SkyWalking，但 trace-log 关联效果取决于日志内容中是否包含 trace id。
+
+## 七、K8s Monitoring 验证
 
 查看 K8s Monitoring Collector 日志：
 
@@ -175,7 +199,7 @@ http://127.0.0.1:18080
 
 
 
-## 七、排查
+## 八、排查
 
 OAP 健康检查：
 
@@ -212,21 +236,3 @@ kubectl logs -n skywalking deploy/k8s-monitoring-collector
 - 应用日志是否写到 stdout/stderr。
 - `otel-log-agent` 是否能读取 `/var/log/pods/*/*/*.log`。
 - 日志资源属性或 Pod label 是否能提供 `service.name`。
-
-## 九、清理
-
-```shell
-# kubectl delete -f otel-log-agent.yaml
-kubectl delete -f k8s-monitoring-collector.yaml
-kubectl delete -f otel-collector.yaml
-kubectl delete -f ui.yaml
-kubectl delete -f oap.yaml
-kubectl delete -f banyandb.yaml
-kubectl delete -f namespace.yaml
-```
-
-如果 kube-state-metrics 是本次单独安装的，也可以清理：
-
-```shell
-kubectl delete -k https://github.com/kubernetes/kube-state-metrics/examples/standard
-```

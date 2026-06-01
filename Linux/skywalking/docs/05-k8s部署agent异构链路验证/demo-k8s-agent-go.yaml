@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: registry.cn-hangzhou.aliyuncs.com/zhengqingya/test:demo-agent-go
+          image: registry.cn-hangzhou.aliyuncs.com/zhengqingya/test:demo-k8s-agent-go
           imagePullPolicy: Always
           env:
             - name: HTTP_ADDR

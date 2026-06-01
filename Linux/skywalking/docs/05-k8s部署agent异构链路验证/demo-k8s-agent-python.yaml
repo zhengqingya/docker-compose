@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: registry.cn-hangzhou.aliyuncs.com/zhengqingya/test:demo-agent-python
+          image: registry.cn-hangzhou.aliyuncs.com/zhengqingya/test:demo-k8s-agent-python
           imagePullPolicy: Always
           env:
             - name: HTTP_HOST
