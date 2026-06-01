@@ -168,6 +168,25 @@ SW_AGENT_NAME=demo-k8s-agent-java
 SW_AGENT_COLLECTOR_BACKEND_SERVICES=skywalking-oap.skywalking.svc.cluster.local:11800
 ```
 
+#### 5、查看日志
+
+```shell
+# 查看 Java 服务日志
+kubectl logs -n k8s-agent deploy/demo-k8s-agent-java --tail=20 -f
+
+# 查看 Python 服务日志
+kubectl logs -n k8s-agent deploy/demo-k8s-agent-python --tail=20 -f
+
+# 查看 Go 服务日志
+kubectl logs -n k8s-agent deploy/demo-k8s-agent-go --tail=20 -f
+
+# 查看 PHP Nginx 访问日志
+kubectl logs -n k8s-agent deploy/demo-k8s-agent-php -c nginx --tail=20 -f
+
+# 查看 PHP-FPM 应用日志
+kubectl logs -n k8s-agent deploy/demo-k8s-agent-php -c php-fpm --tail=20 -f
+```
+
 ### 四、单服务请求
 
 ```shell
