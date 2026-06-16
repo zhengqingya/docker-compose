@@ -102,9 +102,14 @@ docker rm $(docker ps -aq)
 docker rmi $(docker images -q)
 
 # 停止并删除指定容器
+# 法1
 docker ps -a | grep 容器ID/容器名 | awk '{print $1}' | xargs -i docker stop {} | xargs -i docker rm {}
+# 法2 -- 精确匹配指定名称的容器，若存在则强制删除，若不存在则安全退出且不报错
+docker ps -aq -f name=^/容器名$ | xargs -r docker rm -f
+
 
 # 删除镜像
+# 法1
 # docker images 获取所有images
 # grep -E "xxxxx" 筛选到特定的images
 # awk ‘ {print $3}’ 打印第三列 即image id列
@@ -112,8 +117,11 @@ docker ps -a | grep 容器ID/容器名 | awk '{print $1}' | xargs -i docker stop
 # xargs -I {} 多行转单行
 # docker rmi --force {} 删除所有指定镜像id
 docker images | grep -E "镜像id/镜像名" | awk '{print $3}' | uniq | xargs -I {} docker rmi --force {}
-# ex: 删除镜像 `nginx:latest`
+# eg: 删除镜像 `nginx:latest`
 docker images | grep -E nginx | grep latest| awk '{print $3}' | uniq | xargs -I {} docker rmi --force {}
+
+# 法2
+docker images -q -f reference="registry.cn-hangzhou.aliyuncs.com/zhengqing/test:demo-java-agent" | xargs -r docker rmi -f 
 
 
 # 删除所有停止的容器
@@ -125,10 +133,20 @@ docker image prune --force --all
 docker image prune -f -a
 
 
-# 查看容器运行内存信息  【参数`mem_limit: 300m` # 最大使用内存】
+# 查看指定容器运行内存信息 -- 实时显示  【参数`mem_limit: 300m` # 最大使用内存】
 docker stats nginx
 # CONTAINER ID   NAME      CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O     PIDS
 # 385a15a9724d   nginx     0.00%     1.961MiB / 100MiB   1.96%     656B / 0B   0B / 8.19kB   3
+
+# 查看指定容器运行内存信息 -- 只显示1次，不持续刷新
+docker stats --no-stream nginx
+
+# 查看容器运行内存信息 -- 格式化
+docker stats --no-stream --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.MemPerc}}"
+# NAME         CPU %     MEM USAGE / LIMIT     MEM %
+# sw-banyandb  1.25%     220MiB / 7.7GiB       2.79%
+# sw-oap       8.10%     860MiB / 7.7GiB       10.9%
+# sw-ui        0.30%     120MiB / 7.7GiB       1.52%
 ```
 
 

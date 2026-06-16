@@ -1,0 +1,81 @@
+# Apache SkyWalking 10.4.0
+
+分布式系统的应用程序性能监控工具，特别为微服务、云原生和基于容器(Kubernetes)架构设计。
+
+- 官网：https://skywalking.apache.org/
+- github：https://github.com/apache/skywalking
+- 文档：https://skywalking.apache.org/docs/
+
+### 当前方案
+
+这是一个偏 **低内存** 的 `10.4.0` 单机部署方案：
+
+- 存储使用 `BanyanDB`，不再引入 `Elasticsearch`
+- 当前 `BanyanDB` 镜像版本使用 `0.10.1`
+- OAP 堆内存先压到 `512m`
+- BanyanDB 写入并发和 shard 数量做了保守配置
+- 适合本地测试、PoC、小流量环境
+
+如果你的机器内存比较紧张，这套通常会比 `Elasticsearch` 方案更省内存。
+
+---
+
+### 部署
+
+```shell
+# 运行
+docker compose -f docker-compose.yml -p skywalking up -d
+
+# 停止
+docker compose -f docker-compose.yml -p skywalking stop
+# 停止 & 删除容器 & 删除网络
+docker compose -f docker-compose.yml -p skywalking down
+
+# 查看容器内存占用
+docker stats --no-stream sw-banyandb sw-oap sw-ui
+# CONTAINER ID   NAME          CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O     PIDS
+# 82d9d38268df   sw-banyandb   0.00%     864.4MiB / 7.653GiB   11.03%    14.2MB / 62.6MB   0B / 280MB    20
+# b466a3f553a6   sw-oap        9.27%     1.152GiB / 7.653GiB   15.05%    65.5MB / 17.6MB   0B / 17.3MB   80
+# 7adfc6deba62   sw-ui         0.23%     266.8MiB / 7.653GiB   3.40%     3.75MB / 10.4MB   0B / 11.2MB   46
+```
+
+访问 [http://127.0.0.1:18080](http://127.0.0.1:18080)
+
+### Java 项目配置
+
+> 参考 https://skywalking.apache.org/docs/skywalking-java/next/en/setup/service-agent/java-agent/readme/
+
+下载 `Java Agent` https://skywalking.apache.org/downloads/
+
+> eg: https://dlcdn.apache.org/skywalking/java-agent/9.6.0/apache-skywalking-java-agent-9.6.0.tgz
+
+说明：
+
+- 当前 SkyWalking 后端使用的是 `10.4.0`
+- `Java Agent` 采用独立版本线，官网当前最新稳定版是 `9.6.0`
+- 也就是说，这里不是下载 `10.4.0` 的 agent 包，而是下载与当前官方发行对应的 `9.6.0` Java Agent
+
+在java项目运行启动的时候，添加如下运行参数：
+
+```shell
+-javaagent:/data/skywalking-agent/skywalking-agent.jar
+-Dskywalking.agent.service_name=test
+-Dskywalking.collector.backend_service=127.0.0.1:11800
+```
+
+项目跑起来之后调用下接口，就可以去SkyWalking中查看拓扑图，追踪等信息了...
+
+![](./images/run-1775732342517.png)
+
+### Grafana 查看 SkyWalking 已经采集到的 JVM / 服务指标
+
+> tips: 此方式是让 Grafana 直接读取 SkyWalking OAP 提供的 PromQL 兼容查询接口
+
+1、查看暴露了哪些指标 http://127.0.0.1:9090/api/v1/label/__name__/values
+
+2、在 `Grafana` 中新增一个 `Prometheus` 类型数据源 `host.docker.internal:9090`
+![](./images/run-1778751308087.png)
+
+亲测查询无数据，兼容性不强~
+![](./images/run-1778752593401.png)
+

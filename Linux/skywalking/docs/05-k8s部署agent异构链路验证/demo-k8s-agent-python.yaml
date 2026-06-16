@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-k8s-agent-python
+  namespace: k8s-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-k8s-agent-python
+  template:
+    metadata:
+      labels:
+        app: demo-k8s-agent-python
+    spec:
+      containers:
+        - name: app
+          image: registry.cn-hangzhou.aliyuncs.com/zhengqingya/test:demo-k8s-agent-python
+          imagePullPolicy: Always
+          env:
+            - name: HTTP_HOST
+              value: "0.0.0.0"
+            - name: HTTP_PORT
+              value: "18081"
+            - name: SW_AGENT_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['app']
+            - name: SW_AGENT_PROTOCOL
+              value: "grpc"
+            - name: SW_AGENT_COLLECTOR_BACKEND_SERVICES
+              value: "skywalking-oap.skywalking.svc.cluster.local:11800"
+            - name: SW_AGENT_LOG_REPORTER_ACTIVE
+              value: "true"
+            - name: SW_AGENT_LOG_REPORTER_LEVEL
+              value: "INFO"
+            - name: SW_AGENT_LOG_REPORTER_FORMATTED
+              value: "true"
+            - name: SW_AGENT_LOG_REPORTER_LAYOUT
+              value: "%(asctime)s %(levelname)s [%(name)s] %(message)s"
+          ports:
+            - name: http
+              containerPort: 18081
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-k8s-agent-python
+  namespace: k8s-agent
+spec:
+  selector:
+    app: demo-k8s-agent-python
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 31083
+      targetPort: 18081
+      protocol: TCP

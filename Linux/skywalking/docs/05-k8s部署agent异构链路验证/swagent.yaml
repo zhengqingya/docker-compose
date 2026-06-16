@@ -1,0 +1,13 @@
+apiVersion: operator.skywalking.apache.org/v1alpha1
+kind: SwAgent
+metadata:
+  name: demo-k8s-agent-java-swagent
+  namespace: k8s-agent
+spec:
+  selector:
+    swck-java-agent-injected: "true"
+  javaSidecar:
+    image: apache/skywalking-java-agent:8.16.0-java8
+    env:
+      - name: SW_AGENT_COLLECTOR_BACKEND_SERVICES
+        value: skywalking-oap.skywalking.svc.cluster.local:11800

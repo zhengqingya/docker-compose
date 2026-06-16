@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-java-swck
+  namespace: zq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-java-swck
+  template:
+    metadata:
+      labels:
+        app: demo-java-swck
+        swck-java-agent-injected: "true" # 开启当前 Pod 的自动注入
+      annotations:
+        agent.skywalking.apache.org/collector.backend_service: "host.docker.internal:11800"  # 指定 OAP 上报地址 todo 改成自己的宿主机ip
+        agent.skywalking.apache.org/agent.service_name: "demo-java-swck" # 指定 SkyWalking 中显示的服务名
+    spec:
+      containers:
+        - name: app
+          image: registry.cn-hangzhou.aliyuncs.com/zhengqing/test:demo-java-swck
+          imagePullPolicy: Always
+          env:
+            - name: server.port
+              value: "666"
+          ports:
+            - name: http
+              containerPort: 666
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-java-swck
+  namespace: zq
+spec:
+  selector:
+    app: demo-java-swck
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 30080
+      targetPort: 666
+      protocol: TCP

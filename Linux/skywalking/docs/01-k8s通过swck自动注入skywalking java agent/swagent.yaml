@@ -1,0 +1,13 @@
+apiVersion: operator.skywalking.apache.org/v1alpha1
+kind: SwAgent
+metadata:
+  name: demo-java-swagent
+  namespace: zq
+spec:
+  selector:
+    swck-java-agent-injected: "true" # 只给显式开启自动注入的 Pod 应用这份 SwAgent 配置。
+  javaSidecar:
+    image: apache/skywalking-java-agent:8.16.0-java8 # 注入到业务 Pod 的 SkyWalking Java Agent 镜像。
+    env:
+      - name: SW_AGENT_COLLECTOR_BACKEND_SERVICES
+        value: host.docker.internal:11800 # 指定 OAP 上报地址；正式环境建议改成集群内 Service 或宿主机实际 IP。

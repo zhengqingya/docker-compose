@@ -1,0 +1,114 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: demo-k8s-agent-php-nginx
+  namespace: k8s-agent
+data:
+  default.conf: |
+    server {
+        listen 18083;
+        server_name _;
+
+        location / {
+            include fastcgi_params;
+            fastcgi_param SCRIPT_FILENAME /var/www/html/public/index.php;
+            fastcgi_param QUERY_STRING $query_string;
+            fastcgi_param REQUEST_METHOD $request_method;
+            fastcgi_param CONTENT_TYPE $content_type;
+            fastcgi_param CONTENT_LENGTH $content_length;
+            fastcgi_param REQUEST_URI $request_uri;
+            fastcgi_param DOCUMENT_URI $document_uri;
+            fastcgi_param DOCUMENT_ROOT /var/www/html/public;
+            fastcgi_param SERVER_PROTOCOL $server_protocol;
+            fastcgi_param HTTP_HOST $host;
+            fastcgi_param HTTP_USER_AGENT $http_user_agent;
+            fastcgi_param HTTP_ACCEPT $http_accept;
+            fastcgi_param HTTP_SW8 $http_sw8;
+            fastcgi_param HTTP_SW8_CORRELATION $http_sw8_correlation;
+            fastcgi_param HTTP_TRACEPARENT $http_traceparent;
+            fastcgi_pass 127.0.0.1:9000;
+        }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-k8s-agent-php
+  namespace: k8s-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-k8s-agent-php
+  template:
+    metadata:
+      labels:
+        app: demo-k8s-agent-php
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 18083
+          volumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: default.conf
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 18083
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 18083
+            initialDelaySeconds: 15
+            periodSeconds: 20
+        - name: php-fpm
+          image: registry.cn-hangzhou.aliyuncs.com/zhengqingya/test:demo-k8s-agent-php
+          imagePullPolicy: Always
+          env:
+            - name: SW_AGENT_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['app']
+            - name: SW_AGENT_COLLECTOR_BACKEND_SERVICES
+              value: "skywalking-oap.skywalking.svc.cluster.local:11800"
+            - name: SW_AGENT_PSR_LOGGING_LEVEL
+              value: "Info"
+          ports:
+            - name: fpm
+              containerPort: 9000
+          readinessProbe:
+            tcpSocket:
+              port: 9000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 9000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: demo-k8s-agent-php-nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-k8s-agent-php
+  namespace: k8s-agent
+spec:
+  selector:
+    app: demo-k8s-agent-php
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 31085
+      targetPort: 18083
+      protocol: TCP

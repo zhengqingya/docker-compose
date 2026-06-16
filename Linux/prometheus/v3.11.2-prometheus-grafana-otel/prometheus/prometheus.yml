@@ -1,0 +1,37 @@
+global:
+  # 默认采集间隔，所有 job 未单独配置时每 15 秒拉取一次指标。
+  scrape_interval: 15s
+  # 单次采集超时时间，超过该时间会把本次采集标记为失败。
+  scrape_timeout: 10s
+  # 规则评估间隔；当前未配置 rules，保留默认节奏即可。
+  evaluation_interval: 15s
+
+scrape_configs:
+  # 采集 Prometheus 自身运行指标。
+  # 用于观察 Prometheus 是否正常工作、采集耗时、规则执行等状态。
+  - job_name: prometheus
+    static_configs:
+      - targets:
+          # Prometheus 容器自身在 compose 网络中的服务名和端口。
+          - prometheus:9090
+
+  # OpenTelemetry Java Agent Prometheus exporter.
+  # Java 服务通过 -Dotel.metrics.exporter=prometheus 暴露 /metrics 端点。
+  # Prometheus 会从这里拉取 JVM、线程、GC、内存等 runtime 指标。
+  # 如果 Java 服务跑在宿主机上，把 host.docker.internal:9464 改成你的宿主机IP和端口。
+  # 如果 Java 服务也在同一个 docker compose 网络里，把它改成 服务名:端口。
+  - job_name: java-otel
+    # OTel Java Agent Prometheus exporter 默认暴露 /metrics。
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          # 本地 Docker Desktop 场景：容器通过 host.docker.internal 访问宿主机 Java 服务。
+          - host.docker.internal:9464
+        labels:
+          # 自定义应用标签，方便 Dashboard 按应用筛选。
+          application: demo-skywalking-otel
+
+  # 如果 /metrics 配了 basic auth，取消下面注释并修改账号密码。
+  # basic_auth:
+  #   username: admin
+  #   password: 123456

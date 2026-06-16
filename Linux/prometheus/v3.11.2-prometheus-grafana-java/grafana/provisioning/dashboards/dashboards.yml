@@ -1,0 +1,21 @@
+apiVersion: 1
+
+# Grafana Dashboard Provider 配置。
+# 该文件会让 Grafana 启动时扫描 /var/lib/grafana/dashboards 目录，
+# 自动加载其中的 Dashboard JSON 文件。
+providers:
+  # Provider 名称，只用于 Grafana 内部标识，保持唯一即可。
+  - name: local-dashboards
+    # Grafana 组织 ID；默认单组织环境通常是 1。
+    orgId: 1
+    # Dashboard 导入后的文件夹名称；空字符串表示放到 General。
+    folder: ""
+    # file 表示从本地文件系统加载 Dashboard。
+    type: file
+    # false 表示本地 JSON 删除后，Grafana 中对应 Dashboard 也允许被删除。
+    disableDeletion: false
+    # true 表示在 Grafana UI 中可以编辑这些自动加载的 Dashboard。
+    editable: true
+    options:
+      # 对应 docker-compose.yml 中 ./grafana/dashboards 的容器内挂载路径。
+      path: /var/lib/grafana/dashboards

@@ -4,12 +4,11 @@
 
 > 可参考 https://docs.docker.com/engine/install/centos
 >
-> tips: 已测可行环境 
+> tips: 已测可行环境
 > - CentOS Linux release 7.6.1810 (Core)
 > - CentOS Linux release 8.4.2105 (Core)
 > - TencentOS Server release 3.1 (Final) 上会有警告 `/usr/local/lib/python3.6/site-packages/paramiko/transport.py:32: CryptographyDeprecationWarning: Python 3.6 is no longer supported by the Python core team. Therefore, support for it is deprecated in cryptography. The next release of cryptography will remove support for Python 3.6. from cryptography.hazmat.backends import default_backend`
 > - CentOS Stream release 8
-
 
 ```shell
 # 查看CentOS系统版本
@@ -24,6 +23,13 @@ sudo yum-config-manager \
 
 # 通过yum源安装docker
 # sudo yum -y install docker
+# 安装最新版本
+# sudo yum install -y docker-ce docker-ce-cli containerd.io
+# 查看可安装的Docker CE版本列表，并按版本号从高到低排序显示。
+# yum list docker-ce --showduplicates | sort -r
+#      docker-ce.x86_64            3:26.1.4-1.el7                     docker-ce-stable 
+#      docker-ce.x86_64            3:26.1.3-1.el7                     docker-ce-stable 
+#      docker-ce.x86_64            3:26.1.2-1.el7                     docker-ce-stable
 # 指定版本安装
 sudo yum install -y docker-ce-20.10.7 docker-ce-cli-20.10.7 containerd.io-1.4.6
 
