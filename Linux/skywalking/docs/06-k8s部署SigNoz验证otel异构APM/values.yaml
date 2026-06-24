@@ -1,20 +1,54 @@
 global:
+  imageRegistry: registry.cn-hangzhou.aliyuncs.com/zhengqing
   storageClass: standard
   clusterName: docker-desktop
 
 clickhouse:
+  image:
+    registry: registry.cn-hangzhou.aliyuncs.com/zhengqing
+    repository: signoz-clickhouse
+    tag: 25.5.6
   layout:
     shardsCount: 1
     replicasCount: 1
   zookeeper:
     replicaCount: 1
+    image:
+      registry: registry.cn-hangzhou.aliyuncs.com/zhengqing
+      repository: signoz-zookeeper
+      tag: 3.7.1
   persistence:
     enabled: true
     storageClass: standard
     size: 20Gi
+  initContainers:
+    udf:
+      image:
+        registry: registry.cn-hangzhou.aliyuncs.com/zhengqing
+        repository: alpine
+        tag: 3.18.2
+    init:
+      image:
+        registry: registry.cn-hangzhou.aliyuncs.com/zhengqing
+        repository: busybox
+        tag: "1.35"
+  clickhouseOperator:
+    image:
+      registry: registry.cn-hangzhou.aliyuncs.com/zhengqing
+      repository: signoz-clickhouse-operator
+      tag: 0.21.2
+    metricsExporter:
+      image:
+        registry: registry.cn-hangzhou.aliyuncs.com/zhengqing
+        repository: signoz-metrics-exporter
+        tag: 0.21.2
 
 signoz:
   replicaCount: 1
+  image:
+    registry: registry.cn-hangzhou.aliyuncs.com/zhengqing
+    repository: signoz
+    tag: v0.129.0
   service:
     type: ClusterIP
     port: 8080
@@ -25,6 +59,10 @@ signoz:
 
 otelCollector:
   replicaCount: 1
+  image:
+    registry: registry.cn-hangzhou.aliyuncs.com/zhengqing
+    repository: signoz-otel-collector
+    tag: v0.144.5
   service:
     type: ClusterIP
   ports:

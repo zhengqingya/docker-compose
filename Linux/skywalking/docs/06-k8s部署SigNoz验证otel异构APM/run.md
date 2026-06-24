@@ -283,6 +283,8 @@ http://127.0.0.1:28080
 
 查看各服务的请求量、错误率和延迟。
 
+![](./images/run-1782288381401.png)
+
 ### 2、Operations
 
 进入服务详情的 `Operations`：
@@ -290,6 +292,8 @@ http://127.0.0.1:28080
 - 确认 `/hello`、`/chain` 等接口已聚合。
 - 按 P95、P99 或平均耗时降序查看慢接口。
 - 点击 operation 下钻对应 traces。
+
+![](./images/run-1782288416213.png)
 
 ### 3、Traces
 
@@ -299,6 +303,9 @@ http://127.0.0.1:28080
 - 按耗时降序查看慢链路。
 - 打开四语言嵌套 trace，确认上下游 span 使用同一个 trace id。
 
+![](./images/run-1782288572952.png)
+
+
 ### 4、Logs
 
 进入 `Logs`：
@@ -306,6 +313,9 @@ http://127.0.0.1:28080
 - 按 `service.name` 筛选四个 Demo。
 - 从 trace 详情下钻日志，检查 trace id 和 span id 关联。
 - 如果日志已上报但无法关联，检查应用日志是否包含 OTel trace 上下文。
+
+![](./images/run-1782288621907.png)
+
 
 ## 九、排查
 
