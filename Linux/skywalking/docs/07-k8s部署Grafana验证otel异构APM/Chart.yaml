@@ -1,0 +1,23 @@
+apiVersion: v2
+name: grafana-otel
+description: Grafana OpenTelemetry heterogeneous APM validation environment
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+dependencies:
+  - name: tempo
+    version: 1.24.4
+    repository: https://grafana.github.io/helm-charts
+  - name: loki
+    version: 7.0.0
+    repository: https://grafana.github.io/helm-charts
+  - name: prometheus
+    version: 29.13.0
+    repository: https://prometheus-community.github.io/helm-charts
+  - name: opentelemetry-collector
+    alias: otelCollector
+    version: 0.159.0
+    repository: https://open-telemetry.github.io/opentelemetry-helm-charts
+  - name: grafana
+    version: 12.6.0
+    repository: https://grafana-community.github.io/helm-charts

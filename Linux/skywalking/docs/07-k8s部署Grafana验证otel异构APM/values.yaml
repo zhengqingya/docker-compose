@@ -1,0 +1,366 @@
+tempo:
+  fullnameOverride: tempo
+  replicas: 1
+  tempo:
+    registry: registry.cn-hangzhou.aliyuncs.com/zhengqing
+    repository: tempo
+    tag: 2.9.0
+    pullPolicy: IfNotPresent
+    reportingEnabled: false
+    retention: 72h
+    metricsGenerator:
+      enabled: true
+      remoteWriteUrl: http://prometheus-server/api/v1/write
+      processor:
+        service_graphs:
+          wait: 10s
+          max_items: 10000
+        span_metrics:
+          enable_target_info: true
+          enable_exemplars: true
+      storage:
+        path: /var/tempo/metrics
+      traces_storage:
+        path: /var/tempo/generator-wal
+    overrides:
+      defaults:
+        metrics_generator:
+          processors:
+            - service-graphs
+            - span-metrics
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+  persistence:
+    enabled: true
+    storageClassName: standard
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+  service:
+    type: ClusterIP
+
+loki:
+  fullnameOverride: loki
+  deploymentMode: SingleBinary
+  loki:
+    auth_enabled: false
+    image:
+      registry: registry.cn-hangzhou.aliyuncs.com/zhengqing
+      repository: loki
+      tag: 3.6.7
+      pullPolicy: IfNotPresent
+    commonConfig:
+      path_prefix: /var/loki
+      replication_factor: 1
+    storage:
+      type: filesystem
+    useTestSchema: true
+    limits_config:
+      allow_structured_metadata: true
+      retention_period: 72h
+      volume_enabled: true
+    compactor:
+      working_directory: /var/loki/compactor
+      retention_enabled: true
+      delete_request_store: filesystem
+  singleBinary:
+    replicas: 1
+    affinity: {}
+    persistence:
+      enabled: true
+      storageClass: standard
+      size: 10Gi
+      enableStatefulSetAutoDeletePVC: false
+      whenDeleted: Retain
+      whenScaled: Retain
+  write:
+    replicas: 0
+  read:
+    replicas: 0
+  backend:
+    replicas: 0
+  gateway:
+    enabled: false
+  lokiCanary:
+    enabled: false
+  test:
+    enabled: false
+  resultsCache:
+    enabled: false
+  chunksCache:
+    enabled: false
+  minio:
+    enabled: false
+  ruler:
+    enabled: false
+  sidecar:
+    rules:
+      enabled: false
+
+prometheus:
+  fullnameOverride: prometheus
+  configmapReload:
+    prometheus:
+      image:
+        repository: registry.cn-hangzhou.aliyuncs.com/zhengqing/prometheus-config-reloader
+        tag: v0.92.0
+  server:
+    fullnameOverride: prometheus-server
+    image:
+      repository: registry.cn-hangzhou.aliyuncs.com/zhengqing/prometheus
+      tag: v3.12.0
+    extraFlags:
+      - web.enable-lifecycle
+      - web.enable-remote-write-receiver
+    persistentVolume:
+      enabled: true
+      storageClass: standard
+      size: 10Gi
+    retention: 3d
+    service:
+      type: ClusterIP
+      servicePort: 80
+  scrapeConfigs:
+    prometheus:
+      enabled: true
+    kubernetes-api-servers:
+      enabled: false
+    kubernetes-nodes:
+      enabled: false
+    kubernetes-nodes-cadvisor:
+      enabled: false
+    kubernetes-service-endpoints:
+      enabled: false
+    kubernetes-service-endpoints-slow:
+      enabled: false
+    prometheus-pushgateway:
+      enabled: false
+    kubernetes-services:
+      enabled: false
+    kubernetes-pods:
+      enabled: false
+    kubernetes-pods-slow:
+      enabled: false
+  extraScrapeConfigs: |
+    - job_name: otel-collector
+      scrape_interval: 10s
+      static_configs:
+        - targets:
+            - otel-collector:8889
+  alertmanager:
+    enabled: false
+  kube-state-metrics:
+    enabled: false
+  prometheus-node-exporter:
+    enabled: false
+  prometheus-pushgateway:
+    enabled: false
+
+otelCollector:
+  fullnameOverride: otel-collector
+  mode: deployment
+  replicaCount: 1
+  image:
+    repository: registry.cn-hangzhou.aliyuncs.com/zhengqing/opentelemetry-collector-k8s
+    tag: 0.154.0
+    pullPolicy: IfNotPresent
+  command:
+    name: otelcol-k8s
+  alternateConfig:
+    extensions:
+      health_check:
+        endpoint: ${env:MY_POD_IP}:13133
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: ${env:MY_POD_IP}:4317
+          http:
+            endpoint: ${env:MY_POD_IP}:4318
+    processors:
+      memory_limiter:
+        check_interval: 5s
+        limit_percentage: 80
+        spike_limit_percentage: 25
+      batch: {}
+    exporters:
+      otlp/tempo:
+        endpoint: tempo:4317
+        tls:
+          insecure: true
+      otlphttp/loki:
+        endpoint: http://loki:3100/otlp
+      prometheus:
+        endpoint: ${env:MY_POD_IP}:8889
+        enable_open_metrics: true
+        resource_to_telemetry_conversion:
+          enabled: true
+    service:
+      extensions:
+        - health_check
+      pipelines:
+        traces:
+          receivers:
+            - otlp
+          processors:
+            - memory_limiter
+            - batch
+          exporters:
+            - otlp/tempo
+        logs:
+          receivers:
+            - otlp
+          processors:
+            - memory_limiter
+            - batch
+          exporters:
+            - otlphttp/loki
+        metrics:
+          receivers:
+            - otlp
+          processors:
+            - memory_limiter
+            - batch
+          exporters:
+            - prometheus
+  ports:
+    otlp:
+      enabled: true
+      containerPort: 4317
+      servicePort: 4317
+      hostPort:
+      protocol: TCP
+      appProtocol: grpc
+    otlp-http:
+      enabled: true
+      containerPort: 4318
+      servicePort: 4318
+      hostPort:
+      protocol: TCP
+    jaeger-compact:
+      enabled: false
+    jaeger-thrift:
+      enabled: false
+    jaeger-grpc:
+      enabled: false
+    zipkin:
+      enabled: false
+    metrics:
+      enabled: true
+      containerPort: 8889
+      servicePort: 8889
+      protocol: TCP
+  service:
+    type: ClusterIP
+
+grafana:
+  fullnameOverride: grafana
+  replicas: 1
+  image:
+    registry: registry.cn-hangzhou.aliyuncs.com/zhengqing
+    repository: grafana
+    tag: 13.1.0
+    pullPolicy: IfNotPresent
+  testFramework:
+    enabled: false
+  initChownData:
+    enabled: true
+    image:
+      registry: registry.cn-hangzhou.aliyuncs.com/zhengqing
+      repository: busybox
+      tag: "1.38.0"
+  adminUser: admin
+  adminPassword: grafana123
+  service:
+    type: LoadBalancer
+    port: 30080
+    targetPort: 3000
+  persistence:
+    enabled: true
+    storageClassName: standard
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          type: prometheus
+          uid: prometheus
+          access: proxy
+          url: http://prometheus-server
+          isDefault: true
+          jsonData:
+            exemplarTraceIdDestinations:
+              - name: trace_id
+                datasourceUid: tempo
+        - name: Loki
+          type: loki
+          uid: loki
+          access: proxy
+          url: http://loki:3100
+          jsonData:
+            derivedFields:
+              - name: TraceID
+                matcherRegex: 'trace_id[=:" ]+([0-9a-f]{32})'
+                datasourceUid: tempo
+                url: '$${__value.raw}'
+        - name: Tempo
+          type: tempo
+          uid: tempo
+          access: proxy
+          url: http://tempo:3200
+          jsonData:
+            tracesToLogsV2:
+              datasourceUid: loki
+              spanStartTimeShift: -5m
+              spanEndTimeShift: 5m
+              filterByTraceID: true
+              filterBySpanID: false
+              tags:
+                - key: service.name
+                  value: service_name
+            tracesToMetrics:
+              datasourceUid: prometheus
+              spanStartTimeShift: -5m
+              spanEndTimeShift: 5m
+              tags:
+                - key: service.name
+                  value: service
+                - key: span.name
+                  value: span_name
+              queries:
+                - name: 接口请求量
+                  query: 'sum(rate(traces_spanmetrics_calls_total{$$__tags,span_kind="SPAN_KIND_SERVER"}[$$__rate_interval]))'
+                - name: 接口P95
+                  query: 'histogram_quantile(0.95, sum(rate(traces_spanmetrics_latency_bucket{$$__tags,span_kind="SPAN_KIND_SERVER"}[$$__rate_interval])) by (le))'
+            serviceMap:
+              datasourceUid: prometheus
+            nodeGraph:
+              enabled: true
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: default
+          orgId: 1
+          folder: OTel
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/default
+  dashboardsConfigMaps:
+    default: grafana-otel-dashboard
+  grafana.ini:
+    analytics:
+      check_for_updates: false
+      reporting_enabled: false
+    users:
+      default_theme: light

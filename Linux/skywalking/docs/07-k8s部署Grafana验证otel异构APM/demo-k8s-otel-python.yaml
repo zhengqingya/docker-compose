@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-k8s-otel-python
+  namespace: grafana-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-k8s-otel-python
+  template:
+    metadata:
+      labels:
+        app: demo-k8s-otel-python
+      annotations:
+        instrumentation.opentelemetry.io/inject-python: "python-instrumentation"
+    spec:
+      containers:
+        - name: app
+          image: registry.cn-hangzhou.aliyuncs.com/zhengqingya/test:demo-k8s-otel-python
+          imagePullPolicy: Always
+          env:
+            - name: HTTP_HOST
+              value: "0.0.0.0"
+            - name: HTTP_PORT
+              value: "18081"
+          ports:
+            - name: http
+              containerPort: 18081
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-k8s-otel-python
+  namespace: grafana-demo
+spec:
+  selector:
+    app: demo-k8s-otel-python
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 31083
+      targetPort: 18081
+      protocol: TCP
