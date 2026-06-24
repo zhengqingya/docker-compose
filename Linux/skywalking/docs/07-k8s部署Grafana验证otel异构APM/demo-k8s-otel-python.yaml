@@ -39,6 +39,6 @@ spec:
   type: LoadBalancer
   ports:
     - name: http
-      port: 31083
+      port: 30083
       targetPort: 18081
       protocol: TCP

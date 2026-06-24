@@ -17,7 +17,6 @@ tempo:
           max_items: 10000
         span_metrics:
           enable_target_info: true
-          enable_exemplars: true
       storage:
         path: /var/tempo/metrics
       traces_storage:
@@ -166,11 +165,11 @@ otelCollector:
   mode: deployment
   replicaCount: 1
   image:
-    repository: registry.cn-hangzhou.aliyuncs.com/zhengqing/opentelemetry-collector-k8s
+    repository: registry.cn-hangzhou.aliyuncs.com/zhengqing/opentelemetry-collector-contrib
     tag: 0.154.0
     pullPolicy: IfNotPresent
   command:
-    name: otelcol-k8s
+    name: otelcol-contrib
   alternateConfig:
     extensions:
       health_check:
@@ -364,3 +363,4 @@ grafana:
       reporting_enabled: false
     users:
       default_theme: light
+      default_language: zh-Hans

@@ -50,6 +50,13 @@ helm version --short
 - Helm 版本为 `v3.18.0` 或兼容版本。
 - Docker Desktop 建议分配至少 `6 CPU / 8GB` 内存。
 
+如果本机没有 `helm` 命令，先安装后再执行后续 Helm 部署命令：
+
+```shell
+brew install helm
+helm version --short
+```
+
 ### 2、检查 OpenTelemetry Operator
 
 Java 和 Python 使用 OpenTelemetry Operator 自动注入：
@@ -59,11 +66,11 @@ kubectl get pods -n opentelemetry-operator-system
 kubectl get crd | grep -i opentelemetry
 ```
 
-本环境沿用 Operator `v0.151.0`。未安装时先安装 cert-manager 和 Operator：
+本环境沿用 Operator `v0.152.0`。未安装时先安装 cert-manager 和 Operator：
 
 ```shell
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.20.2/cert-manager.yaml
-kubectl apply -f https://github.com/open-telemetry/opentelemetry-operator/releases/download/v0.151.0/opentelemetry-operator.yaml
+kubectl apply -f https://github.com/open-telemetry/opentelemetry-operator/releases/download/v0.152.0/opentelemetry-operator.yaml
 ```
 
 ### 3、同步镜像
@@ -89,7 +96,7 @@ skopeo inspect --raw docker://registry.cn-hangzhou.aliyuncs.com/zhengqing/tempo:
 skopeo inspect --raw docker://registry.cn-hangzhou.aliyuncs.com/zhengqing/loki:3.6.7 | jq
 skopeo inspect --raw docker://registry.cn-hangzhou.aliyuncs.com/zhengqing/grafana:13.1.0 | jq
 skopeo inspect --raw docker://registry.cn-hangzhou.aliyuncs.com/zhengqing/prometheus:v3.12.0 | jq
-skopeo inspect --raw docker://registry.cn-hangzhou.aliyuncs.com/zhengqing/opentelemetry-collector-k8s:0.154.0 | jq
+skopeo inspect --raw docker://registry.cn-hangzhou.aliyuncs.com/zhengqing/opentelemetry-collector-contrib:0.154.0 | jq
 ```
 
 ## 三、一键部署后端
@@ -101,6 +108,11 @@ skopeo inspect --raw docker://registry.cn-hangzhou.aliyuncs.com/zhengqing/opente
 首次拉取代码或本地 `charts/` 不存在时执行：
 
 ```shell
+helm repo add grafana https://grafana.github.io/helm-charts --force-update
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts --force-update
+helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts --force-update
+helm repo add grafana-community https://grafana-community.github.io/helm-charts --force-update
+helm repo update
 helm dependency build
 ```
 
@@ -205,10 +217,10 @@ kubectl rollout restart deployment/demo-k8s-otel-php -n grafana-demo
 ## 六、访问地址
 
 ```text
-Java:   http://127.0.0.1:31082
-Python: http://127.0.0.1:31083
-Go:     http://127.0.0.1:31084
-PHP:    http://127.0.0.1:31085
+Java:   http://127.0.0.1:30082
+Python: http://127.0.0.1:30083
+Go:     http://127.0.0.1:30084
+PHP:    http://127.0.0.1:30085
 ```
 
 集群内 Collector：
@@ -229,32 +241,32 @@ kubectl port-forward -n grafana-observability svc/otel-collector 4317:4317 4318:
 ### 1、单服务请求
 
 ```shell
-curl "http://127.0.0.1:31082/hello?name=java"
-curl "http://127.0.0.1:31083/hello?name=python"
-curl "http://127.0.0.1:31084/hello?name=go"
-curl "http://127.0.0.1:31085/hello?name=php"
+curl "http://127.0.0.1:30082/hello?name=java"
+curl "http://127.0.0.1:30083/hello?name=python"
+curl "http://127.0.0.1:30084/hello?name=go"
+curl "http://127.0.0.1:30085/hello?name=php"
 ```
 
 ### 2、双服务链路
 
 ```shell
-curl "http://127.0.0.1:31082/chain?targetName=python&targetUrl=http://demo-k8s-otel-python:31083/hello?name=from-java"
-curl "http://127.0.0.1:31083/chain?targetName=go&targetUrl=http://demo-k8s-otel-go:31084/hello?name=from-python"
-curl "http://127.0.0.1:31084/chain?targetName=php&targetUrl=http://demo-k8s-otel-php:31085/hello?name=from-go"
-curl "http://127.0.0.1:31085/chain?targetName=java&targetUrl=http://demo-k8s-otel-java:31082/hello?name=from-php"
+curl "http://127.0.0.1:30082/chain?targetName=python&targetUrl=http://demo-k8s-otel-python:30083/hello?name=from-java"
+curl "http://127.0.0.1:30083/chain?targetName=go&targetUrl=http://demo-k8s-otel-go:30084/hello?name=from-python"
+curl "http://127.0.0.1:30084/chain?targetName=php&targetUrl=http://demo-k8s-otel-php:30085/hello?name=from-go"
+curl "http://127.0.0.1:30085/chain?targetName=java&targetUrl=http://demo-k8s-otel-java:30082/hello?name=from-php"
 ```
 
 ### 3、四语言嵌套链路
 
 ```shell
-curl -s "http://127.0.0.1:31082/chain?targetName=python&targetUrl=http%3A%2F%2Fdemo-k8s-otel-python%3A31083%2Fchain%3FtargetName%3Dgo%26targetUrl%3Dhttp%253A%252F%252Fdemo-k8s-otel-go%253A31084%252Fchain%253FtargetName%253Dphp%2526targetUrl%253Dhttp%25253A%25252F%25252Fdemo-k8s-otel-php%25253A31085%25252Fchain%25253FtargetName%25253Djava%252526targetUrl%25253Dhttp%2525253A%2525252F%2525252Fdemo-k8s-otel-java%2525253A31082%2525252Fhello%2525253Fname%2525253Dfrom-php"
+curl -s "http://127.0.0.1:30082/chain?targetName=python&targetUrl=http%3A%2F%2Fdemo-k8s-otel-python%3A30083%2Fchain%3FtargetName%3Dgo%26targetUrl%3Dhttp%253A%252F%252Fdemo-k8s-otel-go%253A30084%252Fchain%253FtargetName%253Dphp%2526targetUrl%253Dhttp%25253A%25252F%25252Fdemo-k8s-otel-php%25253A30085%25252Fchain%25253FtargetName%25253Djava%252526targetUrl%25253Dhttp%2525253A%2525252F%2525252Fdemo-k8s-otel-java%2525253A30082%2525252Fhello%2525253Fname%2525253Dfrom-php"
 ```
 
 ### 4、生成接口统计数据
 
 ```shell
 for i in {1..30}; do
-  curl -s "http://127.0.0.1:31082/chain?targetName=python&targetUrl=http://demo-k8s-otel-python:31083/hello?name=load-$i" >/dev/null
+  curl -s "http://127.0.0.1:30082/chain?targetName=python&targetUrl=http://demo-k8s-otel-python:30083/hello?name=load-$i" >/dev/null
 done
 ```
 
@@ -281,6 +293,9 @@ Dashboards -> OTel -> OTel 异构接口监控
 
 接口指标来自 Tempo 根据 Trace 生成的 RED 指标，只统计 `SPAN_KIND_SERVER`。
 
+![](./images/run-1782320002922.png)
+
+
 ### 2、链路
 
 进入 `Explore`，选择 `Tempo`：
@@ -292,6 +307,11 @@ Dashboards -> OTel -> OTel 异构接口监控
 按 Duration 降序查找慢链路，打开四语言嵌套 Trace，确认 Java、Python、Go、PHP Span 使用同一个 Trace ID。
 
 进入 Tempo 的 Service Graph，确认四个服务的调用关系、请求量、错误率和耗时。
+
+![](./images/run-1782320034780.png)
+![](./images/run-1782320070800.png)
+![](./images/run-1782320082605.png)
+
 
 ### 3、日志
 
@@ -309,11 +329,17 @@ Dashboards -> OTel -> OTel 异构接口监控
 
 展开日志详情，确认存在 `trace_id` 和 `span_id`。
 
+![](./images/run-1782320169663.png)
+
+
 ### 4、日志与链路关联
 
 - 在 Loki 日志详情中点击 `TraceID`，跳转到 Tempo Trace。
 - 在 Tempo Span 详情中点击 `Logs for this span`，跳转到 Loki 并按 Trace ID 查询日志。
 - 在 Prometheus 指标存在 exemplar 时，可从耗时曲线跳转对应 Trace。
+
+![](./images/run-1782320598008.png)
+
 
 ## 九、排查
 

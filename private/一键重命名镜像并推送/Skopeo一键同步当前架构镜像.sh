@@ -1,30 +1,25 @@
 #!/usr/bin/env bash
 
 ####################################
-# @description 使用 skopeo 将 Grafana OTel 验证环境依赖镜像完整同步到阿里云公开镜像仓库
+# @description 使用 skopeo 将当前架构镜像同步到阿里云公开镜像仓库
 # @example
 #   1. brew install skopeo
 #   2. skopeo login registry.cn-hangzhou.aliyuncs.com
-#   3. ./sync-images.sh
+#   3. ./Skopeo一键同步当前架构镜像.sh
 # @author zhengqingya
-# @date 2026/6/24
+# @date 2026/6/25
 ####################################
 
+# 命令执行失败、使用未定义变量或管道中任意命令失败时立即退出。
 set -euo pipefail
 
 target_registry="registry.cn-hangzhou.aliyuncs.com"
 target_image_registry_prefix="${target_registry}/zhengqing/"
 
+# 源镜像|目标镜像名，按需修改。TODO
 images=(
-  "docker.io/grafana/tempo:2.9.0|tempo:2.9.0"
-  "docker.io/grafana/loki:3.6.7|loki:3.6.7"
-  "docker.io/grafana/grafana:13.1.0|grafana:13.1.0"
-  "docker.io/library/busybox:1.38.0|busybox:1.38.0"
-  "quay.io/prometheus/prometheus:v3.12.0|prometheus:v3.12.0"
-  "quay.io/prometheus-operator/prometheus-config-reloader:v0.92.0|prometheus-config-reloader:v0.92.0"
-  "ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.154.0|opentelemetry-collector-contrib:0.154.0"
-  "ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-java:2.27.0|opentelemetry-autoinstrumentation-java:2.27.0"
-  "ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-python:0.62b1|opentelemetry-autoinstrumentation-python:0.62b1"
+  "docker.io/library/mysql:8.0|mysql:8.0"
+  "docker.io/prom/prometheus:v2.51.2|prometheus:v2.51.2"
 )
 
 command -v skopeo >/dev/null 2>&1 || {
@@ -37,14 +32,24 @@ skopeo login --get-login "${target_registry}" >/dev/null 2>&1 || {
   exit 1
 }
 
+echo "*** 当前架构镜像同步开始"
+echo "*** 当前同步平台：linux/$(uname -m | sed 's/^x86_64$/amd64/;s/^aarch64$/arm64/')"
+echo "*** 目标仓库：${target_image_registry_prefix}"
+echo "*** 注意：请提前创建对应的公开镜像仓库，或开启自动创建仓库功能"
+
 for mapping in "${images[@]}"; do
   IFS='|' read -r source_image target_image_name <<< "${mapping}"
   target_image="${target_image_registry_prefix}${target_image_name}"
 
+  echo
+  echo "********************************************************************"
   echo "*** 同步镜像：${source_image} -> ${target_image}"
 
-  skopeo copy \
-    --all \
+  # 不使用 --all，仅复制当前运行环境匹配的 CPU 架构镜像。
+  skopeo \
+    --override-os linux \
+    --override-arch "$(uname -m | sed 's/^x86_64$/amd64/;s/^aarch64$/arm64/')" \
+    copy \
     --retry-times 3 \
     --image-parallel-copies 2 \
     --remove-signatures \
@@ -54,4 +59,4 @@ for mapping in "${images[@]}"; do
   echo "*** [√] 同步完成：${target_image}"
 done
 
-echo "*** [√] Grafana OTel 验证环境镜像同步完成"
+echo "*** [√] 所有镜像同步完成"
