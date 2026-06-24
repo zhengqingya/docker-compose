@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-k8s-otel-php
+  namespace: signoz-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-k8s-otel-php
+  template:
+    metadata:
+      labels:
+        app: demo-k8s-otel-php
+    spec:
+      containers:
+        - name: app
+          image: registry.cn-hangzhou.aliyuncs.com/zhengqingya/test:demo-k8s-otel-php
+          imagePullPolicy: Always
+          env:
+            - name: OTEL_SERVICE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['app']
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://signoz-otel-collector.signoz.svc.cluster.local:4318"
+          ports:
+            - name: http
+              containerPort: 18083
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-k8s-otel-php
+  namespace: signoz-demo
+spec:
+  selector:
+    app: demo-k8s-otel-php
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 30085
+      targetPort: 18083
+      protocol: TCP

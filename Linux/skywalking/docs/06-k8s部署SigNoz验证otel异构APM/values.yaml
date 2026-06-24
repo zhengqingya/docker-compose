@@ -1,0 +1,40 @@
+global:
+  storageClass: standard
+  clusterName: docker-desktop
+
+clickhouse:
+  layout:
+    shardsCount: 1
+    replicasCount: 1
+  zookeeper:
+    replicaCount: 1
+  persistence:
+    enabled: true
+    storageClass: standard
+    size: 20Gi
+
+signoz:
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 8080
+  persistence:
+    enabled: true
+    storageClass: standard
+    size: 1Gi
+
+otelCollector:
+  replicaCount: 1
+  service:
+    type: ClusterIP
+  ports:
+    otlp:
+      enabled: true
+      containerPort: 4317
+      servicePort: 4317
+      protocol: TCP
+    otlp-http:
+      enabled: true
+      containerPort: 4318
+      servicePort: 4318
+      protocol: TCP

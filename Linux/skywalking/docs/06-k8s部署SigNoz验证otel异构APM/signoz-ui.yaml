@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: signoz-ui
+  namespace: signoz
+spec:
+  selector:
+    app.kubernetes.io/name: signoz
+    app.kubernetes.io/instance: signoz
+    app.kubernetes.io/component: signoz
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 28080
+      targetPort: 8080
+      protocol: TCP
