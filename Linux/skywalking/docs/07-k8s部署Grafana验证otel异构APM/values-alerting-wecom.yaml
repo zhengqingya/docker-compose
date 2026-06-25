@@ -1,0 +1,137 @@
+grafana:
+  grafana.ini:
+    server:
+      root_url: http://127.0.0.1:30080
+
+  alerting:
+    contactpoints.yaml:
+      secret:
+        apiVersion: 1
+        contactPoints:
+          - orgId: 1
+            name: 测试推送-wecom
+            receivers:
+              - uid: wecom_error_log
+                type: wecom
+                disableResolveMessage: true
+                settings:
+                  url: https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=02aa7327-40c2-4411-b23c-d5abaa456a78 # TODO 请替换为重置后的企业微信机器人Webhook地址
+                  title: |
+                    [ERROR日志告警]
+                  message: |
+                    {{ `{{ range .Alerts.Firing }}` }}
+                    > 服务：{{ `{{ .Labels.service_name }}` }}
+                    > TraceId：{{ `{{ .Labels.trace_id }}` }}
+                    > 错误数：{{ `{{ with index .Values "B" }}` }}{{ `{{ . }}` }}{{ `{{ else }}` }}未知{{ `{{ end }}` }} 条 / 最近1分钟
+
+                    [查看错误日志](http://127.0.0.1:30080/explore?schemaVersion=1&panes=%7B%22errorLogs%22%3A%7B%22datasource%22%3A%22loki%22%2C%22queries%22%3A%5B%7B%22refId%22%3A%22A%22%2C%22datasource%22%3A%7B%22type%22%3A%22loki%22%2C%22uid%22%3A%22loki%22%7D%2C%22editorMode%22%3A%22code%22%2C%22expr%22%3A%22%7Bservice_name%3D%5C%22{{ `{{ .Labels.service_name }}` }}%5C%22%7D%20%7C%20detected_level%20%3D%20%5C%22ERROR%5C%22%20%7C%20trace_id%20%3D%20%5C%22{{ `{{ .Labels.trace_id }}` }}%5C%22%22%7D%5D%2C%22range%22%3A%7B%22from%22%3A%22now-5m%22%2C%22to%22%3A%22now%22%7D%7D%7D&orgId=1)
+                    [查看链路](http://127.0.0.1:30080/explore?schemaVersion=1&panes=%7B%22trace%22%3A%7B%22datasource%22%3A%22tempo%22%2C%22queries%22%3A%5B%7B%22refId%22%3A%22A%22%2C%22datasource%22%3A%7B%22type%22%3A%22tempo%22%2C%22uid%22%3A%22tempo%22%7D%2C%22query%22%3A%22{{ `{{ .Labels.trace_id }}` }}%22%2C%22queryType%22%3A%22traceql%22%7D%5D%2C%22range%22%3A%7B%22from%22%3A%22now-5m%22%2C%22to%22%3A%22now%22%7D%7D%7D&orgId=1)
+                    [告警详情]({{ `{{ .GeneratorURL }}` }})
+                    [静默告警]({{ `{{ .SilenceURL }}` }})
+
+                    **排查提示：**
+                    展开日志查看 trace_id，可跳转 Tempo 链路。
+
+                    **Loki：**
+                    `{service_name="{{ `{{ .Labels.service_name }}` }}"} | detected_level = "ERROR" | trace_id = "{{ `{{ .Labels.trace_id }}` }}"`
+                    {{ `{{ end }}` }}
+
+    policies.yaml:
+      apiVersion: 1
+      policies:
+        - orgId: 1
+          receiver: 测试推送-wecom
+          group_by:
+            - grafana_folder
+            - alertname
+            - service_name
+            - trace_id
+          group_wait: 10s
+          group_interval: 1m
+          repeat_interval: 10m
+
+    rules.yaml:
+      apiVersion: 1
+      groups:
+        - orgId: 1
+          name: otel-error-log
+          folder: OTel告警
+          interval: 30s
+          rules:
+            - uid: otel_error_log_loki
+              title: ERROR日志告警
+              condition: C
+              data:
+                - refId: A
+                  datasourceUid: loki
+                  queryType: instant
+                  relativeTimeRange:
+                    from: 600
+                    to: 0
+                  model:
+                    datasource:
+                      type: loki
+                      uid: loki
+                    editorMode: code
+                    expr: |
+                      sum by (service_name, trace_id) (
+                        count_over_time({service_name=~"demo-k8s-otel-.*"} | detected_level = "ERROR" | trace_id != "" [1m])
+                      )
+                    instant: true
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                    queryType: instant
+                    refId: A
+                - refId: B
+                  datasourceUid: __expr__
+                  queryType: expression
+                  relativeTimeRange:
+                    from: 0
+                    to: 0
+                  model:
+                    datasource:
+                      type: __expr__
+                      uid: __expr__
+                    expression: A
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                    reducer: last
+                    refId: B
+                    type: reduce
+                - refId: C
+                  datasourceUid: __expr__
+                  queryType: expression
+                  relativeTimeRange:
+                    from: 0
+                    to: 0
+                  model:
+                    datasource:
+                      type: __expr__
+                      uid: __expr__
+                    expression: B
+                    refId: C
+                    type: threshold
+                    conditions:
+                      - evaluator:
+                          type: gt
+                          params:
+                            - 0
+                        operator:
+                          type: and
+                        query:
+                          params:
+                            - C
+                        reducer:
+                          type: last
+                        type: query
+              noDataState: OK
+              execErrState: KeepLast
+              for: 0s
+              annotations:
+                summary: 服务 {{ `{{ $labels.service_name }}` }} 出现 ERROR 日志，TraceId={{ `{{ $labels.trace_id }}` }}
+                description: 最近1分钟检测到 ERROR 日志，请进入 Loki 查询日志或通过 TraceId 跳转 Tempo 链路。
+              labels:
+                source: loki
+                type: error_log
+              notification_settings:
+                receiver: 测试推送-wecom

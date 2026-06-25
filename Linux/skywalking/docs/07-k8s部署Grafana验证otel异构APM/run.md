@@ -120,6 +120,8 @@ helm dependency build
 
 ### 2、一键安装或升级
 
+#### 2.1、默认部署
+
 一个 Helm Release 同时部署 Grafana、Tempo、Loki、Prometheus、OpenTelemetry Collector、Dashboard 和 `grafana-demo` namespace：
 
 ```shell
@@ -130,6 +132,22 @@ helm upgrade --install grafana-otel . \
   --wait \
   --timeout 20m
 ```
+
+#### 2.2、启用企业微信 ERROR 日志告警
+
+可选启用企业微信 ERROR 日志告警时，先编辑 `values-alerting-wecom.yaml`，将企业微信机器人 Webhook 地址替换为重置后的新地址，再叠加部署：
+
+```shell
+helm upgrade --install grafana-otel . \
+  --namespace grafana-observability \
+  --create-namespace \
+  -f values.yaml \
+  -f values-alerting-wecom.yaml \
+  --wait \
+  --timeout 20m
+```
+
+`values-alerting-wecom.yaml` 会通过 Grafana provisioning 自动创建 WeCom 联络点、通知策略和 Loki ERROR 日志告警规则，不修改默认 `values.yaml`。
 
 Tempo Chart `1.24.4` 可能输出 `This chart is deprecated`，这是 Chart 维护状态提示，不影响本方案固定版本的本地验证。
 
