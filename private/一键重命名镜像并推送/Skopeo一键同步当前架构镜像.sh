@@ -6,6 +6,7 @@
 #   1. brew install skopeo
 #   2. skopeo login registry.cn-hangzhou.aliyuncs.com
 #   3. ./Skopeo一键同步当前架构镜像.sh
+#   单镜像同步示例：skopeo copy --override-os linux docker://docker.io/library/mysql:8.0 docker://registry.cn-hangzhou.aliyuncs.com/zhengqing/mysql:8.0
 # @author zhengqingya
 # @date 2026/6/25
 ####################################
