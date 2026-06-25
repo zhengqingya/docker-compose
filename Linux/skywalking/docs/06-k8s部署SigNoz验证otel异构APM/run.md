@@ -248,6 +248,8 @@ curl "http://127.0.0.1:30085/chain?targetName=java&targetUrl=http://demo-k8s-ote
 
 ### 3、四语言嵌套链路
 
+Java -> Python -> Go -> PHP -> Java
+
 ```shell
 curl -s "http://127.0.0.1:30082/chain?targetName=python&targetUrl=http%3A%2F%2Fdemo-k8s-otel-python%3A30083%2Fchain%3FtargetName%3Dgo%26targetUrl%3Dhttp%253A%252F%252Fdemo-k8s-otel-go%253A30084%252Fchain%253FtargetName%253Dphp%2526targetUrl%253Dhttp%25253A%25252F%25252Fdemo-k8s-otel-php%25253A30085%25252Fchain%25253FtargetName%25253Djava%252526targetUrl%25253Dhttp%2525253A%2525252F%2525252Fdemo-k8s-otel-java%2525253A30082%2525252Fhello%2525253Fname%2525253Dfrom-php"
 ```
@@ -261,8 +263,6 @@ for i in {1..30}; do
   curl -s "http://127.0.0.1:30082/chain?targetName=python&targetUrl=http://demo-k8s-otel-python:30083/hello?name=load-$i" >/dev/null
 done
 ```
-
-四语言嵌套链路包含更多下游调用，通常比单个 `/hello` 请求耗时更高，可用于慢链路排序验证。
 
 ## 八、SigNoz APM 验证
 

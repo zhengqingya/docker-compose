@@ -258,11 +258,22 @@ curl "http://127.0.0.1:30085/chain?targetName=java&targetUrl=http://demo-k8s-ote
 
 ### 3、四语言嵌套链路
 
+Java -> Python -> Go -> PHP -> Java
+
 ```shell
 curl -s "http://127.0.0.1:30082/chain?targetName=python&targetUrl=http%3A%2F%2Fdemo-k8s-otel-python%3A30083%2Fchain%3FtargetName%3Dgo%26targetUrl%3Dhttp%253A%252F%252Fdemo-k8s-otel-go%253A30084%252Fchain%253FtargetName%253Dphp%2526targetUrl%253Dhttp%25253A%25252F%25252Fdemo-k8s-otel-php%25253A30085%25252Fchain%25253FtargetName%25253Djava%252526targetUrl%25253Dhttp%2525253A%2525252F%2525252Fdemo-k8s-otel-java%2525253A30082%2525252Fhello%2525253Fname%2525253Dfrom-php"
 ```
 
-### 4、生成接口统计数据
+### 4、验证异常和耗时接口
+
+```shell
+for i in {1..10}; do
+  curl "http://127.0.0.1:30082/error?random=true&rate=30"
+done
+curl "http://127.0.0.1:30082/slow?sleepMs=3000"
+```
+
+### 5、生成接口统计数据
 
 ```shell
 for i in {1..30}; do
@@ -293,7 +304,11 @@ Dashboards -> OTel -> OTel 异构接口监控
 
 接口指标来自 Tempo 根据 Trace 生成的 RED 指标，只统计 `SPAN_KIND_SERVER`。
 
-![](./images/run-1782320002922.png)
+![](./images/run-1782385138779.png)
+![](./images/run-1782385147711.png)
+![](./images/run-1782385155177.png)
+![](./images/run-1782385163392.png)
+![](./images/run-1782385172878.png)
 
 
 ### 2、链路
