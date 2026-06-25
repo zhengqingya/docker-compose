@@ -1,0 +1,5 @@
+images/
+grafana-otel-*.tgz
+.git/
+.gitignore
+.DS_Store
