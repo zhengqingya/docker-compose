@@ -364,6 +364,8 @@ grafana:
     analytics:
       check_for_updates: false
       reporting_enabled: false
+    server:
+      root_url: http://127.0.0.1:30080
     users:
       default_theme: light
       default_language: zh-Hans
