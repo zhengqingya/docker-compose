@@ -15,7 +15,7 @@ grafana:
                 type: wecom
                 disableResolveMessage: true
                 settings:
-                  url: https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=02aa7327-40c2-4411-b23c-d5abaa456a78 # TODO 请替换为重置后的企业微信机器人Webhook地址
+                  url: https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxx # TODO 请替换为重置后的企业微信机器人Webhook地址
                   title: |
                     [ERROR日志告警]
                   message: |

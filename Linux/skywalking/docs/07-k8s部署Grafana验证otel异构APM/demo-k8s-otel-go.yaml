@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: demo-k8s-otel-go
-  namespace: grafana-demo
+  namespace: otel-demo
 spec:
   replicas: 1
   selector:
@@ -25,9 +25,9 @@ spec:
                 fieldRef:
                   fieldPath: metadata.labels['app']
             - name: OTEL_SERVICE_NAMESPACE
-              value: grafana-demo
+              value: otel-demo
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              value: http://otel-collector.grafana-observability.svc.cluster.local:4317
+              value: http://otel-collector.observability.svc.cluster.local:4317
             - name: OTEL_EXPORTER_OTLP_PROTOCOL
               value: grpc
             - name: OTEL_METRIC_EXPORT_INTERVAL
@@ -40,7 +40,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: demo-k8s-otel-go
-  namespace: grafana-demo
+  namespace: otel-demo
 spec:
   selector:
     app: demo-k8s-otel-go

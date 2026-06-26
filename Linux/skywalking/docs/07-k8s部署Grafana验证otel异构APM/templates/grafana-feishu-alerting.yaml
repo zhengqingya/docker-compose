@@ -1,0 +1,151 @@
+{{- if .Values.feishuAlerting.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-otel-alerting
+  labels:
+    grafana_alert: otel-feishu
+data:
+  contactpoints.yaml: |
+    apiVersion: 1
+    contactPoints:
+      - orgId: 1
+        name: 测试推送-feishu
+        receivers:
+          - uid: feishu_error_log
+            type: webhook
+            disableResolveMessage: true
+            settings:
+              url: {{ .Values.feishuAlerting.webhookUrl | quote }}
+              httpMethod: POST
+              payload:
+                template: |
+                  {{ `{{ coll.Dict "msg_type" "text" "content" (coll.Dict "text" (tmpl.Exec "feishu.error_log.text" .)) | data.ToJSON }}` }}
+
+  templates.yaml: |
+    apiVersion: 1
+    templates:
+      - orgId: 1
+        name: feishu_error_log_text
+        template: |
+          {{ `{{ define "feishu.error_log.text" -}}` }}
+          {{ `{{ if gt (len .Alerts.Firing) 0 -}}` }}
+          {{ `{{ $first := index .Alerts.Firing 0 -}}` }}
+          [ERROR日志告警] {{ `{{ with index .CommonLabels "service_name" }}` }}{{ `{{ . }}` }}{{ `{{ else }}` }}未知服务{{ `{{ end }}` }}
+
+          服务：{{ `{{ with index .CommonLabels "service_name" }}` }}{{ `{{ . }}` }}{{ `{{ else }}` }}未知服务{{ `{{ end }}` }}
+          最近1分钟异常链路数：{{ `{{ len .Alerts.Firing }}` }}
+          样例TraceId：{{ `{{ with index $first.Labels "trace_id" }}` }}{{ `{{ . }}` }}{{ `{{ else }}` }}无{{ `{{ end }}` }}
+
+          查看错误日志：http://127.0.0.1:30080/explore?schemaVersion=1&panes=%7B%22errorLogs%22%3A%7B%22datasource%22%3A%22loki%22%2C%22queries%22%3A%5B%7B%22refId%22%3A%22A%22%2C%22datasource%22%3A%7B%22type%22%3A%22loki%22%2C%22uid%22%3A%22loki%22%7D%2C%22editorMode%22%3A%22code%22%2C%22expr%22%3A%22%7Bservice_name%3D%5C%22{{ `{{ index .CommonLabels "service_name" }}` }}%5C%22%7D%20%7C%20detected_level%20%3D%20%5C%22ERROR%5C%22%20%7C%20trace_id%20!%3D%20%5C%22%5C%22%22%7D%5D%2C%22range%22%3A%7B%22from%22%3A%22now-5m%22%2C%22to%22%3A%22now%22%7D%7D%7D&orgId=1
+          查看样例链路：http://127.0.0.1:30080/explore?schemaVersion=1&panes=%7B%22trace%22%3A%7B%22datasource%22%3A%22tempo%22%2C%22queries%22%3A%5B%7B%22refId%22%3A%22A%22%2C%22datasource%22%3A%7B%22type%22%3A%22tempo%22%2C%22uid%22%3A%22tempo%22%7D%2C%22query%22%3A%22{{ `{{ index $first.Labels "trace_id" }}` }}%22%2C%22queryType%22%3A%22traceql%22%7D%5D%2C%22range%22%3A%7B%22from%22%3A%22now-5m%22%2C%22to%22%3A%22now%22%7D%7D%7D&orgId=1
+          告警详情：{{ `{{ $first.GeneratorURL }}` }}
+          静默告警：{{ `{{ $first.SilenceURL }}` }}
+          {{ `{{ else -}}` }}
+          [P2][ERROR日志聚合告警] 测试通知成功
+
+          Grafana 飞书告警联络点已可用。
+          真实告警触发后将按服务聚合，1分钟内合并推送一条消息。
+          {{ `{{ end -}}` }}
+          {{ `{{ end -}}` }}
+
+  policies.yaml: |
+    apiVersion: 1
+    policies:
+      - orgId: 1
+        receiver: 测试推送-feishu
+        group_by:
+          - grafana_folder
+          - alertname
+          - service_name
+        group_wait: 1m
+        group_interval: 1m
+        repeat_interval: 10m
+
+  rules.yaml: |
+    apiVersion: 1
+    groups:
+      - orgId: 1
+        name: otel-error-log
+        folder: OTel告警
+        interval: 30s
+        rules:
+          - uid: otel_error_log_loki
+            title: ERROR日志聚合告警
+            condition: C
+            data:
+              - refId: A
+                datasourceUid: loki
+                queryType: instant
+                relativeTimeRange:
+                  from: 600
+                  to: 0
+                model:
+                  datasource:
+                    type: loki
+                    uid: loki
+                  editorMode: code
+                  expr: |
+                    sum by (service_name, trace_id) (
+                      count_over_time({service_name=~"demo-k8s-otel-.*"} | detected_level = "ERROR" | trace_id != "" [1m])
+                    )
+                  instant: true
+                  intervalMs: 1000
+                  maxDataPoints: 43200
+                  queryType: instant
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                queryType: expression
+                relativeTimeRange:
+                  from: 0
+                  to: 0
+                model:
+                  datasource:
+                    type: __expr__
+                    uid: __expr__
+                  expression: A
+                  intervalMs: 1000
+                  maxDataPoints: 43200
+                  reducer: last
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                queryType: expression
+                relativeTimeRange:
+                  from: 0
+                  to: 0
+                model:
+                  datasource:
+                    type: __expr__
+                    uid: __expr__
+                  expression: B
+                  refId: C
+                  type: threshold
+                  conditions:
+                    - evaluator:
+                        type: gt
+                        params:
+                          - 0
+                      operator:
+                        type: and
+                      query:
+                        params:
+                          - C
+                      reducer:
+                        type: last
+                      type: query
+            noDataState: OK
+            execErrState: KeepLast
+            for: 0s
+            annotations:
+              summary: 服务 {{ `{{ $labels.service_name }}` }} 最近1分钟出现 ERROR 日志，样例TraceId={{ `{{ $labels.trace_id }}` }}
+              description: 最近1分钟检测到 ERROR 日志，请进入 Loki 查询日志或通过样例 TraceId 跳转 Tempo 链路。
+            labels:
+              source: loki
+              type: error_log
+              severity: P2
+            notification_settings:
+              receiver: 测试推送-feishu
+{{- end }}

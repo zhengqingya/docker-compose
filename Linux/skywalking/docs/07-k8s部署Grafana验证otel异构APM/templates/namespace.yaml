@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: grafana-demo
-  labels:
-    app.kubernetes.io/name: grafana-otel
-    app.kubernetes.io/instance: {{ .Release.Name }}

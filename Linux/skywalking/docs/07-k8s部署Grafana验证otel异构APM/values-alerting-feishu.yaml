@@ -1,0 +1,33 @@
+feishuAlerting:
+  enabled: true
+  # TODO 部署前替换为当前飞书群机器人的 Webhook 地址。
+  webhookUrl: https://open.feishu.cn/open-apis/bot/v2/hook/xxx
+
+grafana:
+  # Grafana alerts sidecar watches the alert ConfigMap and reloads alerting after every change.
+  sidecar:
+    alerts:
+      enabled: true
+      label: grafana_alert
+      labelValue: otel-feishu
+      resource: configmap
+      resourceName: configmap/grafana-otel-alerting
+      watchMethod: WATCH
+      skipReload: false
+
+  # Keep the sidecar permission within the Grafana namespace.
+  rbac:
+    namespaced: true
+    extraRoleRules:
+      - apiGroups:
+          - ""
+        resources:
+          - configmaps
+        verbs:
+          - get
+          - list
+          - watch
+
+  grafana.ini:
+    server:
+      root_url: http://127.0.0.1:30080

@@ -2,10 +2,10 @@ apiVersion: opentelemetry.io/v1alpha1
 kind: Instrumentation
 metadata:
   name: python-instrumentation
-  namespace: grafana-demo
+  namespace: otel-demo
 spec:
   exporter:
-    endpoint: http://otel-collector.grafana-observability.svc.cluster.local:4318
+    endpoint: http://otel-collector.observability.svc.cluster.local:4318
   propagators:
     - tracecontext
     - baggage
@@ -21,7 +21,7 @@ spec:
           fieldRef:
             fieldPath: metadata.labels['app']
       - name: OTEL_SERVICE_NAMESPACE
-        value: grafana-demo
+        value: otel-demo
       - name: OTEL_TRACES_EXPORTER
         value: otlp
       - name: OTEL_METRICS_EXPORTER

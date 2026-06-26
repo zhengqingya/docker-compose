@@ -26,8 +26,8 @@ Java / Python / Go / PHP
 命名空间：
 
 ```text
-grafana-observability  Grafana、Tempo、Loki、Prometheus、OTel Collector
-grafana-demo           Java、Python、Go、PHP 示例服务
+observability  # APM后端：Grafana、Tempo、Loki、Prometheus、OTel Collector
+otel-demo      # 异构demo服务：Java、Python、Go、PHP
 ```
 
 本方案只接收四个 Demo 主动发送的 OTLP Logs，不部署节点日志采集 DaemonSet。
@@ -99,7 +99,7 @@ skopeo inspect --raw docker://registry.cn-hangzhou.aliyuncs.com/zhengqing/promet
 skopeo inspect --raw docker://registry.cn-hangzhou.aliyuncs.com/zhengqing/opentelemetry-collector-contrib:0.154.0 | jq
 ```
 
-## 三、一键部署后端
+## 三、一键部署APM后端
 
 ### 1、更新 Chart 依赖
 
@@ -122,16 +122,18 @@ helm dependency build
 
 #### 2.1、默认部署
 
-一个 Helm Release 同时部署 Grafana、Tempo、Loki、Prometheus、OpenTelemetry Collector、Dashboard 和 `grafana-demo` namespace：
+一个 Helm Release 部署 Grafana、Tempo、Loki、Prometheus、OpenTelemetry Collector 和 Dashboard：
 
 ```shell
 helm upgrade --install grafana-otel . \
-  --namespace grafana-observability \
+  --namespace observability \
   --create-namespace \
   --values values.yaml \
   --wait \
   --timeout 20m
 ```
+
+Tempo Chart `1.24.4` 可能输出 `This chart is deprecated`，这是 Chart 维护状态提示，不影响本方案固定版本的本地验证。
 
 #### 2.2、启用企业微信 ERROR 日志告警
 
@@ -139,7 +141,7 @@ helm upgrade --install grafana-otel . \
 
 ```shell
 helm upgrade --install grafana-otel . \
-  --namespace grafana-observability \
+  --namespace observability \
   --create-namespace \
   -f values.yaml \
   -f values-alerting-wecom.yaml \
@@ -149,21 +151,49 @@ helm upgrade --install grafana-otel . \
 
 `values-alerting-wecom.yaml` 会通过 Grafana provisioning 自动创建 WeCom 联络点、通知策略和 Loki ERROR 日志告警规则，不修改默认 `values.yaml`。
 
-Tempo Chart `1.24.4` 可能输出 `This chart is deprecated`，这是 Chart 维护状态提示，不影响本方案固定版本的本地验证。
+#### 2.3、启用飞书 ERROR 日志告警
+
+先编辑 `values-alerting-feishu.yaml` 中的 `feishuAlerting.webhookUrl`，替换为当前飞书群机器人的 Webhook 地址。
+
+执行这一条命令安装、升级或热更新：
+
+```shell
+helm upgrade --install grafana-otel . \
+  --namespace observability \
+  --create-namespace \
+  -f values.yaml \
+  -f values-alerting-feishu.yaml \
+  --wait \
+  --timeout 20m
+```
+
+`values-alerting-feishu.yaml` 会启用 Grafana 内置的 alerts sidecar。它只监听一个 ConfigMap，其中包含飞书 Webhook 联络点、规则、通知策略和模板。
+Helm 更新 ConfigMap 后，sidecar 会自动调用 Grafana alerting reload，无需重启 Grafana Pod。
+
+更新 Webhook、规则、模板或策略后，编辑同一个 `values-alerting-feishu.yaml`，再重新执行上述 Helm 命令。
+可通过以下命令观察自动加载结果：
+
+```shell
+kubectl logs deployment/grafana -n observability -c grafana-sc-alerts --tail=100
+kubectl logs deployment/grafana -n observability --tail=100 | grep -E 'finished to provision alerting|template definitions loaded'
+```
+
+当前飞书与企业微信告警配置为二选一，请不要在同一条 Helm 命令中同时叠加 `values-alerting-feishu.yaml` 和 `values-alerting-wecom.yaml`。
+当前方案依赖飞书自定义机器人直接接收 `msg_type=text` 的 JSON 请求；如果机器人后续开启签名校验，需要先增加中转服务生成飞书要求的 `timestamp` 和 `sign`。
 
 ### 3、查看后端状态
 
 ```shell
-helm list -n grafana-observability
-kubectl get pods -n grafana-observability
-kubectl get svc -n grafana-observability
-kubectl get pvc -n grafana-observability
+helm list -n observability
+kubectl get pods -n observability
+kubectl get svc -n observability
+kubectl get pvc -n observability
 ```
 
 持续观察 Pod：
 
 ```shell
-kubectl get pods -n grafana-observability -w
+kubectl get pods -n observability -w
 ```
 
 ## 四、访问 Grafana
@@ -183,7 +213,7 @@ curl http://127.0.0.1:30080/api/health
 Docker Desktop 无法直接访问 LoadBalancer 时使用：
 
 ```shell
-kubectl port-forward -n grafana-observability svc/grafana 30080:30080
+kubectl port-forward -n observability svc/grafana 30080:30080
 ```
 
 Grafana 已自动配置：
@@ -197,9 +227,10 @@ Grafana 已自动配置：
 
 ### 1、一键部署
 
-`grafana-demo` namespace 已由 `grafana-otel` Helm Release 创建：
+`otel-demo` namespace 独立于 `grafana-otel` Helm Release，先创建 namespace 再部署 Demo：
 
 ```shell
+kubectl apply -f namespace-otel-demo.yaml
 kubectl apply -f instrumentation-java.yaml
 kubectl apply -f instrumentation-python.yaml
 kubectl apply -f demo-k8s-otel-java.yaml
@@ -211,25 +242,25 @@ kubectl apply -f demo-k8s-otel-php.yaml
 ### 2、查看状态
 
 ```shell
-kubectl get instrumentation -n grafana-demo
-kubectl get pods -n grafana-demo -o wide
-kubectl get svc -n grafana-demo
+kubectl get instrumentation -n otel-demo
+kubectl get pods -n otel-demo -o wide
+kubectl get svc -n otel-demo
 ```
 
 确认 Java、Python 已被 Operator 注入：
 
 ```shell
-kubectl describe pod -n grafana-demo -l app=demo-k8s-otel-java
-kubectl describe pod -n grafana-demo -l app=demo-k8s-otel-python
+kubectl describe pod -n otel-demo -l app=demo-k8s-otel-java
+kubectl describe pod -n otel-demo -l app=demo-k8s-otel-python
 ```
 
 ### 3、一键重启
 
 ```shell
-kubectl rollout restart deployment/demo-k8s-otel-java -n grafana-demo
-kubectl rollout restart deployment/demo-k8s-otel-python -n grafana-demo
-kubectl rollout restart deployment/demo-k8s-otel-go -n grafana-demo
-kubectl rollout restart deployment/demo-k8s-otel-php -n grafana-demo
+kubectl rollout restart deployment/demo-k8s-otel-java -n otel-demo
+kubectl rollout restart deployment/demo-k8s-otel-python -n otel-demo
+kubectl rollout restart deployment/demo-k8s-otel-go -n otel-demo
+kubectl rollout restart deployment/demo-k8s-otel-php -n otel-demo
 ```
 
 ## 六、访问地址
@@ -244,14 +275,14 @@ PHP:    http://127.0.0.1:30085
 集群内 Collector：
 
 ```text
-OTLP gRPC: otel-collector.grafana-observability.svc.cluster.local:4317
-OTLP HTTP: http://otel-collector.grafana-observability.svc.cluster.local:4318
+OTLP gRPC: otel-collector.observability.svc.cluster.local:4317
+OTLP HTTP: http://otel-collector.observability.svc.cluster.local:4318
 ```
 
 宿主机应用临时接入：
 
 ```shell
-kubectl port-forward -n grafana-observability svc/otel-collector 4317:4317 4318:4318
+kubectl port-forward -n observability svc/otel-collector 4317:4317 4318:4318
 ```
 
 ## 七、生成验证数据
@@ -380,53 +411,53 @@ Dashboards -> OTel -> OTel 异构接口监控
 
 ```shell
 # 持续观察 Pod 状态，按 Ctrl+C 退出
-kubectl get pods -n grafana-observability -w
+kubectl get pods -n observability -w
 
 # 查看最近事件，定位调度、镜像、PVC 和健康检查问题
-kubectl get events -n grafana-observability --sort-by=.lastTimestamp | tail -30
+kubectl get events -n observability --sort-by=.lastTimestamp | tail -30
 
 # 深入查看具体 Pod
-kubectl describe pod -n grafana-observability <pod-name>
+kubectl describe pod -n observability <pod-name>
 
 # 查看已经启动过的容器日志
-kubectl logs -n grafana-observability <pod-name> --tail=200
+kubectl logs -n observability <pod-name> --tail=200
 ```
 
 ### 2、查看各组件日志
 
 ```shell
-kubectl logs -n grafana-observability statefulset/tempo --tail=200
-kubectl logs -n grafana-observability statefulset/loki --tail=200
-kubectl logs -n grafana-observability deployment/prometheus-server --tail=200
-kubectl logs -n grafana-observability deployment/otel-collector --tail=200
-kubectl logs -n grafana-observability deployment/grafana --tail=200
+kubectl logs -n observability statefulset/tempo --tail=200
+kubectl logs -n observability statefulset/loki --tail=200
+kubectl logs -n observability deployment/prometheus-server --tail=200
+kubectl logs -n observability deployment/otel-collector --tail=200
+kubectl logs -n observability deployment/grafana --tail=200
 ```
 
 实际资源类型不一致时先执行：
 
 ```shell
-kubectl get deploy,statefulset -n grafana-observability
+kubectl get deploy,statefulset -n observability
 ```
 
 ### 3、查看 Demo 日志
 
 ```shell
-kubectl logs -n grafana-demo deploy/demo-k8s-otel-java --tail=100
-kubectl logs -n grafana-demo deploy/demo-k8s-otel-python --tail=100
-kubectl logs -n grafana-demo deploy/demo-k8s-otel-go -c app --tail=100
-kubectl logs -n grafana-demo deploy/demo-k8s-otel-php -c app --tail=100
+kubectl logs -n otel-demo deploy/demo-k8s-otel-java --tail=100
+kubectl logs -n otel-demo deploy/demo-k8s-otel-python --tail=100
+kubectl logs -n otel-demo deploy/demo-k8s-otel-go -c app --tail=100
+kubectl logs -n otel-demo deploy/demo-k8s-otel-php -c app --tail=100
 ```
 
 ### 4、检查 Collector
 
 ```shell
-kubectl get svc,endpoints -n grafana-observability otel-collector
-kubectl logs -n grafana-observability deployment/otel-collector --tail=200
+kubectl get svc,endpoints -n observability otel-collector
+kubectl logs -n observability deployment/otel-collector --tail=200
 ```
 
 没有数据时依次检查：
 
-1. Demo 是否指向 `otel-collector.grafana-observability.svc.cluster.local`。
+1. Demo 是否指向 `otel-collector.observability.svc.cluster.local`。
 2. Collector 是否开放 `4317/4318`。
 3. Collector 是否能访问 `tempo:4317`、`loki:3100` 和 `prometheus-server`。
 4. Java、Python 自动注入是否成功。
@@ -434,17 +465,17 @@ kubectl logs -n grafana-observability deployment/otel-collector --tail=200
 ### 5、检查后端健康
 
 ```shell
-kubectl port-forward -n grafana-observability svc/tempo 23200:3200
+kubectl port-forward -n observability svc/tempo 23200:3200
 curl http://127.0.0.1:23200/ready
 ```
 
 ```shell
-kubectl port-forward -n grafana-observability svc/loki 23100:3100
+kubectl port-forward -n observability svc/loki 23100:3100
 curl http://127.0.0.1:23100/ready
 ```
 
 ```shell
-kubectl port-forward -n grafana-observability svc/prometheus-server 29090:80
+kubectl port-forward -n observability svc/prometheus-server 29090:80
 curl http://127.0.0.1:29090/-/ready
 ```
 
@@ -466,12 +497,13 @@ kubectl delete -f demo-k8s-otel-go.yaml --ignore-not-found
 kubectl delete -f demo-k8s-otel-php.yaml --ignore-not-found
 kubectl delete -f instrumentation-java.yaml --ignore-not-found
 kubectl delete -f instrumentation-python.yaml --ignore-not-found
+kubectl delete -f namespace-otel-demo.yaml --ignore-not-found
 ```
 
-### 2、卸载后端
+### 2、卸载APM后端
 
 ```shell
-helm uninstall grafana-otel -n grafana-observability --ignore-not-found
+helm uninstall grafana-otel -n observability --ignore-not-found
 ```
 
 ### 3、删除持久化数据
@@ -479,8 +511,8 @@ helm uninstall grafana-otel -n grafana-observability --ignore-not-found
 以下命令会删除本环境的全部 Trace、日志、指标和 Grafana 配置：
 
 ```shell
-kubectl delete pvc --all -n grafana-observability
-kubectl delete namespace grafana-observability --ignore-not-found
+kubectl delete pvc --all -n observability
+kubectl delete namespace observability --ignore-not-found
 ```
 
 ### 4、namespace 删除卡住
@@ -488,21 +520,21 @@ kubectl delete namespace grafana-observability --ignore-not-found
 查看 namespace 删除条件：
 
 ```shell
-kubectl get namespace grafana-observability -o yaml
+kubectl get namespace observability -o yaml
 ```
 
 列出仍然残留的资源：
 
 ```shell
 kubectl api-resources --verbs=list --namespaced -o name \
-  | xargs -n 1 kubectl get -n grafana-observability --ignore-not-found
+  | xargs -n 1 kubectl get -n observability --ignore-not-found
 ```
 
 如果确认环境已废弃，再针对报错中明确指出的残留资源检查并移除 finalizer：
 
 ```shell
-kubectl get <resource-type> <resource-name> -n grafana-observability -o yaml
-kubectl patch <resource-type> <resource-name> -n grafana-observability \
+kubectl get <resource-type> <resource-name> -n observability -o yaml
+kubectl patch <resource-type> <resource-name> -n observability \
   --type=merge \
   -p '{"metadata":{"finalizers":[]}}'
 ```

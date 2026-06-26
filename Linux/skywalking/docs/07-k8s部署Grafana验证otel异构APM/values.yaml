@@ -257,6 +257,9 @@ otelCollector:
   service:
     type: ClusterIP
 
+feishuAlerting:
+  enabled: false
+
 grafana:
   fullnameOverride: grafana
   replicas: 1
