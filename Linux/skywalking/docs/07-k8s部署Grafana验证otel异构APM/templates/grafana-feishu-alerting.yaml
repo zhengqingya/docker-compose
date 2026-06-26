@@ -20,34 +20,34 @@ data:
               httpMethod: POST
               payload:
                 template: |
-                  {{ `{{ coll.Dict "msg_type" "text" "content" (coll.Dict "text" (tmpl.Exec "feishu.error_log.text" .)) | data.ToJSON }}` }}
-
-  templates.yaml: |
-    apiVersion: 1
-    templates:
-      - orgId: 1
-        name: feishu_error_log_text
-        template: |
-          {{ `{{ define "feishu.error_log.text" -}}` }}
-          {{ `{{ if gt (len .Alerts.Firing) 0 -}}` }}
-          {{ `{{ $first := index .Alerts.Firing 0 -}}` }}
-          [ERROR日志告警] {{ `{{ with index .CommonLabels "service_name" }}` }}{{ `{{ . }}` }}{{ `{{ else }}` }}未知服务{{ `{{ end }}` }}
-
-          服务：{{ `{{ with index .CommonLabels "service_name" }}` }}{{ `{{ . }}` }}{{ `{{ else }}` }}未知服务{{ `{{ end }}` }}
-          最近1分钟异常链路数：{{ `{{ len .Alerts.Firing }}` }}
-          样例TraceId：{{ `{{ with index $first.Labels "trace_id" }}` }}{{ `{{ . }}` }}{{ `{{ else }}` }}无{{ `{{ end }}` }}
-
-          查看错误日志：http://127.0.0.1:30080/explore?schemaVersion=1&panes=%7B%22errorLogs%22%3A%7B%22datasource%22%3A%22loki%22%2C%22queries%22%3A%5B%7B%22refId%22%3A%22A%22%2C%22datasource%22%3A%7B%22type%22%3A%22loki%22%2C%22uid%22%3A%22loki%22%7D%2C%22editorMode%22%3A%22code%22%2C%22expr%22%3A%22%7Bservice_name%3D%5C%22{{ `{{ index .CommonLabels "service_name" }}` }}%5C%22%7D%20%7C%20detected_level%20%3D%20%5C%22ERROR%5C%22%20%7C%20trace_id%20!%3D%20%5C%22%5C%22%22%7D%5D%2C%22range%22%3A%7B%22from%22%3A%22now-5m%22%2C%22to%22%3A%22now%22%7D%7D%7D&orgId=1
-          查看样例链路：http://127.0.0.1:30080/explore?schemaVersion=1&panes=%7B%22trace%22%3A%7B%22datasource%22%3A%22tempo%22%2C%22queries%22%3A%5B%7B%22refId%22%3A%22A%22%2C%22datasource%22%3A%7B%22type%22%3A%22tempo%22%2C%22uid%22%3A%22tempo%22%7D%2C%22query%22%3A%22{{ `{{ index $first.Labels "trace_id" }}` }}%22%2C%22queryType%22%3A%22traceql%22%7D%5D%2C%22range%22%3A%7B%22from%22%3A%22now-5m%22%2C%22to%22%3A%22now%22%7D%7D%7D&orgId=1
-          告警详情：{{ `{{ $first.GeneratorURL }}` }}
-          静默告警：{{ `{{ $first.SilenceURL }}` }}
-          {{ `{{ else -}}` }}
-          [P2][ERROR日志聚合告警] 测试通知成功
-
-          Grafana 飞书告警联络点已可用。
-          真实告警触发后将按服务聚合，1分钟内合并推送一条消息。
-          {{ `{{ end -}}` }}
-          {{ `{{ end -}}` }}
+{{ `{{ coll.Dict
+  "msg_type" "interactive"
+  "card" (coll.Dict
+    "config" (coll.Dict "wide_screen_mode" true)
+    "header" (coll.Dict
+      "template" "red"
+      "title" (coll.Dict "tag" "plain_text" "content" (printf "ERROR日志告警 %s" (or (index .CommonLabels "service_name") "未知服务")))
+    )
+    "elements" (coll.Slice
+      (coll.Dict
+        "tag" "div"
+        "text" (coll.Dict
+          "tag" "lark_md"
+          "content" (printf "**服务：** %s\n**最近1分钟异常链路数：** %d\n**样例TraceId：** %s\n**错误日志：** %s" (or (index .CommonLabels "service_name") "未知服务") (len .Alerts.Firing) (or (index (index .Alerts.Firing 0).Labels "trace_id") "无") (or (index (index .Alerts.Firing 0).Labels "error_message") "无"))
+        )
+      )
+      (coll.Dict
+        "tag" "action"
+        "actions" (coll.Slice
+          (coll.Dict "tag" "button" "type" "primary" "text" (coll.Dict "tag" "plain_text" "content" "查看错误日志") "url" (printf "http://127.0.0.1:30080/explore?schemaVersion=1&panes=%%7B%%22errorLogs%%22%%3A%%7B%%22datasource%%22%%3A%%22loki%%22%%2C%%22queries%%22%%3A%%5B%%7B%%22refId%%22%%3A%%22A%%22%%2C%%22datasource%%22%%3A%%7B%%22type%%22%%3A%%22loki%%22%%2C%%22uid%%22%%3A%%22loki%%22%%7D%%2C%%22editorMode%%22%%3A%%22code%%22%%2C%%22expr%%22%%3A%%22%%7Bservice_name%%3D%%5C%%22%s%%5C%%22%%7D%%20%%7C%%20detected_level%%20%%3D%%20%%5C%%22ERROR%%5C%%22%%20%%7C%%20trace_id%%20%%3D%%20%%5C%%22%s%%5C%%22%%22%%7D%%5D%%2C%%22range%%22%%3A%%7B%%22from%%22%%3A%%22now-5m%%22%%2C%%22to%%22%%3A%%22now%%22%%7D%%7D%%7D&orgId=1" (or (index .CommonLabels "service_name") "未知服务") (or (index (index .Alerts.Firing 0).Labels "trace_id") "无")))
+          (coll.Dict "tag" "button" "type" "primary" "text" (coll.Dict "tag" "plain_text" "content" "查看样例链路") "url" (printf "http://127.0.0.1:30080/explore?schemaVersion=1&panes=%%7B%%22trace%%22%%3A%%7B%%22datasource%%22%%3A%%22tempo%%22%%2C%%22queries%%22%%3A%%5B%%7B%%22refId%%22%%3A%%22A%%22%%2C%%22datasource%%22%%3A%%7B%%22type%%22%%3A%%22tempo%%22%%2C%%22uid%%22%%3A%%22tempo%%22%%7D%%2C%%22query%%22%%3A%%22%s%%22%%2C%%22queryType%%22%%3A%%22traceql%%22%%7D%%5D%%2C%%22range%%22%%3A%%7B%%22from%%22%%3A%%22now-5m%%22%%2C%%22to%%22%%3A%%22now%%22%%7D%%7D%%7D&orgId=1" (or (index (index .Alerts.Firing 0).Labels "trace_id") "无")))
+          (coll.Dict "tag" "button" "text" (coll.Dict "tag" "plain_text" "content" "告警详情") "url" (index .Alerts.Firing 0).GeneratorURL)
+          (coll.Dict "tag" "button" "text" (coll.Dict "tag" "plain_text" "content" "静默告警") "url" (index .Alerts.Firing 0).SilenceURL)
+        )
+      )
+    )
+  )
+| data.ToJSON }}` | nindent 18 }}
 
   policies.yaml: |
     apiVersion: 1
@@ -58,17 +58,18 @@ data:
           - grafana_folder
           - alertname
           - service_name
-        group_wait: 1m
-        group_interval: 1m
-        repeat_interval: 10m
+          - trace_id
+        group_wait: 5s
+        group_interval: 30s
+        repeat_interval: 1m
 
   rules.yaml: |
     apiVersion: 1
     groups:
       - orgId: 1
-        name: otel-error-log
+        name: otel-error-log-10s
         folder: OTel告警
-        interval: 30s
+        interval: 10s
         rules:
           - uid: otel_error_log_loki
             title: ERROR日志聚合告警
@@ -86,8 +87,8 @@ data:
                     uid: loki
                   editorMode: code
                   expr: |
-                    sum by (service_name, trace_id) (
-                      count_over_time({service_name=~"demo-k8s-otel-.*"} | detected_level = "ERROR" | trace_id != "" [1m])
+                    sum by (service_name, trace_id, error_message) (
+                      count_over_time({service_name=~"demo-k8s-otel-.*"} | detected_level = "ERROR" | trace_id != "" | regexp `(?P<error_message>.{1,120}).*` [1m])
                     )
                   instant: true
                   intervalMs: 1000
