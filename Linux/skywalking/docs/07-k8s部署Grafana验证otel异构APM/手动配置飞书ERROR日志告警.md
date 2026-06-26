@@ -132,9 +132,14 @@ Error: Keep Last State        # 控制查询报错或超时时的告警状态，
 
 #### 5. Configure notifications
 
+作用：配置当前告警规则触发后直接通知哪个 Contact point。这里选择 `测试推送-feishu`，表示该规则进入 Firing 后会交给飞书 Webhook 发送。
+
 ![](./images/手动配置飞书ERROR日志告警-1782498081739.png)
 
 #### 6. Configure notification message
+
+作用：配置告警摘要和描述信息，用于 Grafana 告警详情、通知内容上下文和排查说明。
+这里通过 `$labels.service_name`、`$labels.trace_id` 引用 LogQL 聚合出来的服务名和 TraceId。
 
 ```text
 summary = 服务 {{ $labels.service_name }} 最近1分钟出现 ERROR 日志，样例TraceId={{ $labels.trace_id }}
@@ -149,26 +154,23 @@ Save
 
 Alerting -> Notification configuration -> Notification policies
 
+> 作用：配置告警通知路由和聚合策略，决定哪些告警发给哪个 Contact point，以及同一类告警如何合并、多久重复提醒一次。这里用于把 ERROR 日志告警路由到飞书，并控制推送频率，避免短时间内大量错误日志刷屏。
+
 New notification policy：
 
 ```text
-Contact point: 测试推送-feishu
+Contact point: 测试推送-feishu     # 指定告警最终发送到哪个联络点，这里发送到飞书 Webhook。
 
 Group by:
-  grafana_folder
-  alertname
-  service_name
-  trace_id
+  grafana_folder              # 按 Grafana 告警目录分组，避免不同目录的规则混在一起。
+  alertname                   # 按告警名称分组，避免不同告警规则混在一起。
+  service_name                # 按服务名分组，同一服务的 ERROR 日志会聚合到同一条通知。
+  trace_id                    # 按 TraceId 分组，每条异常链路单独推送，适合实时验证；验证后可删除以减少刷屏。
 
-Group wait: 5s
-Group interval: 30s
-Repeat interval: 1m
+Group wait: 5s                # 新告警组出现后等待多久发送第一条通知，时间越短推送越及时。
+Group interval: 30s           # 同一告警组已有通知后，组内有新变化时至少间隔多久再发送更新通知。
+Repeat interval: 1m           # 告警一直未恢复且没有新变化时，多久重复提醒一次。
 ```
-
-说明：
-
-1. `Group by` 不放 `trace_id`，避免每条链路单独刷屏。
-2. 如果临时压测并希望每个 Trace 都推送，可短暂把 `trace_id` 加入 `Group by`，验证后删除。
 
 ![](./images/手动配置飞书ERROR日志告警-1782498545962.png)
 ![](./images/手动配置飞书ERROR日志告警-1782498598412.png)
