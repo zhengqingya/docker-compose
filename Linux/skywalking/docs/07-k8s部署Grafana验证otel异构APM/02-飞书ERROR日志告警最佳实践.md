@@ -1,7 +1,7 @@
 # 飞书ERROR日志告警最佳实践
 
 配置效果：
-![](./images/手动配置飞书ERROR日志告警-1782498842639.png)
+![](./images/02-飞书ERROR日志告警最佳实践-1782666984560.png)
 
 ```shell
 10s 评估一次
@@ -217,6 +217,8 @@ Repeat interval: 1m           # 告警一直未恢复且没有新变化时，多
 curl "http://127.0.0.1:30082/error?random=false"
 ```
 
+![](./images/02-飞书ERROR日志告警最佳实践-1782666886295.png)
+
 确认 Loki 有数据：
 
 ```logql
@@ -224,4 +226,4 @@ curl "http://127.0.0.1:30082/error?random=false"
 ```
 
 查看飞书消息
-![](./images/手动配置飞书ERROR日志告警-1782498702071.png)
+![](./images/02-飞书ERROR日志告警最佳实践-1782666967635.png)
