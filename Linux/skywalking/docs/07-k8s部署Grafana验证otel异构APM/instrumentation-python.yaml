@@ -4,6 +4,9 @@ metadata:
   name: python-instrumentation
   namespace: otel-demo
 spec:
+  resource:
+    resourceAttributes:
+      deployment.environment: dev
   exporter:
     endpoint: http://otel-collector.observability.svc.cluster.local:4318
   propagators:

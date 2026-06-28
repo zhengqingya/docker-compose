@@ -3,6 +3,13 @@
 配置效果：
 ![](./images/手动配置飞书ERROR日志告警-1782498842639.png)
 
+```shell
+10s 评估一次
+查询最近 1 分钟 ERROR
+按 service_name + trace_id + error_message 聚合
+发飞书通知
+```
+
 配置步骤简述：
 
 1. `Contact point`：配置飞书 Webhook 接收方和消息卡片模板，决定飞书最终收到什么内容、按钮跳转到哪里。

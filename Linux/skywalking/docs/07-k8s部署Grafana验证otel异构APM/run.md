@@ -153,6 +153,8 @@ helm upgrade --install grafana-otel . \
 
 #### 2.3、启用飞书 ERROR 日志告警
 
+![](./images/run-1782664554205.png)
+
 先编辑 `values-alerting-feishu.yaml` 中的 `feishuAlerting.webhookUrl`，替换为当前飞书群机器人的 Webhook 地址。
 
 执行这一条命令安装、升级或热更新：

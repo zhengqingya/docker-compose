@@ -4,6 +4,9 @@ metadata:
   name: java-instrumentation
   namespace: otel-demo
 spec:
+  resource:
+    resourceAttributes:
+      deployment.environment: dev
   exporter:
     endpoint: http://otel-collector.observability.svc.cluster.local:4317
   propagators:
@@ -32,3 +35,5 @@ spec:
         value: grpc
       - name: OTEL_INSTRUMENTATION_LOGBACK_MDC_ENABLED
         value: "true"
+      - name: OTEL_INSTRUMENTATION_LOGBACK_APPENDER_EXPERIMENTAL_CAPTURE_MDC_ATTRIBUTES
+        value: http.request.method,http.route
