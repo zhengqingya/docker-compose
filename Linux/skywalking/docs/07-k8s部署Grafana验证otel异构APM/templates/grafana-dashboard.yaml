@@ -27,7 +27,68 @@ data:
       "editable": true,
       "graphTooltip": 1,
       "id": null,
-      "links": [],
+      "links": [
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "APM 驾驶舱",
+          "tooltip": "跳转到 APM 驾驶舱",
+          "type": "link",
+          "url": "/d/otel-apm-overview?orgId=1"
+        },
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "服务分析",
+          "tooltip": "跳转到服务分析",
+          "type": "link",
+          "url": "/d/otel-service-analysis?orgId=1"
+        },
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "接口分析",
+          "tooltip": "跳转到接口分析",
+          "type": "link",
+          "url": "/d/otel-api-analysis?orgId=1"
+        },
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "异常分析",
+          "tooltip": "跳转到异常分析",
+          "type": "link",
+          "url": "/d/otel-error-analysis?orgId=1"
+        },
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "JVM 监控",
+          "tooltip": "跳转到 JVM 监控",
+          "type": "link",
+          "url": "/d/otel-jvm-monitor?orgId=1"
+        }
+      ],
       "panels": [
         {
           "datasource": {
@@ -1233,7 +1294,68 @@ data:
       "editable": true,
       "graphTooltip": 1,
       "id": null,
-      "links": [],
+      "links": [
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "APM 驾驶舱",
+          "tooltip": "跳转到 APM 驾驶舱",
+          "type": "link",
+          "url": "/d/otel-apm-overview?orgId=1"
+        },
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "服务分析",
+          "tooltip": "跳转到服务分析",
+          "type": "link",
+          "url": "/d/otel-service-analysis?orgId=1"
+        },
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "接口分析",
+          "tooltip": "跳转到接口分析",
+          "type": "link",
+          "url": "/d/otel-api-analysis?orgId=1"
+        },
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "异常分析",
+          "tooltip": "跳转到异常分析",
+          "type": "link",
+          "url": "/d/otel-error-analysis?orgId=1"
+        },
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "JVM 监控",
+          "tooltip": "跳转到 JVM 监控",
+          "type": "link",
+          "url": "/d/otel-jvm-monitor?orgId=1"
+        }
+      ],
       "panels": [
         {
           "datasource": {
@@ -2509,7 +2631,68 @@ data:
       "editable": true,
       "graphTooltip": 1,
       "id": null,
-      "links": [],
+      "links": [
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "APM 驾驶舱",
+          "tooltip": "跳转到 APM 驾驶舱",
+          "type": "link",
+          "url": "/d/otel-apm-overview?orgId=1"
+        },
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "服务分析",
+          "tooltip": "跳转到服务分析",
+          "type": "link",
+          "url": "/d/otel-service-analysis?orgId=1"
+        },
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "接口分析",
+          "tooltip": "跳转到接口分析",
+          "type": "link",
+          "url": "/d/otel-api-analysis?orgId=1"
+        },
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "异常分析",
+          "tooltip": "跳转到异常分析",
+          "type": "link",
+          "url": "/d/otel-error-analysis?orgId=1"
+        },
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "JVM 监控",
+          "tooltip": "跳转到 JVM 监控",
+          "type": "link",
+          "url": "/d/otel-jvm-monitor?orgId=1"
+        }
+      ],
       "panels": [
         {
           "datasource": {
@@ -3762,7 +3945,68 @@ data:
       "editable": true,
       "graphTooltip": 1,
       "id": null,
-      "links": [],
+      "links": [
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "APM 驾驶舱",
+          "tooltip": "跳转到 APM 驾驶舱",
+          "type": "link",
+          "url": "/d/otel-apm-overview?orgId=1"
+        },
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "服务分析",
+          "tooltip": "跳转到服务分析",
+          "type": "link",
+          "url": "/d/otel-service-analysis?orgId=1"
+        },
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "接口分析",
+          "tooltip": "跳转到接口分析",
+          "type": "link",
+          "url": "/d/otel-api-analysis?orgId=1"
+        },
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "异常分析",
+          "tooltip": "跳转到异常分析",
+          "type": "link",
+          "url": "/d/otel-error-analysis?orgId=1"
+        },
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "JVM 监控",
+          "tooltip": "跳转到 JVM 监控",
+          "type": "link",
+          "url": "/d/otel-jvm-monitor?orgId=1"
+        }
+      ],
       "panels": [
         {
           "datasource": {
@@ -4460,7 +4704,68 @@ data:
       "editable": true,
       "graphTooltip": 1,
       "id": null,
-      "links": [],
+      "links": [
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "APM 驾驶舱",
+          "tooltip": "跳转到 APM 驾驶舱",
+          "type": "link",
+          "url": "/d/otel-apm-overview?orgId=1"
+        },
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "服务分析",
+          "tooltip": "跳转到服务分析",
+          "type": "link",
+          "url": "/d/otel-service-analysis?orgId=1"
+        },
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "接口分析",
+          "tooltip": "跳转到接口分析",
+          "type": "link",
+          "url": "/d/otel-api-analysis?orgId=1"
+        },
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "异常分析",
+          "tooltip": "跳转到异常分析",
+          "type": "link",
+          "url": "/d/otel-error-analysis?orgId=1"
+        },
+        {
+          "asDropdown": false,
+          "icon": "dashboard",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "JVM 监控",
+          "tooltip": "跳转到 JVM 监控",
+          "type": "link",
+          "url": "/d/otel-jvm-monitor?orgId=1"
+        }
+      ],
       "panels": [
         {
           "datasource": {
