@@ -1,6 +1,6 @@
 ### LiveKit 1.13.10
 
-IM 语音/视频通话服务，单节点部署，复用现有域名的 `/livekit/` 路径。
+IM 语音/视频通话服务，单节点部署，信令与管理 API 复用现有 HTTPS 域名。
 
 ### 一、启动
 
@@ -19,28 +19,29 @@ docker compose up -d
 将 [Nginx 配置片段](nginx/livekit.conf.example) 放入现有 HTTPS `server` 内并重载，复用站点证书。
 
 - 前端地址：`wss://www.zhengqingya.com/livekit/`，替换为实际域名。
-- `proxy_pass http://127.0.0.1:7880/;` 末尾 `/` 必须保留，用于剥离 `/livekit/` 前缀。
+- 信令代理 `/livekit/`：`proxy_pass http://127.0.0.1:7880/;` 末尾 `/` 用于剥离前缀。
+- 管理代理 `/twirp/livekit.RoomService/`：`proxy_pass http://127.0.0.1:7880;` 末尾不加 `/`，保留完整请求路径并透传 `Authorization`。
 - 音视频媒体直接连接服务器，云安全组和主机防火墙均需放行以下端口。
 
 | 端口 | 用途 | 公网放行 |
 | --- | --- | --- |
-| `443/TCP` | HTTPS / WSS 信令 | 是 |
+| `443/TCP` | HTTPS 管理 API / WSS 信令 | 是 |
 | `7880/TCP` | LiveKit API，仅本机监听 | 否 |
 | `7881/TCP` | ICE TCP 媒体回退 | 是 |
 | `7882/UDP` | UDP 媒体 | 是 |
 | `3478/UDP` | TURN / STUN | 是 |
 
-**Docker bridge 容器访问宿主机：** 给 Nginx/后端容器添加 `extra_hosts: ["host.docker.internal:host-gateway"]`，用 `host.docker.internal` 替换上游的 `127.0.0.1`。
+**Docker bridge 容器直连宿主机 7880：** 给 Nginx/后端容器添加 `extra_hosts: ["host.docker.internal:host-gateway"]`，用 `host.docker.internal` 替换上游的 `127.0.0.1`。后端使用 HTTPS 域名时无需此配置。
 同时将 LiveKit 的 `bind_addresses` 改为 `["0.0.0.0"]` 并重启，仅允许可信内网/Docker 网段访问 7880。
 
 ### 三、业务配置
 
 - 公网 IP：[config/livekit.yaml](config/livekit.yaml) 默认通过 STUN 自动识别（`rtc.use_external_ip: true`），需允许 UDP 3478/19302 出站；公网 IP 变更后需重启重新探测。探测失败会导致启动失败，可按配置文件 TODO 手动指定实际公网 IPv4。
-- 后端管理地址：同机使用 `http://127.0.0.1:7880`，容器按上一节处理；异机使用可信内网地址并调整监听与防火墙。Java/Kotlin SDK 会忽略 URL 路径前缀，管理地址使用直连 7880。
+- 后端管理地址：`application-im.yml` 中 `im.rtc.api-url` 使用 `https://www.zhengqingya.com`，Mac 可直接通过 Nginx 调用管理 API，无需 SSH 隧道。Java/Kotlin SDK 使用根路径，地址不能带 `/livekit/` 前缀；同机后端也可直连 `http://127.0.0.1:7880`。
 - 密钥：修改 [docker-compose.yml](docker-compose.yml) 中 `LIVEKIT_KEYS` 的示例 API Key / Secret，并同步到后端。前端接入 LiveKit SDK，只接收后端签发的入房 Token。
 - 人数：`room.max_participants: 0` 表示不设上限，后端 CreateRoom 也应省略限制或传 `0`；实际容量取决于服务器资源和带宽。
 - 内存：容器上限 `512 MiB`，`GOMEMLIMIT: 400MiB` 为 Go 运行时软目标；`memswap_limit` 与上限相同，禁用 Swap。按需占用内存，调整上限时同步调整这三项；负载过大仍可能触发 OOM 重启并中断通话。
-- Webhook 默认关闭；启用时取消配置注释，`webhook.api_key` 使用上述 Key，并确认回调接口已部署且 LiveKit 服务器可访问。
+- Webhook 默认关闭；启用时取消配置注释，`webhook.api_key` 使用上述 Key，并确认回调接口已部署且 LiveKit 服务器可访问。回调到 Mac 后端需另行提供可达入口，管理 API 代理不会转发回调至本地。
 
 ### 四、快速验证
 
@@ -57,12 +58,26 @@ docker compose up -d
    curl -i https://www.zhengqingya.com/livekit/
    ```
 
-3. **双人音视频验证**：在 Mac 安装 CLI，使用服务器 `docker-compose.yml` 中的实际 Key / Secret，为同一房间生成两个不同用户的 Token。
+3. **管理 API 验证**：先在 Mac 不带 Token 调用，预期返回 `401 Unauthorized`，响应中的 `code` 为 `unauthenticated`，表示请求已到达 LiveKit 鉴权环节。
 
    ```shell
-   brew install livekit-cli
+   curl -i -X POST https://www.zhengqingya.com/twirp/livekit.RoomService/ListRooms \
+     -H 'Content-Type: application/json' -d '{}'
+   ```
+
+   再使用服务器 `docker-compose.yml` 中的实际 Key / Secret 查询房间，正常返回列表即验证通过，空列表也正常。
+
+   ```shell
+   brew install livekit-cli  # 已安装可跳过
+   export LIVEKIT_URL='https://www.zhengqingya.com'
    export LIVEKIT_API_KEY='实际APIKey'
    export LIVEKIT_API_SECRET='实际APISecret'
+   lk room list --json
+   ```
+
+4. **双人音视频验证**：在同一终端沿用上述凭据，为同一房间生成两个不同用户的 Token。
+
+   ```shell
    lk token create --join --room im-smoke --identity user1 --valid-for 30m
    lk token create --join --room im-smoke --identity user2 --valid-for 30m
    ```
@@ -106,6 +121,7 @@ docker compose down
 
 - [部署说明](https://docs.livekit.io/transport/self-hosting/deployment/)
 - [端口与防火墙](https://docs.livekit.io/transport/self-hosting/ports-firewall/)
+- [管理 API 与鉴权](https://docs.livekit.io/reference/other/roomservice-api/)
 - [LiveKit CLI](https://docs.livekit.io/reference/developer-tools/livekit-cli/)
 - [使用 LiveKit Meet 验证通话](https://docs.livekit.io/reference/developer-tools/livekit-cli/rooms/#test-a-room-with-livekit-meet)
 - [Docker 内存限制](https://docs.docker.com/reference/compose-file/services/#mem_limit)
