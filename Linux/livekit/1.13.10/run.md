@@ -41,7 +41,7 @@ docker compose up -d
 - 密钥：修改 [docker-compose.yml](docker-compose.yml) 中 `LIVEKIT_KEYS` 的示例 API Key / Secret，并同步到后端。前端接入 LiveKit SDK，只接收后端签发的入房 Token。
 - 人数：`room.max_participants: 0` 表示不设上限，后端 CreateRoom 也应省略限制或传 `0`；实际容量取决于服务器资源和带宽。
 - 内存：容器上限 `512 MiB`，`GOMEMLIMIT: 400MiB` 为 Go 运行时软目标；`memswap_limit` 与上限相同，禁用 Swap。按需占用内存，调整上限时同步调整这三项；负载过大仍可能触发 OOM 重启并中断通话。
-- Webhook 默认关闭；启用时取消配置注释，`webhook.api_key` 使用上述 Key，并确认回调接口已部署且 LiveKit 服务器可访问。回调到 Mac 后端需另行提供可达入口，管理 API 代理不会转发回调至本地。
+- Webhook 默认开启，回调地址自行修改；`webhook.api_key` 与上述 Key 保持一致，回调接口需已部署且 LiveKit 服务器可访问。回调到 Mac 后端需另行提供可达入口，管理 API 代理不会转发回调至本地。
 
 ### 四、快速验证
 
