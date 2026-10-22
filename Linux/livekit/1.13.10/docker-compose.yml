@@ -1,0 +1,35 @@
+# 官方文档：https://docs.livekit.io/transport/self-hosting/deployment/
+name: livekit
+services:
+  livekit:
+    image: registry.cn-hangzhou.aliyuncs.com/zhengqing/livekit-server:v1.13.10  # 原镜像`livekit/livekit-server:v1.13.10`
+    container_name: livekit
+    restart: unless-stopped
+    # TODO 按并发调整内存上限，并同步调整 memswap_limit 和下方 GOMEMLIMIT。
+    mem_limit: 512m
+    # 与内存上限相同，禁用容器 Swap，避免换页增加通话延迟。
+    memswap_limit: 512m
+    # Linux 宿主机网络，媒体端口直接监听宿主机，不再配置 ports 映射。
+    network_mode: host
+    command: ["--config", "/etc/livekit/livekit.yaml"]
+    volumes:
+      - "./config/livekit.yaml:/etc/livekit/livekit.yaml:ro"
+    environment:
+      TZ: Asia/Shanghai
+      # Go 运行时软内存目标，为非 Go 内存留出余量；不能保证不会触发 OOM。
+      GOMEMLIMIT: "400MiB"
+      # TODO 部署前自行修改 API Key / Secret，并与业务后端保持一致。
+      # 格式为 "API Key": "API Secret"；Secret 至少 32 位字母数字，不要提交真实密钥。
+      LIVEKIT_KEYS: |
+        "APIChangeMe01234567": "ChangeMeLiveKitSecret0123456789abcdef0123456789abcdef0123456789a"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:7880/"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 20s
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"

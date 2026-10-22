@@ -1,0 +1,39 @@
+# 固定版本配置参考：https://github.com/livekit/livekit/blob/v1.13.10/config-sample.yaml
+port: 7880
+# API/信令仅供同机 Nginx 和后端访问；此项不限制 RTC 媒体监听地址。
+bind_addresses:
+  - "127.0.0.1"
+
+rtc:
+  tcp_port: 7881
+  # 单端口承载 UDP 媒体，不配置 port_range_start / port_range_end。
+  udp_port: 7882
+  # 启动时通过 STUN 自动识别公网 IP，服务器需能访问外部 STUN 服务。
+  use_external_ip: true
+  # TODO 手动指定时，将 use_external_ip 改为 false，取消下行注释并替换为实际公网 IPv4（不能填域名）。
+  # node_ip: "127.0.0.1"
+
+room:
+  # 语音、视频共用房间规则；0 表示不设置人数上限。
+  max_participants: 0
+
+turn:
+  enabled: true
+  udp_port: 3478
+  # 默认仅启用 TURN/UDP，TURN/TLS 的域名、证书和 443 入口见 run.md。
+  tls_port: 0
+
+logging:
+  level: info
+
+# TODO 启用时将 api_key 与 docker-compose.yml 的 LIVEKIT_KEYS 及业务后端配置保持一致。
+# 服务端事件回调，用于把通话中的变化通知业务后端      流程：LiveKit → HTTP POST → 业务后端（eg：/im/callbacks/livekit）
+# 主要事件：
+#   - participant_joined：成员成功入房，更新接通状态和入房时间。
+#   - participant_left：成员离开，累计通话时长。
+#   - room_finished：房间结束，收尾通话记录。
+
+# webhook:
+#   api_key: "APIChangeMe01234567"
+#   urls:
+#     - "https://www.zhengqingya.com/prod-api/im/callbacks/livekit"
