@@ -32,7 +32,8 @@ logging:
 #   - participant_joined：成员成功入房，更新接通状态和入房时间。
 #   - participant_left：成员离开，累计通话时长。
 #   - room_finished：房间结束，收尾通话记录。
-webhook:
-  api_key: "APIChangeMe01234567"
-  urls:
-    - "https://www.zhengqingya.com/prod-api/im/callbacks/livekit"
+
+#webhook:
+#  api_key: "APIChangeMe01234567"
+#  urls:
+#    - "https://www.zhengqingya.com/prod-api/im/callbacks/livekit"
