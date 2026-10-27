@@ -27,7 +27,7 @@ logging:
   level: info
 
 # TODO api_key 与 docker-compose.yml 的 LIVEKIT_KEYS 及业务后端配置保持一致。
-# 服务端事件回调，用于把通话中的变化通知业务后端      流程：LiveKit → HTTP POST → 业务后端（eg：/im/callbacks/livekit）
+# 服务端事件回调，用于把通话中的变化通知业务后端      流程：LiveKit → HTTP POST → 业务后端（eg：/api/shared/im/callbacks/livekit）
 # 主要事件：
 #   - participant_joined：成员成功入房，更新接通状态和入房时间。
 #   - participant_left：成员离开，累计通话时长。
@@ -36,4 +36,4 @@ logging:
 #webhook:
 #  api_key: "APIChangeMe01234567"
 #  urls:
-#    - "https://www.zhengqingya.com/prod-api/im/callbacks/livekit"
+#    - "https://www.zhengqingya.com/api/shared/im/callbacks/livekit"
